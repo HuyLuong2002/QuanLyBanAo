@@ -1,8 +1,8 @@
 package com.example.quanlybanaobackend.model;
 
-import com.example.quanlybanaobackend.constant.Constant;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 
 
 @AllArgsConstructor
@@ -46,7 +46,7 @@ public class Product {
     @Getter
     @Setter
     @Enumerated(EnumType.STRING)
-    private Constant.Color color;
+    private Color color;
     @Getter
     @Setter
     private boolean isDeleted;
