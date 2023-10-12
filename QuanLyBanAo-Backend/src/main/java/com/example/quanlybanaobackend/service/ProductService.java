@@ -9,5 +9,4 @@ public interface ProductService {
     List<Product> getProducts();
     Product save(Product product);
     Product findById(int id);
-
 }

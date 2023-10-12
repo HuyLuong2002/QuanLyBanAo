@@ -9,14 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
     @Override
     public List<Product> getProducts() {
-       return productRepository.findAll();
+        return productRepository.findAll();
     }
 
     @Override
@@ -27,11 +29,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findById(int id) {
         boolean isPresent = productRepository.findById(id).isPresent();
-        if(isPresent)
-        {
+        if (isPresent) {
             return productRepository.findById(id).get();
-        }
-        else return null;
+        } else return null;
 
     }
 
