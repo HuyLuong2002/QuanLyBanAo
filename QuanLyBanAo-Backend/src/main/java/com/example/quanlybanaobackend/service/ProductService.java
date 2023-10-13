@@ -18,5 +18,4 @@ public interface ProductService {
     List<Product> findByMaxPrice();
 
     List<Product> findByMinPrice();
-
 }
