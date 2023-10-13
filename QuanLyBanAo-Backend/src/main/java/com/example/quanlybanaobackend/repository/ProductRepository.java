@@ -24,4 +24,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.price = (SELECT MIN(p2.price) FROM Product p2)")
     List<Product> findProductByMinPrice();
 
+    @Query("SELECT p FROM Product p WHERE p.price < :price")
+    List<Product> findProductUnderCertainPrice(@Param("price") String price);
+
+    @Query("SELECT p FROM Product p WHERE p.price > :price")
+    List<Product> findProductOverCertainPrice(@Param("price") String price);
+
+    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :priceA AND :priceB")
+    List<Product> findProductBetweenCertainPrice(@Param("priceA") String priceA, @Param("priceB") String priceB);
 }
