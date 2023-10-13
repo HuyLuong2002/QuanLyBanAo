@@ -1,6 +1,7 @@
 package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.dto.ProductDTO;
+import com.example.quanlybanaobackend.model.Color;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,26 @@ public class ProductController {
     @GetMapping(path = {"/get/{id}"})
     public Product getProductById(@PathVariable int id){
         return productService.findById(id);
+    }
+
+    @GetMapping(path = {"/getByColor"})
+    public List<Product> getProductByColor(@RequestParam(name = "color") Color color){
+        return productService.findByColor(color);
+    }
+
+    @GetMapping(path = {"/getByName"})
+    public List<Product> getProductByName(@RequestParam(name = "name") String name){
+        return productService.findByName(name);
+    }
+
+    @GetMapping(path = {"/getByMaxPrice"})
+    public List<Product> getProductByMaxPrice(){
+        return productService.findByMaxPrice();
+    }
+
+    @GetMapping(path = {"/getByMinPrice"})
+    public List<Product> getProductByMinPrice(){
+        return productService.findByMinPrice();
     }
 
     @PostMapping(path = {"/create"})
@@ -70,6 +91,5 @@ public class ProductController {
         deleteProduct.setDeleted(true);
         productService.save(deleteProduct);
         return ResponseEntity.status(HttpStatus.OK).body("Xóa sản phẩm thành công");
-
     }
 }
