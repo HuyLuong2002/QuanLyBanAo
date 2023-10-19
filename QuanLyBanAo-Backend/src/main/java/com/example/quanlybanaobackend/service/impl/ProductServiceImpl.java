@@ -1,6 +1,5 @@
 package com.example.quanlybanaobackend.service.impl;
 
-import com.example.quanlybanaobackend.dto.ProductDTO;
 import com.example.quanlybanaobackend.model.Color;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.repository.ProductRepository;
@@ -67,4 +66,18 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByMinPrice();
     }
 
+    @Override
+    public List<Product> findUnderCertainPrice(String price){
+        return productRepository.findProductUnderCertainPrice(price);
+    }
+
+    @Override
+    public List<Product> findOverCertainPrice(String price){
+        return productRepository.findProductOverCertainPrice(price);
+    }
+
+    @Override
+    public List<Product> findBetweenCertainPrice(String priceA, String priceB){
+        return productRepository.findProductBetweenCertainPrice(priceA, priceB);
+    }
 }

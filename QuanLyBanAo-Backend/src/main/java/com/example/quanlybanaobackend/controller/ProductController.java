@@ -47,6 +47,21 @@ public class ProductController {
         return productService.findByMinPrice();
     }
 
+    @GetMapping(path = {"/getUnderPrice"})
+    public List<Product> getProductUnderCertainPrice(@RequestParam(name="price") String price){
+        return productService.findUnderCertainPrice(price);
+    }
+
+    @GetMapping(path = {"/getOverPrice"})
+    public List<Product> getProductOverCertainPrice(@RequestParam(name="price") String price){
+        return productService.findOverCertainPrice(price);
+    }
+
+    @GetMapping(path = {"/getBetweenPrice"})
+    public List<Product> getProductBetweenCertainPrice(@RequestParam(name="priceA") String priceA,@RequestParam(name="priceB") String priceB){
+        return productService.findBetweenCertainPrice(priceA,priceB);
+    }
+
     @PostMapping(path = {"/create"})
     public ResponseEntity<String> createProducts(@RequestBody Product product){
         Product savedProduct = productService.save(product);

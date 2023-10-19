@@ -18,4 +18,10 @@ public interface ProductService {
     List<Product> findByMaxPrice();
 
     List<Product> findByMinPrice();
+
+    List<Product> findUnderCertainPrice(String price);
+
+    List<Product> findOverCertainPrice(String price);
+
+    List<Product> findBetweenCertainPrice(String priceA, String priceB);
 }
