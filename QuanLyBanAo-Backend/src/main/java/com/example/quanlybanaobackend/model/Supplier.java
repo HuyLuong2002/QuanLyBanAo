@@ -38,7 +38,7 @@ public class Supplier {
         this.name = name;
     }
 
-    public boolean isDeleted() {
+    public boolean getDeleted() {
         return isDeleted;
     }
 
