@@ -21,9 +21,9 @@ public class ShoppingCart {
     private int id;
     private int totalItems;
     private double totalPrices;
-//    @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-//    private Customer customer;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cart")
     private Set<CartItem> cartItem;

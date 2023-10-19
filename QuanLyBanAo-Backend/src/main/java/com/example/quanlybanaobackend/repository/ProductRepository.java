@@ -1,5 +1,5 @@
 package com.example.quanlybanaobackend.repository;
-import com.example.quanlybanaobackend.model.Color;
+import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p from Product p where p.color = :color")
-    List<Product> findProductByColor(@Param("color") Color color);
+    List<Product> findProductByColor(@Param("color") Constant.Color color);
 
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(concat('%', :name, '%'))")
     List<Product> findProductByName(@Param("name") String name);

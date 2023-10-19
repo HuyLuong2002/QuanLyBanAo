@@ -1,6 +1,6 @@
 package com.example.quanlybanaobackend.service.impl;
 
-import com.example.quanlybanaobackend.model.Color;
+import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.repository.ProductRepository;
 import com.example.quanlybanaobackend.service.ProductService;
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findByColor(Color color) {
+    public List<Product> findByColor(Constant.Color color) {
         if(color.name().isEmpty())
         {
             return null;

@@ -1,5 +1,6 @@
 package com.example.quanlybanaobackend.model;
 
+import com.example.quanlybanaobackend.constant.Constant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,6 @@ public class Product {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     @Enumerated(EnumType.STRING)
-    private Color color;
+    private Constant.Color color;
     private boolean isDeleted;
 }

@@ -1,7 +1,6 @@
 package com.example.quanlybanaobackend.controller;
 
-import com.example.quanlybanaobackend.dto.ProductDTO;
-import com.example.quanlybanaobackend.model.Color;
+import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping(path = {"/getByColor"})
-    public List<Product> getProductByColor(@RequestParam(name = "color") Color color){
+    public List<Product> getProductByColor(@RequestParam(name = "color") Constant.Color color){
         return productService.findByColor(color);
     }
 
