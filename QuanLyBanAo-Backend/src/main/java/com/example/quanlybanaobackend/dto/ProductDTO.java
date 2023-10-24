@@ -2,22 +2,14 @@ package com.example.quanlybanaobackend.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
+@Getter
+@Setter
 public class ProductDTO {
-    @Getter
-    @Setter
+
     private int id;
-    @Getter
-    @Setter
     private String name;
-    @Getter
-    @Setter
     private double price;
-    @Getter
-    @Setter
     private String categoryName; // Thêm tên danh mục
-    @Getter
-    @Setter
     private String supplierName; // Thêm tên nhà cung cấp
 
     // Constructors, getters, and setters

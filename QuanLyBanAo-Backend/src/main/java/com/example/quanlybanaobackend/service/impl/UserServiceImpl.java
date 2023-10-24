@@ -38,4 +38,9 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(true);
         userRepository.save(user);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByEmail(username);
+    }
 }

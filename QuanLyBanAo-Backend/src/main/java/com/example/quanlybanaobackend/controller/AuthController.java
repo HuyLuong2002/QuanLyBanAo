@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 @RestController
@@ -22,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginData loginData) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginData loginData) throws InvocationTargetException, IllegalAccessException {
         return authService.login(loginData);
     }
 
