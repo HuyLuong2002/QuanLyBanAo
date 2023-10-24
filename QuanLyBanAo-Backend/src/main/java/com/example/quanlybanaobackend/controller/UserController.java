@@ -1,12 +1,14 @@
 package com.example.quanlybanaobackend.controller;
 
+import com.example.quanlybanaobackend.middleware.Auth;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.service.UserService;
+import jakarta.servlet.annotation.WebFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired

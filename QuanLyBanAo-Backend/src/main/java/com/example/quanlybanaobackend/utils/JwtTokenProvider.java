@@ -6,10 +6,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-@Component
+@Service
 public class JwtTokenProvider {
 
     @Value("${jwt.secret:heygirliloveyou123oklacasdfklsdfsdafifjk2lk3fmdsklafmk42kfklweklm32klm32klmf23lkmflk23fmkl23flkm2f32lkf}")
@@ -41,7 +42,7 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        int id = claims.get("id", int.class);
+        int id = claims.get("id", Integer.class);
         String username = claims.get("email", String.class);
 
         return new jwtPayLoad(id, username);
