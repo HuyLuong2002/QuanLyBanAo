@@ -1,5 +1,6 @@
 package com.example.quanlybanaobackend.service.impl;
 
+import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.UserRepository;
 import com.example.quanlybanaobackend.service.UserService;
@@ -25,7 +26,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) { return userRepository.save(user); }
+    public User createUser(User user) {
+
+        return userRepository.save(user); }
+
 
     @Override
     public User updateUser(int id, User user) {

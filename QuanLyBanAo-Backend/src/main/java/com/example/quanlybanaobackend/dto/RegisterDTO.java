@@ -1,25 +1,15 @@
 package com.example.quanlybanaobackend.dto;
 
 import com.example.quanlybanaobackend.constant.Constant;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class UserDTO {
+@Data
+public class RegisterDTO {
     private int id;
-
     private String email;
-
     private String password;
-
     private String lastName;
 
     private String firstName;
@@ -40,7 +30,7 @@ public class UserDTO {
 
     private boolean isDeleted;
 
-    public UserDTO(int id, String email, String lastName, String firstName, Constant.Gender sex, Date dateOfBirth, String address, String tel, Constant.UserStatus status, boolean isDeleted, Date createdAt, Date updatedAt) {
+    public RegisterDTO(int id, String email, String lastName, String firstName, Constant.Gender sex, Date dateOfBirth, String address, String tel, Constant.UserStatus status, boolean isDeleted, Date createdAt, Date updatedAt) {
         this.id = id;
         this.email = email;
         this.lastName = lastName;

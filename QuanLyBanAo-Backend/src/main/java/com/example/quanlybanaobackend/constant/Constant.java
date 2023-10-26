@@ -5,10 +5,6 @@ public class Constant {
         ACTIVE, INACTIVE, BANNED
     }
 
-    public enum Role {
-        ADMIN, EMPLOYEE, CUSTOMER
-    }
-
     public enum Gender {
         MALE, FEMALE, NON_BINARY
     }

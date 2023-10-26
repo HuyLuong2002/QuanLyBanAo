@@ -1,9 +1,14 @@
 package com.example.quanlybanaobackend.service;
 
+import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.model.ShoppingCart;
+import com.example.quanlybanaobackend.model.User;
 
 public interface ShoppingCartService {
 
-    ShoppingCart save(ShoppingCart shoppingCart);
-    ShoppingCart findUserShoppingCart(String username);
+    ShoppingCart addItemToCart(Product product, int quantity, User user);
+
+    ShoppingCart updateItemInCart(Product product, int quantity, User user);
+
+    ShoppingCart deleteItemFromCart(Product product, User user);
 }

@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -35,6 +37,7 @@ public class User {
     private String firstName;
 
     @Column(name = "sex")
+    @Enumerated(EnumType.STRING)
     private Constant.Gender sex;
 
     @Column(name = "date_of_birth")
@@ -47,10 +50,8 @@ public class User {
     private String tel;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private Constant.UserStatus status;
-
-    @Column(name = "role")
-    private Constant.Role role;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -62,4 +63,17 @@ public class User {
     @Column(name = "updated_at")
     @LastModifiedDate
     private Date updatedAt;
+
+    @OneToOne(mappedBy = "user")
+    private ShoppingCart shoppingCart;
+//    @OneToMany(mappedBy = "customer")
+//    private List<Order> orders;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "customers_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+    @ColumnDefault("id")
+    private Collection<Role> roles;
+
 }

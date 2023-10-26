@@ -33,13 +33,10 @@ public class SupplierServiceImpl implements SupplierService {
     }
     @Override
     public Supplier updateSupplier(int id, Supplier supplier){
-
-//        Supplier newSupplier = supplierRepository.findById(id).get();
-//        newSupplier.setId(supplier.getId());
-//        newSupplier.setName(supplier.getName());
-//        newSupplier.setDeleted(supplier.getDeleted());
-        supplier.setId(id);
-        return supplierRepository.save(supplier);
+        Supplier newSupplier = supplierRepository.findById(id).get();
+        newSupplier.setName(supplier.getName());
+        newSupplier.setDeleted(supplier.isDeleted());
+        return supplierRepository.save(newSupplier);
     }
 
     @Override
