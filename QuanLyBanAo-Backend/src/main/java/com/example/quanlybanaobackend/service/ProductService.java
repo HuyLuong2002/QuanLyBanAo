@@ -9,6 +9,11 @@ public interface ProductService {
 
     List<Product> getProducts();
     Product save(Product product);
+
+    Product updateProduct(int id, Product product);
+
+    void deleteProduct(int id);
+
     Product findById(int id);
 
     List<Product> findByColor(Constant.Color color);

@@ -144,4 +144,11 @@ public class ShoppingCartImpl implements ShoppingCartService {
 
         return shoppingCartRepository.save(cart);
     }
+
+    @Override
+    public void delete(ShoppingCart shoppingCart) {
+        shoppingCartRepository.delete(shoppingCart);
+    }
+
+
 }

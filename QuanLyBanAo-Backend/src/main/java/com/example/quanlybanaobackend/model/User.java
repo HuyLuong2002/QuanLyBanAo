@@ -1,7 +1,9 @@
 package com.example.quanlybanaobackend.model;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -41,6 +44,8 @@ public class User {
     private Constant.Gender sex;
 
     @Column(name = "date_of_birth")
+    // Sử dụng @Temporal để chỉ định kiểu thời gian
+    @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     @Column(name = "address")
@@ -64,16 +69,17 @@ public class User {
     @LastModifiedDate
     private Date updatedAt;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private ShoppingCart shoppingCart;
-//    @OneToMany(mappedBy = "customer")
-//    private List<Order> orders;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<Order> orders;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "customers_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-    @ColumnDefault("id")
     private Collection<Role> roles;
 
 }

@@ -9,8 +9,8 @@ public class ProductDTO {
     private int id;
     private String name;
     private double price;
-    private String categoryName; // Thêm tên danh mục
-    private String supplierName; // Thêm tên nhà cung cấp
+    private String categoryName;
+    private String supplierName;
 
     // Constructors, getters, and setters
 

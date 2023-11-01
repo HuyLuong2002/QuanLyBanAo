@@ -16,47 +16,47 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    @GetMapping(path = {"/get"})
+    @GetMapping()
     public List<Product> getProducts(){
         return productService.getProducts();
     }
 
-    @GetMapping(path = {"/get/{id}"})
+    @GetMapping(path = {"/{id}"})
     public Product getProductById(@PathVariable int id){
         return productService.findById(id);
     }
 
-    @GetMapping(path = {"/getByColor"})
-    public List<Product> getProductByColor(@RequestParam(name = "color") Constant.Color color){
+    @GetMapping(path = {"/color/{color}"})
+    public List<Product> getProductByColor(@PathVariable Constant.Color color){
         return productService.findByColor(color);
     }
 
-    @GetMapping(path = {"/getByName"})
-    public List<Product> getProductByName(@RequestParam(name = "name") String name){
+    @GetMapping(path = {"/name/{name}"})
+    public List<Product> getProductByName(@PathVariable String name){
         return productService.findByName(name);
     }
 
-    @GetMapping(path = {"/getByMaxPrice"})
+    @GetMapping(path = {"/max-price"})
     public List<Product> getProductByMaxPrice(){
         return productService.findByMaxPrice();
     }
 
-    @GetMapping(path = {"/getByMinPrice"})
+    @GetMapping(path = {"/min-price"})
     public List<Product> getProductByMinPrice(){
         return productService.findByMinPrice();
     }
 
-    @GetMapping(path = {"/getUnderPrice"})
+    @GetMapping(path = {"/under-price"})
     public List<Product> getProductUnderCertainPrice(@RequestParam(name="price") String price){
         return productService.findUnderCertainPrice(price);
     }
 
-    @GetMapping(path = {"/getOverPrice"})
+    @GetMapping(path = {"/over-price"})
     public List<Product> getProductOverCertainPrice(@RequestParam(name="price") String price){
         return productService.findOverCertainPrice(price);
     }
 
-    @GetMapping(path = {"/getBetweenPrice"})
+    @GetMapping(path = {"/between-price"})
     public List<Product> getProductBetweenCertainPrice(@RequestParam(name="priceA") String priceA,@RequestParam(name="priceB") String priceB){
         return productService.findBetweenCertainPrice(priceA,priceB);
     }
@@ -72,22 +72,12 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thêm sản phẩm thất bại");
         }
     }
-    @PutMapping(path = {"/update/{id}"})
+    @PutMapping(path = {"/{id}"})
     public ResponseEntity<String> updateProducts(@RequestBody Product product, @PathVariable int id){
         Product getProduct = productService.findById(id);
         if (getProduct == null || getProduct.isDeleted())
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
-        getProduct.setName(product.getName());
-        getProduct.setPrice(product.getPrice());
-        getProduct.setQuantity(product.getQuantity());
-        getProduct.setImage(product.getImage());
-        getProduct.setDescription(product.getDescription());
-        getProduct.setCategory(product.getCategory());
-        getProduct.setSize(product.getSize());
-        getProduct.setSupplier(product.getSupplier());
-        getProduct.setColor(product.getColor());
-        getProduct.setDeleted(product.isDeleted());
-        Product updateProduct = productService.save(getProduct);
+        Product updateProduct = productService.updateProduct(id, product);
         if(updateProduct != null)
         {
             // Trả về HTTP status code 200 (OK) và thông báo thành công
@@ -102,8 +92,7 @@ public class ProductController {
         Product deleteProduct = productService.findById(id);
         if (deleteProduct == null || deleteProduct.isDeleted())
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
-        deleteProduct.setDeleted(true);
-        productService.save(deleteProduct);
+        productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.OK).body("Xóa sản phẩm thành công");
     }
 }

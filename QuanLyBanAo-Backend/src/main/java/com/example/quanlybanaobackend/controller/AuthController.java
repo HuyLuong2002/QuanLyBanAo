@@ -8,7 +8,6 @@ import com.example.quanlybanaobackend.dto.RegisterDTO;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
-import com.example.quanlybanaobackend.repository.UserRepository;
 import com.example.quanlybanaobackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,10 +27,15 @@ import java.util.Collections;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+    @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
     private UserService userService;
+    @Autowired
     private RoleRepository roleRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private JWTGenerator jwtGenerator;
 
     @Autowired
@@ -71,7 +74,7 @@ public class AuthController {
 
         User user = new User();
         user.setEmail(registerDto.getEmail());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
+        user.setPassword(registerDto.getPassword());
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());
         user.setSex(registerDto.getSex());

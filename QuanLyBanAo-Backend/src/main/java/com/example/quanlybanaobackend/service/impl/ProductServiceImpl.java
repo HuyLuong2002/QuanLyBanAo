@@ -25,6 +25,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product updateProduct(int id, Product product) {
+        Product oldProduct = findById(id);
+        oldProduct.setName(product.getName());
+        oldProduct.setQuantity(product.getQuantity());
+        oldProduct.setPrice(product.getPrice());
+        oldProduct.setDescription(product.getDescription());
+        oldProduct.setImage(product.getImage());
+        oldProduct.setSize(product.getSize());
+        oldProduct.setCategory(product.getCategory());
+        oldProduct.setSupplier(product.getSupplier());
+        oldProduct.setColor(product.getColor());
+        oldProduct.setDeleted(product.isDeleted());
+        return productRepository.save(oldProduct);
+
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        Product removeProduct = findById(id);
+        removeProduct.setDeleted(true);
+        productRepository.save(removeProduct);
+    }
+
+    @Override
     public Product findById(int id) {
         boolean isPresent = productRepository.findById(id).isPresent();
         if (isPresent) {
@@ -80,4 +104,6 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findBetweenCertainPrice(String priceA, String priceB){
         return productRepository.findProductBetweenCertainPrice(priceA, priceB);
     }
+
+
 }

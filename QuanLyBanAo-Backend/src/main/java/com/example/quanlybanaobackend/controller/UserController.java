@@ -1,5 +1,6 @@
 package com.example.quanlybanaobackend.controller;
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
@@ -11,23 +12,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private final UserService userService;
-    @Autowired
-    private RoleRepository roleRepository;
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
@@ -41,12 +38,6 @@ public class UserController {
         if (userService.findByUsername(user.getEmail()) != null) {
             return new ResponseEntity<>("Tên tài khoản đã được đăng ký!", HttpStatus.BAD_REQUEST);
         }
-        user.setStatus(Constant.UserStatus.ACTIVE);
-        user.setPassword(passwordEncoder.encode((user.getPassword())));
-        user.setDeleted(false);
-        Role roles = roleRepository.findByName(user.getRoles().stream().findFirst().get().getName()).get();
-        user.setRoles(Collections.singletonList(roles));
-
         userService.createUser(user);
         return new ResponseEntity<>("Đăng ký thành công!", HttpStatus.OK);
     }
@@ -56,7 +47,7 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 
-    @PutMapping("delete/{id}")
+    @PutMapping("/delete/{id}")
     public void deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
     }

@@ -12,4 +12,19 @@ public class Constant {
     public enum Color {
         RED, BLUE, YELLOW, GREEN
     }
+
+    public enum OrderStatus {
+        ACTIVE, UNACTIVE
+    }
+
+    public enum ShipStatus {
+        APPROVAL, SHIPPING, SHIPPED
+    }
+
+    public enum PaymentMethod {
+        CASH, BANKING
+    }
+    public enum PaymentStatus {
+        PAID, UNPAID
+    }
 }

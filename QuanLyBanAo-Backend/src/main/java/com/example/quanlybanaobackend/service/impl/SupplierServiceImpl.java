@@ -41,8 +41,12 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public void deleteSupplier(int id){
-        Supplier supplier = supplierRepository.findById(id).get();
-        supplier.setDeleted(true);
-        supplierRepository.save(supplier);
+        boolean isPresent = supplierRepository.findById(id).isPresent();
+        if(isPresent)
+        {
+            Supplier supplier = supplierRepository.findById(id).get();
+            supplier.setDeleted(true);
+            supplierRepository.save(supplier);
+        }
     }
 }

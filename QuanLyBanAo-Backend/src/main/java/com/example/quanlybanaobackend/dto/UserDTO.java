@@ -1,12 +1,14 @@
 package com.example.quanlybanaobackend.dto;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.model.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -40,18 +42,5 @@ public class UserDTO {
 
     private boolean isDeleted;
 
-    public UserDTO(int id, String email, String lastName, String firstName, Constant.Gender sex, Date dateOfBirth, String address, String tel, Constant.UserStatus status, boolean isDeleted, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.email = email;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.sex = sex;
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-        this.tel = tel;
-        this.status = status;
-        this.isDeleted = isDeleted;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+    private Collection<Role> roles;
 }

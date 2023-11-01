@@ -14,15 +14,15 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-    @GetMapping(path = {"/get"})
+    @GetMapping(path = {""})
     public List<Category> getCategories(){
         return categoryService.getCategories();
     }
-    @GetMapping(path = {"/get/{id}"})
+    @GetMapping(path = {"/{id}"})
     public Category getCategoryById(@PathVariable int id){
         return categoryService.findById(id);
     }
-    @PostMapping(path = {"/create"})
+    @PostMapping(path = {""})
     public ResponseEntity<String> createCategories(@RequestBody Category category){
         Category saveCategory = categoryService.save(category);
         if (saveCategory != null){
@@ -33,7 +33,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thêm thể loại thất bại");
         }
     }
-    @PutMapping(path = {"/update/{id}"})
+    @PutMapping(path = {"/{id}"})
     public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable int id){
         Category getCategory = categoryService.findById(id);
         if(getCategory == null || getCategory.isDeleted()){
@@ -53,7 +53,7 @@ public class CategoryController {
     public ResponseEntity<String> deleteCategory(@PathVariable int id){
         Category deleteCategory = categoryService.findById(id);
         if(deleteCategory == null || deleteCategory.isDeleted()){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy th loại!");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy thể loại!");
         }
         deleteCategory.setDeleted(true);
         categoryService.save(deleteCategory);
