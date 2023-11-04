@@ -36,6 +36,11 @@ public class ProductController {
         return productService.findByName(name);
     }
 
+    @GetMapping(path = {"/category/{category_id}"})
+    public List<Product> getProductByCategory(@PathVariable int category_id){
+        return productService.getProductsByCategory(category_id);
+    }
+
     @GetMapping(path = {"/max-price"})
     public List<Product> getProductByMaxPrice(){
         return productService.findByMaxPrice();

@@ -105,5 +105,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductBetweenCertainPrice(priceA, priceB);
     }
 
-
+    @Override
+    public List<Product> getProductsByCategory(int category_id) {
+        return productRepository.getProductsByCategory(category_id);
+    }
 }

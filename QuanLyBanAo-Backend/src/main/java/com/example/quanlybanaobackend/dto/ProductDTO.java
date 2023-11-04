@@ -22,6 +22,4 @@ public class ProductDTO {
         this.supplierName = supplierName;
     }
 
-
-
 }

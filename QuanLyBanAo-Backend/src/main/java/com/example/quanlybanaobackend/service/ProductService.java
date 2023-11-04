@@ -29,4 +29,6 @@ public interface ProductService {
     List<Product> findOverCertainPrice(String price);
 
     List<Product> findBetweenCertainPrice(String priceA, String priceB);
+
+    List<Product> getProductsByCategory(int category_id);
 }

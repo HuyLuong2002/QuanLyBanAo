@@ -17,6 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(concat('%', :name, '%'))")
     List<Product> findProductByName(@Param("name") String name);
 
+    @Query("SELECT p FROM Product p WHERE p.category.id = :category_id AND p.isDeleted = false")
+    List<Product> getProductsByCategory(@Param("category_id") int category_id);
+
     //SELECT p FROM Product p WHERE p.price = (SELECT MAX(p2.price) FROM Product p2)
     //ORDER BY p.id ASC
     //LIMIT 1 -> lấy max 1 sản phẩm
