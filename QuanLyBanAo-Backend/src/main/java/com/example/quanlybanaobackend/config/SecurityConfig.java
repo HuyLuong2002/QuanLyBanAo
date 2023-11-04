@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .securityMatcher("/api/v1/**")
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/cart/add").hasAuthority("CUSTOMER")
                         .anyRequest().authenticated()
                 );
         return http.build();

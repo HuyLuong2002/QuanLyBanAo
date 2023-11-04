@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,18 +34,16 @@ public class AuthController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JWTGenerator jwtGenerator;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserService userService,
-                          RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
+                          RoleRepository roleRepository, JWTGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
     }
 
@@ -82,8 +81,8 @@ public class AuthController {
         user.setDateOfBirth(registerDto.getDateOfBirth());
         user.setTel(registerDto.getTel());
         user.setStatus(Constant.UserStatus.ACTIVE);
-        user.setCreatedAt(registerDto.getCreatedAt());
-        user.setUpdatedAt(registerDto.getUpdatedAt());
+        user.setCreatedAt(new Date());
+        user.setUpdatedAt(new Date());
         user.setDeleted(false);
 
 

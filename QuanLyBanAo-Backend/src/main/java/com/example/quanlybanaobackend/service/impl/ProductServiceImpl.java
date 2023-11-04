@@ -1,10 +1,13 @@
 package com.example.quanlybanaobackend.service.impl;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.controller.AuthController;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.repository.ProductRepository;
 import com.example.quanlybanaobackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -13,6 +16,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
 
     @Override
     public List<Product> getProducts() {
@@ -28,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(int id, Product product) {
         Product oldProduct = findById(id);
         oldProduct.setName(product.getName());
-        oldProduct.setQuantity(product.getQuantity());
         oldProduct.setPrice(product.getPrice());
         oldProduct.setDescription(product.getDescription());
         oldProduct.setImage(product.getImage());

@@ -18,7 +18,6 @@ public class Product {
     @Column(name = "product_id")
     private int id;
     private String name;
-    private int quantity;
     private int price;
     private String description;
     private String image;
@@ -31,5 +30,10 @@ public class Product {
     private Supplier supplier;
     @Enumerated(EnumType.STRING)
     private Constant.Color color;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
+    private User seller;
+
     private boolean isDeleted;
 }
