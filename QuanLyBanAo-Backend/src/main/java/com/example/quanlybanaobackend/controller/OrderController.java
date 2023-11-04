@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -55,5 +57,21 @@ public class OrderController {
     public ResponseEntity<String> deleteOrders(@PathVariable int id) {
         orderService.deleteOrder(id);
         return ResponseEntity.status(HttpStatus.CREATED).body("Xóa hóa đơn thành công.");
+    }
+
+    @GetMapping(path = {"/getOrderByDay"})
+    public List<Order> getOrderByDay(@RequestParam String firstDate, @RequestParam String secondDate) throws ParseException {
+        return orderService.getOrderByDay(firstDate, secondDate);
+    }
+
+    @GetMapping(path = {"/exportExcel/{id}"})
+    public ResponseEntity<String> exportDataExcel(@PathVariable int id, String inputPath, String outputPath) throws IOException, ParseException, InterruptedException {
+        inputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
+        outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData\\";
+        if(orderService.exportDataExcel(id, inputPath, outputPath))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body("Xuất file thành công");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xuất file thất bại");
     }
 }

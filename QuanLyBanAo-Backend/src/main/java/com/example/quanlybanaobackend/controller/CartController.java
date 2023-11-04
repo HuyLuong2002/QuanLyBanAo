@@ -45,6 +45,10 @@ public class CartController {
         if(authController.getUserLogin() != null)
         {
             Product product = productService.findById(productId);
+            if(product == null)
+            {
+                return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
+            }
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             ShoppingCart cart = shoppingCartService.addItemToCart(product, quantity, user);
@@ -77,6 +81,10 @@ public class CartController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
+            if(product == null)
+            {
+                return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
+            }
             ShoppingCart cart = shoppingCartService.deleteItemFromCart(product, user);
 
 
