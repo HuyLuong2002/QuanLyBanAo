@@ -30,4 +30,12 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryRepository.findById(id).get();
         } else return null;
     }
+
+    @Override
+    public Category updateCategory(int id, Category category) {
+        Category oldCategory = findById(id);
+        oldCategory.setName(category.getName());
+        oldCategory.setDeleted(category.isDeleted());
+        return categoryRepository.save(oldCategory);
+    }
 }

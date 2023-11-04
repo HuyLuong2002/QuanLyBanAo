@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-    @GetMapping(path = {""})
+    @GetMapping()
     public List<Category> getCategories(){
         return categoryService.getCategories();
     }
@@ -39,9 +39,7 @@ public class CategoryController {
         if(getCategory == null || getCategory.isDeleted()){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy thể loại!");
         }
-        getCategory.setName(category.getName());
-        getCategory.setDeleted(category.isDeleted());
-        Category updateCategory = categoryService.save(getCategory);
+        Category updateCategory = categoryService.updateCategory(id, category);
         if (updateCategory != null){
             // Trả về HTTP status code 200 (OK) và thông báo thành công
             return ResponseEntity.status(HttpStatus.OK).body("Sửa thể loại thành công");

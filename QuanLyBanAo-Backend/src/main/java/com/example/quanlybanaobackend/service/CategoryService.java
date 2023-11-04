@@ -8,4 +8,6 @@ public interface CategoryService {
     List<Category> getCategories();
     Category save(Category category);
     Category findById(int id);
+
+    Category updateCategory(int id, Category category);
 }
