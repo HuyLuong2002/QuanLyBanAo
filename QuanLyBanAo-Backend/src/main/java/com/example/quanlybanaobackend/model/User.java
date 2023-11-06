@@ -82,10 +82,6 @@ public class User {
     @JsonIgnore
     private List<Order> approvedOrder;
 
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-    @JsonBackReference
-    @JsonIgnore
-    private List<Product> sellingProduct;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "customers_roles",

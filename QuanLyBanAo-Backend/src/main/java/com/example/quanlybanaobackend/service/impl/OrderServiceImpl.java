@@ -108,6 +108,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getApprovalOrder() {
+        return orderRepository.getApprovedOrder();
+    }
+
+    @Override
+    public Order approveOrder(int id) {
+        Order order = findById(id);
+        order.setShipStatus(Constant.ShipStatus.SHIPPING);
+        return orderRepository.save(order);
+    }
+
+    @Override
     public boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException {
         Order order = findById(id);
         if(order == null)

@@ -31,9 +31,5 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Constant.Color color;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "seller_id", referencedColumnName = "user_id")
-    private User seller;
-
     private boolean isDeleted;
 }

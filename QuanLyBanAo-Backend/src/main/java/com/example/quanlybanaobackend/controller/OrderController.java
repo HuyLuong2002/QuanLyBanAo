@@ -29,7 +29,15 @@ public class OrderController {
 
     @GetMapping()
     public List<Order> getOrders() {
-        return orderService.getOrders();
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            return orderService.getOrders();
+        }
+        return null;
     }
 
 
@@ -45,18 +53,44 @@ public class OrderController {
 
     @GetMapping(path = {"/{id}"})
     public Order getOrderById(@PathVariable int id) {
-        return orderService.findById(id);
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            return orderService.findById(id);
+        }
+        return null;
+
     }
 
     @PutMapping(path = {"/{id}"})
     public Order updateOrders(@PathVariable int id, @RequestBody Order order) {
-        return orderService.updateOrders(id, order);
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            return orderService.updateOrders(id, order);
+        }
+        return null;
+
     }
 
     @PutMapping(path = {"/delete/{id}"})
     public ResponseEntity<String> deleteOrders(@PathVariable int id) {
-        orderService.deleteOrder(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Xóa hóa đơn thành công.");
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            orderService.deleteOrder(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Xóa hóa đơn thành công.");
+        }
+        return null;
     }
 
     @GetMapping(path = {"/getOrderByDay"})
@@ -64,10 +98,41 @@ public class OrderController {
         return orderService.getOrderByDay(firstDate, secondDate);
     }
 
+    @GetMapping(path = {"/getApprovalOrder"})
+    public List<Order> getApprovalOrder()
+    {
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            return orderService.getApprovalOrder();
+        }
+        return null;
+
+    }
+
+    @PutMapping(path = {"/approve/{id}"})
+    public Order approveOrder(@PathVariable int id)
+    {
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                return null;
+            }
+            return orderService.approveOrder(id);
+        }
+        return null;
+
+    }
+
     @GetMapping(path = {"/exportExcel/{id}"})
-    public ResponseEntity<String> exportDataExcel(@PathVariable int id, String inputPath, String outputPath) throws IOException, ParseException, InterruptedException {
-        inputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
-        outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData\\";
+    public ResponseEntity<String> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException {
+        String inputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
+        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData\\";
+        
         if(orderService.exportDataExcel(id, inputPath, outputPath))
         {
             return ResponseEntity.status(HttpStatus.OK).body("Xuất file thành công");

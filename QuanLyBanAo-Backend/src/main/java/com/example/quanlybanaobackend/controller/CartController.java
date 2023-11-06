@@ -30,23 +30,23 @@ public class CartController {
     @Autowired
     private ProductService productService;
 
-
     @Autowired
     private AuthController authController;
 
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private EmailController emailController;
+
 
     @PostMapping("/add")
     public ResponseEntity<String> addItemToCart(
             @RequestParam("id") int productId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity) {
-        if(authController.getUserLogin() != null)
-        {
+        if (authController.getUserLogin() != null) {
             Product product = productService.findById(productId);
-            if(product == null)
-            {
+            if (product == null) {
                 return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
             }
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -61,9 +61,8 @@ public class CartController {
 
     @RequestMapping(value = "/update-cart", params = "action=update", method = RequestMethod.POST)
     public ResponseEntity<String> updateCart(@RequestParam("quantity") int quantity,
-                             @RequestParam("id") int productId) {
-        if(authController.getUserLogin() != null)
-        {
+                                             @RequestParam("id") int productId) {
+        if (authController.getUserLogin() != null) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
@@ -76,13 +75,11 @@ public class CartController {
 
     @RequestMapping(value = "/update-cart", params = "action=delete", method = RequestMethod.POST)
     public ResponseEntity<String> deleteItemFromCart(@RequestParam("id") int productId) {
-        if(authController.getUserLogin() != null)
-        {
+        if (authController.getUserLogin() != null) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
-            if(product == null)
-            {
+            if (product == null) {
                 return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
             }
             ShoppingCart cart = shoppingCartService.deleteItemFromCart(product, user);
@@ -95,8 +92,8 @@ public class CartController {
     }
 
     @GetMapping("/check-out")
-    public ResponseEntity<String> checkout(@RequestParam String paymentMethod, @RequestParam String notes){
-        if(authController.getUserLogin() != null) {
+    public ResponseEntity<String> checkout(@RequestParam String paymentMethod, @RequestParam String notes) {
+        if (authController.getUserLogin() != null) {
 
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
@@ -116,10 +113,9 @@ public class CartController {
                 order.setPaymentStatus(Constant.PaymentStatus.UNPAID);
                 order.setNotes(notes);
                 order.setUser(user);
-                if(paymentMethod.equals("Cash")){
+                if (paymentMethod.equals("Cash")) {
                     order.setPaymentMethod(Constant.PaymentMethod.CASH);
-                }
-                else if(paymentMethod.equals("Banking")){
+                } else if (paymentMethod.equals("Banking")) {
                     order.setPaymentMethod(Constant.PaymentMethod.BANKING);
                 }
                 for (CartItem item :
@@ -135,11 +131,16 @@ public class CartController {
 
                 orderService.save(order);
                 shoppingCartService.delete(cart);
+                EmailDetails emailDetails = new EmailDetails();
+                emailDetails.setRecipient(user.getEmail());
+                emailDetails.setSubject("Thông báo đơn hàng");
+                emailDetails.setMsgBody("Cảm ơn bạn đã đặt hàng ở công ty chúng tôi. " +
+                        "Chúng tôi xin thông báo với bạn về đơn hàng của bạn đã đặt thành công");
+                emailController.sendMail(emailDetails);
             }
             return new ResponseEntity<>("Đặt đơn hàng thành công!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
     }
-
 
 }

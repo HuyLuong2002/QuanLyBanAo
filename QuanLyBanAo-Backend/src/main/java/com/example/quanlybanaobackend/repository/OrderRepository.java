@@ -42,6 +42,8 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
             "group by o.employee.id order by o.totalQuantity desc limit 5")
     List<StatisticalBestSellEmployeeDTO> getTop10EmployeeBestSell();
 
+    @Query("select o from Order o where o.orderStatus != 'UNACTIVE' and o.shipStatus = 'APPROVAL'")
+    List<Order> getApprovedOrder();
     @Query("select o from Order o where o.orderDate >= :firstDate and o.orderDate <= :secondDate and o.orderStatus != 'UNACTIVE'")
     List<Order> getOrderByDay(Date firstDate, Date secondDate);
 }

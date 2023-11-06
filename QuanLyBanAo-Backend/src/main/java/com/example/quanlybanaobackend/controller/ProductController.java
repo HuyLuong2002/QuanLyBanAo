@@ -82,9 +82,8 @@ public class ProductController {
         {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
-            if(!Objects.equals(user.getRoles().stream().findFirst().get().getName(), "EMPLOYEE"))
+            if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
-            product.setSeller(user);
             Product savedProduct = productService.save(product);
             if (savedProduct != null) {
                 // Trả về HTTP status code 201 (Created) và thông báo thành công
@@ -99,25 +98,44 @@ public class ProductController {
     }
     @PutMapping(path = {"/{id}"})
     public ResponseEntity<String> updateProducts(@RequestBody Product product, @PathVariable int id){
-        Product getProduct = productService.findById(id);
-        if (getProduct == null || getProduct.isDeleted())
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
-        Product updateProduct = productService.updateProduct(id, product);
-        if(updateProduct != null)
+        if(authController.getUserLogin() != null)
         {
-            // Trả về HTTP status code 200 (OK) và thông báo thành công
-            return ResponseEntity.status(HttpStatus.OK).body("Sửa sản phẩm thành công");
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findByUsername(username);
+            if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
+            Product getProduct = productService.findById(id);
+            if (getProduct == null || getProduct.isDeleted())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
+            Product updateProduct = productService.updateProduct(id, product);
+            if(updateProduct != null)
+            {
+                // Trả về HTTP status code 200 (OK) và thông báo thành công
+                return ResponseEntity.status(HttpStatus.OK).body("Sửa sản phẩm thành công");
+            }
+            // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sửa sản phẩm thất bại");
         }
-        // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-        else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sửa sản phẩm thất bại");
+        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+
     }
 
     @PutMapping(path = {"/delete/{id}"})
     public ResponseEntity<String> deleteProducts(@PathVariable int id){
-        Product deleteProduct = productService.findById(id);
-        if (deleteProduct == null || deleteProduct.isDeleted())
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
-        productService.deleteProduct(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Xóa sản phẩm thành công");
+        if(authController.getUserLogin() != null)
+        {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findByUsername(username);
+            if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
+            Product deleteProduct = productService.findById(id);
+            if (deleteProduct == null || deleteProduct.isDeleted())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
+            productService.deleteProduct(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Xóa sản phẩm thành công");
+        }
+        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+
+
     }
 }

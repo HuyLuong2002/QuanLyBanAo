@@ -37,5 +37,8 @@ public interface OrderService {
 
     List<Order> getOrderByDay(String firstDate, String secondDate) throws ParseException;
 
+    List<Order> getApprovalOrder();
+
+    Order approveOrder(int id);
     boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException;
 }

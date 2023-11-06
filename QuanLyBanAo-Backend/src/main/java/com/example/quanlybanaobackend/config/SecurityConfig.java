@@ -41,9 +41,10 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .exceptionHandling(h -> h.authenticationEntryPoint(authEntryPoint))
                 .securityMatcher("/api/v1/**")
+                .userDetailsService(new CustomUserDetailsService())
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/cart/add").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
                         .anyRequest().authenticated()
                 );
         return http.build();
