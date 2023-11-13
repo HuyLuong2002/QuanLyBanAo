@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -27,115 +29,180 @@ public class ProductController {
     @Autowired
     private AuthController authController;
     @GetMapping()
-    public List<Product> getProducts(){
-        return productService.getProducts();
+    public ResponseEntity<Map<String, Object>> getProducts(){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.getProducts());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/{id}"})
-    public Product getProductById(@PathVariable int id){
-        return productService.findById(id);
+    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable int id){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findById(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/color/{color}"})
-    public List<Product> getProductByColor(@PathVariable Constant.Color color){
-        return productService.findByColor(color);
+    public ResponseEntity<Map<String, Object>> getProductByColor(@PathVariable Constant.Color color){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findByColor(color));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/name/{name}"})
-    public List<Product> getProductByName(@PathVariable String name){
-        return productService.findByName(name);
+    public ResponseEntity<Map<String, Object>> getProductByName(@PathVariable String name){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findByName(name));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(path = {"/category/{category_id}"})
-    public List<Product> getProductByCategory(@PathVariable int category_id){
-        return productService.getProductsByCategory(category_id);
+    @GetMapping(path = {"/category/{categoryId}"})
+    public ResponseEntity<Map<String, Object>> getProductByCategory(@PathVariable int categoryId){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.getProductsByCategory(categoryId));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/max-price"})
-    public List<Product> getProductByMaxPrice(){
-        return productService.findByMaxPrice();
+    public ResponseEntity<Map<String, Object>> getProductByMaxPrice(){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findByMaxPrice());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/min-price"})
-    public List<Product> getProductByMinPrice(){
-        return productService.findByMinPrice();
+    public ResponseEntity<Map<String, Object>> getProductByMinPrice(){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findByMinPrice());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/under-price"})
-    public List<Product> getProductUnderCertainPrice(@RequestParam(name="price") String price){
-        return productService.findUnderCertainPrice(price);
+    public ResponseEntity<Map<String, Object>> getProductUnderCertainPrice(@RequestParam(name="price") String price){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findUnderCertainPrice(price));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/over-price"})
-    public List<Product> getProductOverCertainPrice(@RequestParam(name="price") String price){
-        return productService.findOverCertainPrice(price);
+    public ResponseEntity<Map<String, Object>> getProductOverCertainPrice(@RequestParam(name="price") String price){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findOverCertainPrice(price));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/between-price"})
-    public List<Product> getProductBetweenCertainPrice(@RequestParam(name="priceA") String priceA,@RequestParam(name="priceB") String priceB){
-        return productService.findBetweenCertainPrice(priceA,priceB);
+    public ResponseEntity<Map<String, Object>> getProductBetweenCertainPrice(@RequestParam(name="priceA") String priceA,@RequestParam(name="priceB") String priceB){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.findBetweenCertainPrice(priceA,priceB));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(path = {"/create"})
-    public ResponseEntity<String> createProducts(@RequestBody Product product){
+    public ResponseEntity<Map<String, Object>> createProducts(@RequestBody Product product){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
+            {
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
             Product savedProduct = productService.save(product);
             if (savedProduct != null) {
+                response.put("success", true);
+                response.put("product", savedProduct);
                 // Trả về HTTP status code 201 (Created) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.CREATED).body("Thêm sản phẩm thành công.");
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             } else {
+                response.put("message", "Thêm sản phẩm thất bại");
                 // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thêm sản phẩm thất bại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
     @PutMapping(path = {"/{id}"})
-    public ResponseEntity<String> updateProducts(@RequestBody Product product, @PathVariable int id){
+    public ResponseEntity<Map<String, Object>> updateProducts(@RequestBody Product product, @PathVariable int id){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
+            {
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             Product getProduct = productService.findById(id);
             if (getProduct == null || getProduct.isDeleted())
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
+            {
+                response.put("message", "Không tìm thấy sản phẩm");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             Product updateProduct = productService.updateProduct(id, product);
             if(updateProduct != null)
             {
-                // Trả về HTTP status code 200 (OK) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.OK).body("Sửa sản phẩm thành công");
+                response.put("success", true);
+                response.put("product", updateProduct);
+                // Trả về HTTP status code 201 (Created) và thông báo thành công
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
             // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sửa sản phẩm thất bại");
+            else {
+                response.put("message", "Sửa sản phẩm thất bại");
+                // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @PutMapping(path = {"/delete/{id}"})
-    public ResponseEntity<String> deleteProducts(@PathVariable int id){
+    public ResponseEntity<Map<String, Object>> deleteProducts(@PathVariable int id){
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             if(Objects.equals(user.getRoles().stream().findFirst().get().getName(), "CUSTOMER"))
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thêm sản phẩm");
+            {
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             Product deleteProduct = productService.findById(id);
             if (deleteProduct == null || deleteProduct.isDeleted())
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy sản phẩm!");
+            {
+                response.put("message", "Không tìm thấy sản phẩm");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             productService.deleteProduct(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Xóa sản phẩm thành công");
+            response.put("success", true);
+            response.put("message", "Xóa sản phẩm thành công");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 }

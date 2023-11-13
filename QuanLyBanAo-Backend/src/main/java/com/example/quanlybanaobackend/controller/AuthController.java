@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,18 +59,22 @@ public class AuthController {
             SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
             String token = jwtGenerator.generateToken(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthResponseDTO(token, true), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Tài khoản hoặc mật khẩu không đúng", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", true), HttpStatus.BAD_REQUEST);
         }
 
 
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
+    public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterDTO registerDto) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+
         if (userService.findByUsername(registerDto.getEmail()) != null) {
-            return new ResponseEntity<>("Tên tài khoản đã được đăng ký!", HttpStatus.BAD_REQUEST);
+            response.put("message", "Tài khoản đã được đăng ký");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();
@@ -90,7 +96,10 @@ public class AuthController {
         user.setRoles(Collections.singletonList(roles));
         userService.createUser(user);
 
-        return new ResponseEntity<>("Đăng ký thành công", HttpStatus.OK);
+        response.put("success", true);
+        response.put("user", user);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public boolean checkUserLogin() {

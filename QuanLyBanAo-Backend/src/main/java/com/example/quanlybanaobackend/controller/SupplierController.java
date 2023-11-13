@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/suppliers")
@@ -25,76 +27,101 @@ public class SupplierController {
     private UserService userService;
 
     @GetMapping()
-    public List<Supplier> getSuppliers(){
-        return supplierService.getSuppliers();
+    public ResponseEntity<Map<String, Object>> getSuppliers() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("suppliers", supplierService.getSuppliers());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(path="/{id}")
-    public Supplier getSupplierById(@PathVariable int id){
-        return supplierService.getSupplierById(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Map<String, Object>> getSupplierById(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("suppliers", supplierService.getSupplierById(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<String> createSupplier(@RequestBody Supplier supplier){
+    public ResponseEntity<Map<String, Object>> createSupplier(@RequestBody Supplier supplier) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Supplier createsupplier = supplierService.createSupplier(supplier);
-            if(createsupplier != null){
+            if (createsupplier != null) {
+                response.put("success", true);
+                response.put("supplier", createsupplier);
                 // Trả về HTTP status code 201 (Created) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.CREATED).body("Thêm nhà cung cấp thành công!");
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             } else {
+                response.put("message", "Thêm nhà cung cấp thất bại");
                 // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thêm nhà cung cấp thất bại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping(path="/{id}")
-    public ResponseEntity<String> updateSupplier(@PathVariable int id, @RequestBody Supplier supplier){
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Map<String, Object>> updateSupplier(@PathVariable int id, @RequestBody Supplier supplier) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Supplier getSupplier = supplierService.getSupplierById(id);
-            if(getSupplier == null || getSupplier.isDeleted()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy nhà cung cấp!");
+            if (getSupplier == null || getSupplier.isDeleted()) {
+                response.put("message", "Không tìm thấy nhà cung cấp");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Supplier updateSupplier = supplierService.updateSupplier(id, supplier);
-            if(updateSupplier != null){
+            if (updateSupplier != null) {
+                response.put("success", true);
+                response.put("supplier", updateSupplier);
                 // Trả về HTTP status code 201 (Created) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.OK).body("Sửa nhà cung cấp thành công!");
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
+                response.put("message", "Sửa nhà cung cấp thất bại");
                 // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sửa nhà cung cấp thất bại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping(path="/delete/{id}")
-    public ResponseEntity<String> deleteSupplier(@PathVariable int id){
+    @PutMapping(path = "/delete/{id}")
+    public ResponseEntity<Map<String, Object>> deleteSupplier(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Supplier getSupplier = supplierService.getSupplierById(id);
-            if(getSupplier == null || getSupplier.isDeleted()){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy nhà cung cấp!");
+            if (getSupplier == null || getSupplier.isDeleted()) {
+                response.put("message", "Không tìm thấy nhà cung cấp");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             } else {
                 supplierService.deleteSupplier(id);
-                return ResponseEntity.status(HttpStatus.OK).body("Xóa nhà cung cấp thành công");
+                response.put("success", true);
+                response.put("message", "Xóa nhà cung cấp thành công");
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

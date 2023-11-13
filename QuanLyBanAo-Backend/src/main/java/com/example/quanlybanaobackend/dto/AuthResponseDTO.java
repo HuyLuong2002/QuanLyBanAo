@@ -5,9 +5,10 @@ import lombok.Data;
 @Data
 public class AuthResponseDTO {
     private String accessToken;
-    private String message = "Đăng nhập thành công";
+    private boolean success;
 
-    public AuthResponseDTO(String accessToken) {
+    public AuthResponseDTO(String accessToken, boolean success) {
         this.accessToken = accessToken;
+        this.success = success;
     }
 }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -28,115 +30,163 @@ public class OrderController {
     private AuthController authController;
 
     @GetMapping()
-    public List<Order> getOrders() {
+    public ResponseEntity<Map<String, Object>> getOrders() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return orderService.getOrders();
+            response.put("success", true);
+            response.put("orders", orderService.getOrders());
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 
     @GetMapping(path = {"/my-orders"})
-    public List<Order> getUserOrders() {
+    public ResponseEntity<Map<String, Object>> getUserOrders() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         User user = null;
         if (authController.getUserLogin() != null) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             user = userService.findByUsername(username);
         }
-        return orderService.findAllUserOrder(user);
+        response.put("success", true);
+        response.put("order", orderService.findAllUserOrder(user));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/{id}"})
-    public Order getOrderById(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> getOrderById(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return orderService.findById(id);
+            response.put("success", true);
+            response.put("order", orderService.findById(id));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @PutMapping(path = {"/{id}"})
-    public Order updateOrders(@PathVariable int id, @RequestBody Order order) {
+    public ResponseEntity<Map<String, Object>> updateOrders(@PathVariable int id, @RequestBody Order order) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return orderService.updateOrders(id, order);
+            response.put("success", true);
+            response.put("order", orderService.updateOrders(id, order));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @PutMapping(path = {"/delete/{id}"})
-    public ResponseEntity<String> deleteOrders(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteOrders(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+
             orderService.deleteOrder(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Xóa hóa đơn thành công.");
+            response.put("success", true);
+            response.put("message", "Xóa hóa đơn thành công");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = {"/getOrderByDay"})
-    public List<Order> getOrderByDay(@RequestParam String firstDate, @RequestParam String secondDate) throws ParseException {
-        return orderService.getOrderByDay(firstDate, secondDate);
+    public ResponseEntity<Map<String, Object>> getOrderByDay(@RequestParam String firstDate, @RequestParam String secondDate) throws ParseException {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("order", orderService.getOrderByDay(firstDate, secondDate));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/getApprovalOrder"})
-    public List<Order> getApprovalOrder()
+    public ResponseEntity<Map<String, Object>> getApprovalOrder()
     {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return orderService.getApprovalOrder();
+            response.put("success", true);
+            response.put("order", orderService.getApprovalOrder());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @PutMapping(path = {"/approve/{id}"})
-    public Order approveOrder(@PathVariable int id)
+    public ResponseEntity<Map<String, Object>> approveOrder(@PathVariable int id)
     {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(authController.getUserLogin() != null)
         {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return orderService.approveOrder(id);
+            response.put("success", true);
+            response.put("order", orderService.approveOrder(id));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = {"/exportExcel/{id}"})
-    public ResponseEntity<String> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException {
+    public ResponseEntity<Map<String, Object>> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException {
         String inputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
         String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData\\";
-        
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if(orderService.exportDataExcel(id, inputPath, outputPath))
         {
-            return ResponseEntity.status(HttpStatus.OK).body("Xuất file thành công");
+            response.put("success", true);
+            response.put("message", "Xuất file thành công");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Xuất file thất bại");
+        response.put("message", "Xuất file thất bại");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

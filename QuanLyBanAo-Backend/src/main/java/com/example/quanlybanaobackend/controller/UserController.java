@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -29,67 +31,99 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public ResponseEntity<Map<String, Object>> getAllUsers() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("CUSTOMER") || userAdmin.getRoles().stream().findFirst().get().getName().equals("EMPLOYEE")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return userService.getAllUsers();
+            response.put("success", true);
+            response.put("users", userService.getAllUsers());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("CUSTOMER") || userAdmin.getRoles().stream().findFirst().get().getName().equals("EMPLOYEE")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return userService.getUserById(id);
+            response.put("success", true);
+            response.put("user", userService.getUserById(id));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("CUSTOMER") || userAdmin.getRoles().stream().findFirst().get().getName().equals("EMPLOYEE")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             if (userService.findByUsername(user.getEmail()) != null) {
-                return new ResponseEntity<>("Tên tài khoản đã được đăng ký!", HttpStatus.BAD_REQUEST);
+                response.put("message", "Tên tài khoản đã được đăng ký");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             userService.createUser(user);
-            return new ResponseEntity<>("Đăng ký thành công!", HttpStatus.OK);
+
+            response.put("success", true);
+            response.put("message", "Đăng ký thành công");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable int id, @RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("CUSTOMER") || userAdmin.getRoles().stream().findFirst().get().getName().equals("EMPLOYEE")) {
-                return null;
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            return userService.updateUser(id, user);
+            response.put("success", true);
+            response.put("user", userService.updateUser(id, user));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return null;
-
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/delete/{id}")
-    public void deleteUser(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("ADMIN")) {
                 userService.deleteUser(id);
+                response.put("success", true);
+                response.put("message", "Xóa người dùng thành công");
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

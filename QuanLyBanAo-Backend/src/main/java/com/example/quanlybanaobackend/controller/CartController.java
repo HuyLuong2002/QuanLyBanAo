@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -41,67 +39,82 @@ public class CartController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<String> addItemToCart(
+    public ResponseEntity<Map<String, Object>> addItemToCart(
             @RequestParam("id") int productId,
             @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             Product product = productService.findById(productId);
             if (product == null) {
-                return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
+                response.put("message", "Không tìm thấy sản phẩm");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             ShoppingCart cart = shoppingCartService.addItemToCart(product, quantity, user);
-
-            return new ResponseEntity<>("Thêm sản phẩm vào giỏ hàng thành công!", HttpStatus.OK);
+            response.put("success", true);
+            response.put("cart", cart);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 
     @RequestMapping(value = "/update-cart", params = "action=update", method = RequestMethod.POST)
-    public ResponseEntity<String> updateCart(@RequestParam("quantity") int quantity,
+    public ResponseEntity<Map<String, Object>> updateCart(@RequestParam("quantity") int quantity,
                                              @RequestParam("id") int productId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
             ShoppingCart cart = shoppingCartService.updateItemInCart(product, quantity, user);
-
-            return new ResponseEntity<>("Thêm sản phẩm vào giỏ hàng thành công!", HttpStatus.OK);
+            response.put("success", true);
+            response.put("cart", cart);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/update-cart", params = "action=delete", method = RequestMethod.POST)
-    public ResponseEntity<String> deleteItemFromCart(@RequestParam("id") int productId) {
+    public ResponseEntity<Map<String, Object>> deleteItemFromCart(@RequestParam("id") int productId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
             if (product == null) {
-                return new ResponseEntity<>("Sản phẩm không tồn tại", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             ShoppingCart cart = shoppingCartService.deleteItemFromCart(product, user);
+            response.put("success", true);
+            response.put("cart", cart);
 
-
-            return new ResponseEntity<>("Xóa sản phẩm vào giỏ hàng thành công!", HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 
     @GetMapping("/check-out")
-    public ResponseEntity<String> checkout(@RequestParam String paymentMethod, @RequestParam String notes) {
+    public ResponseEntity<Map<String, Object>> checkout(@RequestParam String paymentMethod, @RequestParam String notes) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
-
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.findByUsername(username);
             if (user.getTel().trim().isEmpty() || user.getAddress().trim().isEmpty()) {
-
-                return new ResponseEntity<>("Yêu cầu điên đầy đủ thông tin cho đơn hàng!", HttpStatus.BAD_REQUEST);
+                response.put("message", "Bạn chưa nhập số điện thoại và địa chỉ");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             } else {
-
                 ShoppingCart cart = user.getShoppingCart();
                 Order order = new Order();
                 List<OrderDetail> orderDetailList = new ArrayList<>();
@@ -131,16 +144,21 @@ public class CartController {
 
                 orderService.save(order);
                 shoppingCartService.delete(cart);
+                response.put("success", true);
+                response.put("message", "Đặt đơn hàng thành công");
+                //Send mail to customer
                 EmailDetails emailDetails = new EmailDetails();
                 emailDetails.setRecipient(user.getEmail());
                 emailDetails.setSubject("Thông báo đơn hàng");
                 emailDetails.setMsgBody("Cảm ơn bạn đã đặt hàng ở công ty chúng tôi. " +
                         "Chúng tôi xin thông báo với bạn về đơn hàng của bạn đã đặt thành công");
-                emailController.sendMail(emailDetails);
+                String result = emailController.sendMail(emailDetails);
+                System.out.println(result);
             }
-            return new ResponseEntity<>("Đặt đơn hàng thành công!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Bạn chưa đăng nhập!", HttpStatus.BAD_REQUEST);
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

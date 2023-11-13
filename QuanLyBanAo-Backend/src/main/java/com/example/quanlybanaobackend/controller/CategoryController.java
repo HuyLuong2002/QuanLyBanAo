@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
@@ -25,73 +27,101 @@ public class CategoryController {
     private AuthController authController;
 
     @GetMapping()
-    public List<Category> getCategories() {
-        return categoryService.getCategories();
+    public ResponseEntity<Map<String, Object>> getCategories() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("categories", categoryService.getCategories());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/{id}"})
-    public Category getCategoryById(@PathVariable int id) {
-        return categoryService.findById(id);
+    public ResponseEntity<Map<String, Object>> getCategoryById(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("category", categoryService.findById(id));
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
-    @PostMapping(path = {""})
-    public ResponseEntity<String> createCategories(@RequestBody Category category) {
+    @PostMapping()
+    public ResponseEntity<Map<String, Object>> createCategories(@RequestBody Category category) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Category saveCategory = categoryService.save(category);
             if (saveCategory != null) {
+                response.put("success", true);
+                response.put("category", saveCategory);
                 // Trả về HTTP status code 201 (Created) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.CREATED).body("Thêm thể loại thành công.");
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             } else {
+                response.put("message", "Thêm thể loại thất bại");
                 // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Thêm thể loại thất bại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(path = {"/{id}"})
-    public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> updateCategory(@RequestBody Category category, @PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Category getCategory = categoryService.findById(id);
             if (getCategory == null || getCategory.isDeleted()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy thể loại!");
+
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Category updateCategory = categoryService.updateCategory(id, category);
             if (updateCategory != null) {
+                response.put("success", true);
+                response.put("category", updateCategory);
                 // Trả về HTTP status code 200 (OK) và thông báo thành công
-                return ResponseEntity.status(HttpStatus.OK).body("Sửa thể loại thành công");
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
             }
+            response.put("message", "Sửa thể loại thất bại");
             // Trả về HTTP status code 500 (Internal Server Error) và thông báo lỗi
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sửa thể loại thất bại");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(path = {"/delete/{id}"})
-    public ResponseEntity<String> deleteCategory(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteCategory(@PathVariable int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
         if (authController.getUserLogin() != null) {
             User user = userService.findByUsername(authController.getUserLogin());
             if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn không có quyền thực hiện chức năng này");
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Category deleteCategory = categoryService.findById(id);
             if (deleteCategory == null || deleteCategory.isDeleted()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Không tìm thấy thể loại!");
+                response.put("message", "Không tìm thấy thể loại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             deleteCategory.setDeleted(true);
             categoryService.save(deleteCategory);
-            return ResponseEntity.status(HttpStatus.OK).body("Xóa thể loại thành công");
+            response.put("success", true);
+            response.put("message", "Xóa thể loại thành công");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bạn chưa đăng nhập!");
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 
     }
 }
