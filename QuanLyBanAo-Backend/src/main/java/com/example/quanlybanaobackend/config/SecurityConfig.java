@@ -37,8 +37,9 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable)
+                .formLogin(Customizer.withDefaults())
                 .exceptionHandling(h -> h.authenticationEntryPoint(authEntryPoint))
                 .securityMatcher("/api/v1/**")
                 .userDetailsService(new CustomUserDetailsService())
