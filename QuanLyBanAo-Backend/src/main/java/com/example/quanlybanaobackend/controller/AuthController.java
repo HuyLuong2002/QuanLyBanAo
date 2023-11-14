@@ -5,6 +5,7 @@ import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.dto.AuthResponseDTO;
 import com.example.quanlybanaobackend.dto.LoginDTO;
 import com.example.quanlybanaobackend.dto.RegisterDTO;
+import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
@@ -59,9 +60,11 @@ public class AuthController {
             SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
             String token = jwtGenerator.generateToken(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new ResponseEntity<>(new AuthResponseDTO(token, true), HttpStatus.OK);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            UserDTO userDTO = mapToDTO(userService.findByUsername(username));
+            return new ResponseEntity<>(new AuthResponseDTO(token, true, userDTO), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", true), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", false, null), HttpStatus.BAD_REQUEST);
         }
 
 
@@ -114,6 +117,25 @@ public class AuthController {
             return SecurityContextHolder.getContext().getAuthentication().getName();
         }
         return null;
+    }
+
+    public UserDTO mapToDTO(User user)
+    {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setSex(user.getSex());
+        userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setTel(user.getTel());
+        userDTO.setStatus(user.getStatus());
+        userDTO.setUpdatedAt(new Date());
+        userDTO.setRoles(user.getRoles());
+        userDTO.setDeleted(user.isDeleted());
+        return userDTO;
     }
 
 }
