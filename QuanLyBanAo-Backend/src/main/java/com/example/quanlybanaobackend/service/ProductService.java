@@ -1,13 +1,17 @@
 package com.example.quanlybanaobackend.service;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProducts();
+    Page<Product> getProducts(Pageable pageable);
+
     Product save(Product product);
 
     Product updateProduct(int id, Product product);
@@ -29,6 +33,6 @@ public interface ProductService {
     List<Product> findOverCertainPrice(String price);
 
     List<Product> findBetweenCertainPrice(String priceA, String priceB);
-
-    List<Product> getProductsByCategory(int category_id);
+    Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable);
+    Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable);
 }
