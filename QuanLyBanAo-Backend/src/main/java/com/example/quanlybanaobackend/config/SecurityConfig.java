@@ -19,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -40,10 +43,11 @@ public class SecurityConfig implements WebMvcConfigurer {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        http
+        return http
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(Customizer.withDefaults())
+
                 .exceptionHandling(h -> h.authenticationEntryPoint(authEntryPoint))
                 .securityMatcher("/api/v1/**")
                 .userDetailsService(new CustomUserDetailsService())
@@ -51,8 +55,9 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/cart/**").hasAuthority("CUSTOMER")
                         .anyRequest().authenticated()
-                );
-        return http.build();
+                )
+                .logout((logout) -> logout.logoutUrl("/auth/logout").permitAll())
+                .build();
 
     }
     @Override

@@ -74,7 +74,6 @@ public class ProductController {
                                                                     @RequestParam(required = false) Constant.Color color,
                                                                     @RequestParam(required = false) String price,
                                                                     @RequestParam(required = false) String keyword,
-                                                                    @RequestParam(required = false) String orderBy,
                                                                     @RequestParam(required = false, defaultValue = "1") int orderById,
                                                                     @RequestParam(defaultValue = "0") int page) {
         Map<String, Object> response = new HashMap<>();
@@ -82,17 +81,14 @@ public class ProductController {
         Category category = categoryService.findById(categoryId);
         if (category != null) {
             Pageable pageable = PageRequest.of(page, 10);
-            String orderByName;
             if (orderById == 1)
             {
-                orderByName = "ASC";
                 response.put("success", true);
-                response.put("products", productService.findByCategoryASC(category, color, price, keyword, orderBy, orderByName, pageable));
+                response.put("products", productService.findByCategoryASC(category, color, price, keyword, pageable));
             }
-            else {
-                orderByName = "DESC";
+            else if(orderById == 2) {
                 response.put("success", true);
-                response.put("products", productService.findByCategoryDESC(category, color, price, keyword, orderBy, orderByName, pageable));
+                response.put("products", productService.findByCategoryDESC(category, color, price, keyword, pageable));
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);

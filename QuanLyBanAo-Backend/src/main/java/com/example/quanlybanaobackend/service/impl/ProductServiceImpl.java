@@ -112,12 +112,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable) {
-        return productRepository.findByCategoryASC(category, color, price, keyword, orderBy, pageable);
+    public Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASC(category, color, price, keyword, pageable);
     }
 
     @Override
-    public Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable) {
-        return productRepository.findByCategoryDESC(category, color, price, keyword, orderBy, pageable);
+    public Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESC(category, color, price, keyword, pageable);
     }
 }

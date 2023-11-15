@@ -1,4 +1,5 @@
 package com.example.quanlybanaobackend.repository;
+
 import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
@@ -21,15 +22,14 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findProductByName(@Param("name") String name);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category or p.color = :color or p.price = :price " +
-            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by :orderBy ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASC(@Param("category") Category category, @Param("color") Constant.Color color,
-                                 @Param("price") String price, @Param("keyword") String keyword,
-                                 @Param("orderBy") String orderBy, Pageable pageable);
+                                    @Param("price") String price, @Param("keyword") String keyword, Pageable pageable);
+
     @Query("SELECT p FROM Product p WHERE p.category = :category or p.color = :color or p.price = :price " +
-            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by :orderBy DESC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name DESC ")
     Page<Product> findByCategoryDESC(@Param("category") Category category, @Param("color") Constant.Color color,
-                                 @Param("price") String price, @Param("keyword") String keyword,
-                                 @Param("orderBy") String orderBy, Pageable pageable);
+                                     @Param("price") String price, @Param("keyword") String keyword, Pageable pageable);
 
     //SELECT p FROM Product p WHERE p.price = (SELECT MAX(p2.price) FROM Product p2)
     //ORDER BY p.id ASC

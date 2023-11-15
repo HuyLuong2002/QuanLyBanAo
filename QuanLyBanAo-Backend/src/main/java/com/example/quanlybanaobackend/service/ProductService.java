@@ -33,6 +33,6 @@ public interface ProductService {
     List<Product> findOverCertainPrice(String price);
 
     List<Product> findBetweenCertainPrice(String priceA, String priceB);
-    Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable);
-    Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, String orderBy, String orderById, Pageable pageable);
+    Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
+    Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
 }

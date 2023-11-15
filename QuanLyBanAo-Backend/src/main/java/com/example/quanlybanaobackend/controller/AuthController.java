@@ -18,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Date;
@@ -105,6 +102,32 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser() {
+        String username = getUserLogin();
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if(username == null)
+        {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        User user = userService.findByUsername(username);
+        response.put("success", true);
+        response.put("user", user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout() {
+        Map<String, Object> response = new HashMap<>();
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        response.put("success", true);
+        response.put("user", null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     public boolean checkUserLogin() {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return false;
@@ -119,8 +142,7 @@ public class AuthController {
         return null;
     }
 
-    public UserDTO mapToDTO(User user)
-    {
+    public UserDTO mapToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
