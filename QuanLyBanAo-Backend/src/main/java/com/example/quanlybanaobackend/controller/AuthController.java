@@ -5,6 +5,7 @@ import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.dto.AuthResponseDTO;
 import com.example.quanlybanaobackend.dto.LoginDTO;
 import com.example.quanlybanaobackend.dto.RegisterDTO;
+import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
@@ -17,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.Date;
@@ -59,9 +57,11 @@ public class AuthController {
             SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
             String token = jwtGenerator.generateToken(authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new ResponseEntity<>(new AuthResponseDTO(token, true), HttpStatus.OK);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            UserDTO userDTO = mapToDTO(userService.findByUsername(username));
+            return new ResponseEntity<>(new AuthResponseDTO(token, true, userDTO), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", true), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", false, null), HttpStatus.BAD_REQUEST);
         }
 
 
@@ -102,6 +102,32 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser() {
+        String username = getUserLogin();
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if(username == null)
+        {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        User user = userService.findByUsername(username);
+        response.put("success", true);
+        response.put("user", user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout() {
+        Map<String, Object> response = new HashMap<>();
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        response.put("success", true);
+        response.put("user", null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     public boolean checkUserLogin() {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return false;
@@ -114,6 +140,24 @@ public class AuthController {
             return SecurityContextHolder.getContext().getAuthentication().getName();
         }
         return null;
+    }
+
+    public UserDTO mapToDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setSex(user.getSex());
+        userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setAddress(user.getAddress());
+        userDTO.setTel(user.getTel());
+        userDTO.setStatus(user.getStatus());
+        userDTO.setUpdatedAt(new Date());
+        userDTO.setRoles(user.getRoles());
+        userDTO.setDeleted(user.isDeleted());
+        return userDTO;
     }
 
 }

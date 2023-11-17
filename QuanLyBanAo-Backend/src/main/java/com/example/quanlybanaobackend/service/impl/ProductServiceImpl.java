@@ -2,10 +2,13 @@ package com.example.quanlybanaobackend.service.impl;
 
 import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.controller.AuthController;
+import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.repository.ProductRepository;
 import com.example.quanlybanaobackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,8 +22,8 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
@@ -109,7 +112,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategory(int category_id) {
-        return productRepository.getProductsByCategory(category_id);
+    public Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASC(category, color, price, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESC(category, color, price, keyword, pageable);
     }
 }
