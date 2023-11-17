@@ -69,29 +69,19 @@ const NewArrivals = () => {
                         return (
                             <div className="px-2" key={index}>
                                 <Product
-                                    _id={item.id}
-                                    img={item.image}
-                                    productName={item.name}
+                                    id={item.id}
+                                    image={item.image}
+                                    name={item.name}
                                     price={item.price}
                                     color={item.color}
                                     badge={true}
-                                    des={item.description}
+                                    description={item.description}
+                                    cate={item.category.name}
                                 />
                             </div>
                         )
                     })
                 }
-                {/* <div className="px-2">
-                    <Product
-                        _id="100001"
-                        img={newArrOne}
-                        productName="Round Table Clock"
-                        price="44.00"
-                        color="Black"
-                        badge={true}
-                        des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-                    />
-                </div> */}
             </Slider>
         </div>
     );

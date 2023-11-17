@@ -4,18 +4,20 @@ import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { paginationItems } from "../../../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { getProduct } from "../../../actions/productAction";
+// import { paginationItems } from "../../../constants";
 
 const HeaderBottom = () => {
-  const products = useSelector((state) => state.products);
+  const { products } = useSelector((state) => state.products);
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const ref = useRef();
   useEffect(() => {
     document.body.addEventListener("click", (e) => {
-      if (ref.current.contains(e.target)) {
+      if (ref.current?.contains(e.target)) {
         setShow(true);
       } else {
         setShow(false);
@@ -31,12 +33,19 @@ const HeaderBottom = () => {
     setSearchQuery(e.target.value);
   };
 
+  console.log("filteredProducts: ", filteredProducts);
+
   useEffect(() => {
-    const filtered = paginationItems.filter((item) =>
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = products.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredProducts(filtered);
-  }, [searchQuery]);
+  }, [searchQuery, products]);
+
+  useEffect(() => {
+    dispatch(getProduct())
+
+  }, [dispatch])
 
   return (
     <div className="w-full bg-[#F5F5F3] relative">
@@ -96,10 +105,7 @@ const HeaderBottom = () => {
                     <div
                       onClick={() =>
                         navigate(
-                          `/product/${item.productName
-                            .toLowerCase()
-                            .split(" ")
-                            .join("")}`,
+                          `/product/${item.id}`,
                           {
                             state: {
                               item: item,
@@ -109,15 +115,15 @@ const HeaderBottom = () => {
                         setShowSearchBar(true) &
                         setSearchQuery("")
                       }
-                      key={item._id}
+                      key={item.id}
                       className="max-w-[600px] h-28 bg-gray-100 mb-3 flex items-center gap-3"
                     >
-                      <img className="w-24" src={item.img} alt="productImg" />
+                      <img className="w-24" src={item.image} alt="productImg" />
                       <div className="flex flex-col gap-1">
                         <p className="font-semibold text-lg">
-                          {item.productName}
+                          {item.name}
                         </p>
-                        <p className="text-xs">{item.des}</p>
+                        <p className="text-xs">{item.description}</p>
                         <p className="text-sm">
                           Price:{" "}
                           <span className="text-primeColor font-semibold">

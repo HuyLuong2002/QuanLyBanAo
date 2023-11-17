@@ -10,7 +10,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { useEffect } from 'react';
 import { getProduct } from "../../actions/productAction";
-import axios from "axios";
 
 const Home = () => {
     const alert = useAlert();
@@ -22,27 +21,13 @@ const Home = () => {
         dispatch(getProduct());
     }, [dispatch, error, alert]);
 
-
-    // useEffect(() => {
-    //     axios.get('http://localhost:8081/api/v1/products')
-    //         .then(response => {
-    //             setData(response.data.products);
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //         });
-    // }, []);
-
-
-    // console.log("product:", products);
-
     return (
         <div className="w-full mx-auto">
             <Banner />
             <BannerBottom />
             <div className="max-w-container mx-auto px-4">
                 {/* <Sale /> */}
-                {/* <NewArrivals /> */}
+                <NewArrivals />
                 <BestSellers />
                 <YearProduct />
                 <SpecialOffers />

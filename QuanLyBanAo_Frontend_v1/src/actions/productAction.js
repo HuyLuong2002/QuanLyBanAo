@@ -63,13 +63,18 @@ export const getProduct = () => async (dispatch) => {
     try {
         dispatch({ type: ALL_PRODUCT_REQUEST });
 
-        let link = `api/v1/products`;
+        let link = `http://localhost:8081/api/v1/products`;
 
         const { data } = await axios.get(link);
 
+        const newData = {}
+        newData.products = data.products.content
+        newData.productsCount = data.products.numberOfElements
+        newData.resultPerPage = data.products.resultPerPage
+
         dispatch({
             type: ALL_PRODUCT_SUCCESS,
-            payload: data,
+            payload: newData,
         });
     } catch (error) {
         dispatch({

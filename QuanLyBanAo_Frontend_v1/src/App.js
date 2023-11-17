@@ -82,6 +82,7 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  // dispatch action load user
   return (
     <div className="font-bodyFont">
       <RouterProvider router={router} />

@@ -61,7 +61,7 @@ public class AuthController {
             UserDTO userDTO = mapToDTO(userService.findByUsername(username));
             return new ResponseEntity<>(new AuthResponseDTO(token, true, userDTO), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new AuthResponseDTO("Tài khoản hoặc mật khẩu không đúng", false, null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new AuthResponseDTO(false, "Tài khoản hoặc mật khẩu không đúng"), HttpStatus.BAD_REQUEST);
         }
 
 

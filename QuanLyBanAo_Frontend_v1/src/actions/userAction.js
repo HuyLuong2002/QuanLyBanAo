@@ -62,7 +62,7 @@ export const register = (userData) => async (dispatch) => {
 
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
 
-        const { data } = await axios.post(`localhost:8081/api/v1/auth/register`, userData, config);
+        const { data } = await axios.post(`api/v1/auth/register`, userData, config);
 
         dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
     } catch (error) {
@@ -89,12 +89,13 @@ export const loadUser = () => async (dispatch) => {
 // Logout User
 export const logout = () => async (dispatch) => {
     try {
-        await axios.get(`localhost:8081/api/v1/logout`);
+        await axios.get(`api/v1/auth/logout`);
 
         dispatch({ type: LOGOUT_SUCCESS });
         localStorage.removeItem('cartItems');
+        localStorage.removeItem('user');
         localStorage.removeItem('shippingInfo');
-        window.location.reload();
+        // window.location.reload();
     } catch (error) {
         dispatch({ type: LOGOUT_FAIL, payload: error.response.data.message });
     }

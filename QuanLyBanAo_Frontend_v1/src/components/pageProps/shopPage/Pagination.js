@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
-import { paginationItems } from "../../../constants";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../../actions/productAction";
@@ -14,13 +13,14 @@ function Items({ currentItems }) {
                 currentItems.map((item) => (
                     <div key={item._id} className="w-full">
                         <Product
-                            _id={item.id}
-                            img={item.image}
-                            productName={item.name}
+                            id={item.id}
+                            image={item.image}
+                            name={item.name}
                             price={item.price}
                             color={item.color}
                             badge={true}
-                            des={item.description}
+                            description={item.description}
+                            cate={item.category.name}
                         />
                     </div>
                 ))}
