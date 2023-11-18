@@ -78,7 +78,7 @@ export const loadUser = () => async (dispatch) => {
     try {
         dispatch({ type: LOAD_USER_REQUEST });
 
-        const { data } = await axios.get(`localhost:8081/api/v1/api/v1/me`);
+        const { data } = await axios.get(`http://localhost:8081/api/v1/auth/me`);
 
         dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
     } catch (error) {
@@ -178,11 +178,10 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 export const getAllUsers = () => async (dispatch) => {
     try {
         dispatch({ type: ALL_USERS_REQUEST });
-        const { data } = await axios.get(`localhost:8081/api/v1/admin/users`);
-
+        const { data } = await axios.get(`api/v1/users`);
         dispatch({ type: ALL_USERS_SUCCESS, payload: data.users });
     } catch (error) {
-        dispatch({ type: ALL_USERS_FAIL, payload: error.response.data.message });
+        dispatch({ type: ALL_USERS_FAIL, payload: error.response?.data?.message });
     }
 };
 

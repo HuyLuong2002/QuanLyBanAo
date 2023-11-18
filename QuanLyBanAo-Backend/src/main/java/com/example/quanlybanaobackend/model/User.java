@@ -70,6 +70,7 @@ public class User {
     private Date updatedAt;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonBackReference
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
