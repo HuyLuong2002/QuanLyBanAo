@@ -37,6 +37,22 @@ public class CartController {
     @Autowired
     private EmailController emailController;
 
+    @GetMapping(path = {"/getUserCart"})
+    public ResponseEntity<Map<String, Object>> getUserCart() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if (authController.getUserLogin() == null) {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+        ShoppingCart cart = user.getShoppingCart();
+        response.put("success", true);
+        response.put("cart", cart);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addItemToCart(
@@ -64,7 +80,7 @@ public class CartController {
 
     @RequestMapping(value = "/update-cart", params = "action=update", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> updateCart(@RequestParam("quantity") int quantity,
-                                             @RequestParam("id") int productId) {
+                                                          @RequestParam("id") int productId) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {

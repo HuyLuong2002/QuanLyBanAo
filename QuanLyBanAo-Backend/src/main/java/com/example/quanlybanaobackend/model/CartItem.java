@@ -1,5 +1,6 @@
 package com.example.quanlybanaobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "shopping_cart_id")
+    @JsonIgnore
     private ShoppingCart cart;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

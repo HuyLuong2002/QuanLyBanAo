@@ -5,6 +5,7 @@ import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.service.CategoryService;
+import com.example.quanlybanaobackend.service.CloudinaryService;
 import com.example.quanlybanaobackend.service.ProductService;
 import com.example.quanlybanaobackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,9 @@ public class ProductController {
 
     @Autowired
     private AuthController authController;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getProducts(@RequestParam(defaultValue = "0") int page) {
@@ -136,6 +142,11 @@ public class ProductController {
         response.put("success", true);
         response.put("products", productService.findBetweenCertainPrice(priceA, priceB));
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/upload")
+    public String handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        return cloudinaryService.uploadImage(file);
     }
 
     @PostMapping(path = {"/create"})
