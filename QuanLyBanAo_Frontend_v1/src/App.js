@@ -25,6 +25,18 @@ import Shop from "./pages/Shop/Shop";
 import Profile from "./pages/Profile/Profile";
 import Order from "./pages/Order/Order";
 import ProtectedRoute from "./route/ProtectedRoute";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loadUser } from "./actions/userAction";
+import store from './store';
+import Dashboard from "./Admin/Dashboard";
+import ProductList from "./Admin/ProductList";
+import NewProduct from "./Admin/NewProduct";
+import UpdateProduct from "./Admin/UpdateProduct";
+import OrderList from "./Admin/OrderList";
+import UsersList from "./Admin/UsersList";
+import UpdateUser from "./Admin/UpdateUser";
+import ProcessOrder from "./Admin/ProcessOrder";
 
 const Layout = () => {
   return (
@@ -47,10 +59,10 @@ const router = createBrowserRouter(
         <Route index element={<Home />}></Route>
         <Route path="/shop" element={<Shop />}></Route>
         <Route path="/about" element={
-            <ProtectedRoute>
-              <About />
-            </ProtectedRoute>
-          }
+          <ProtectedRoute>
+            <About />
+          </ProtectedRoute>
+        }
         ></Route>
         <Route path="/contact" element={<Contact />}></Route>
         <Route path="/journal" element={<Journal />}></Route>
@@ -77,12 +89,101 @@ const router = createBrowserRouter(
             <Profile />
           </ProtectedRoute>
         }></Route>
+
+      {/* admin route */}
+      <Route
+        exact
+        path="/admin/dashboard"
+        element={
+            <Dashboard />
+        }
+      />
+      <Route
+        exact
+        path="/admin/products"
+        element={
+          <ProtectedRoute>
+            <ProductList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/product"
+        element={
+          <ProtectedRoute>
+            <NewProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/product/:id"
+        element={
+          <ProtectedRoute>
+            <UpdateProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/orders"
+        element={
+          <ProtectedRoute>
+            <OrderList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/order/:id"
+        element={
+          <ProtectedRoute>
+            <ProcessOrder />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/users"
+        element={
+          <ProtectedRoute>
+            <UsersList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/user/:id"
+        element={
+          <ProtectedRoute>
+            <UpdateUser />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        exact
+        path="/admin/suppliers"
+        element={
+          <ProtectedRoute>
+            {/* <ProductReviews /> */}
+          </ProtectedRoute>
+        }
+      />
     </Route>
   )
 );
 
 function App() {
   // dispatch action load user
+  const dispatch = useDispatch()
+
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, [])
+
   return (
     <div className="font-bodyFont">
       <RouterProvider router={router} />

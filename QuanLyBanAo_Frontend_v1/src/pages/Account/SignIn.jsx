@@ -56,9 +56,11 @@ const SignIn = () => {
         }
     };
 
-    console.log("user: ", user);
+    console.log("user1: ", user);
 
     const redirect = location.search ? location.search.split('=')[1] : '/';
+
+    const redirectAdmin = '/admin/dashboard'
 
     useEffect(() => {
         if (error) {
@@ -69,7 +71,12 @@ const SignIn = () => {
         if (isAuthenticated) {
             navigate(redirect);
         }
-    }, [dispatch, error, alert, navigate, isAuthenticated, redirect]);
+
+        console.log("first user: ", user)
+        if(user?.user && user.user.roles[0].name === 'ADMIN') {
+            navigate(redirectAdmin);
+        }
+    }, [dispatch, error, alert, navigate, isAuthenticated, redirect, user]);
     return (
         <div className="w-full h-screen flex items-center justify-center">
             <div className="w-1/2 hidden lgl:inline-flex h-full text-white">

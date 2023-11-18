@@ -10,16 +10,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { useEffect } from 'react';
 import { getProduct } from "../../actions/productAction";
+import { getAllUsers } from "../../actions/userAction";
+import axios from "axios";
 
 const Home = () => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const { loading, error, products } = useSelector((state) => state.products);
+    const { users } = useSelector((state) => state.allUsers);
 
     useEffect(() => {
         if (error) return alert.error(error);
         dispatch(getProduct());
+        dispatch(getAllUsers());
     }, [dispatch, error, alert]);
+
+
+    // console.log("product:", products);
 
     return (
         <div className="w-full mx-auto">

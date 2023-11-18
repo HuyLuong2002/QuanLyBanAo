@@ -33,7 +33,7 @@ const HeaderBottom = () => {
     setSearchQuery(e.target.value);
   };
 
-  console.log("filteredProducts: ", filteredProducts);
+  // console.log("filteredProducts: ", filteredProducts);
 
   useEffect(() => {
     const filtered = products.filter((item) =>
