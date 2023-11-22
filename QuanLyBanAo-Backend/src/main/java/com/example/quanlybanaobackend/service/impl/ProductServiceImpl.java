@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        return productRepository.getAll(pageable);
     }
 
     @Override

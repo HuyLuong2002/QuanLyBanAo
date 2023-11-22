@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getOrders() {
-        return orderRepository.findAll();
+        return orderRepository.getAll();
     }
 
     @Override
@@ -50,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateOrders(int id, Order order) {
         Order oldOrder = findById(id);
+
         oldOrder.setOrderStatus(order.getOrderStatus());
         oldOrder.setPaymentStatus(order.getPaymentStatus());
         oldOrder.setShipStatus(order.getShipStatus());
@@ -118,6 +120,8 @@ public class OrderServiceImpl implements OrderService {
         order.setShipStatus(Constant.ShipStatus.SHIPPING);
         return orderRepository.save(order);
     }
+
+
 
     @Override
     public boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException {

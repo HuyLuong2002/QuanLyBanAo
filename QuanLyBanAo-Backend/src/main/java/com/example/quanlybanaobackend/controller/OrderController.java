@@ -1,5 +1,6 @@
 package com.example.quanlybanaobackend.controller;
 
+import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.model.Order;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.service.OrderService;
@@ -94,14 +95,19 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            if((order.getShipStatus() == Constant.ShipStatus.SHIPPING || order.getShipStatus() == Constant.ShipStatus.SHIPPED) && order.getOrderStatus() == Constant.OrderStatus.UNACTIVE)
+            {
+                response.put("message", "Trạng thái hóa đơn đang là đã hủy không thể cập nhật tình trạng giao hàng là đang giao hoặc đã giao");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             response.put("success", true);
             response.put("order", orderService.updateOrders(id, order));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-
     }
+
 
     @PutMapping(path = {"/delete/{id}"})
     public ResponseEntity<Map<String, Object>> deleteOrders(@PathVariable int id) {
@@ -114,7 +120,17 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-
+            Order order = orderService.findById(id);
+            if(order == null)
+            {
+                response.put("message", "Hóa đơn không tồn tại");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            if(order.getShipStatus() == Constant.ShipStatus.SHIPPING || order.getShipStatus() == Constant.ShipStatus.SHIPPED)
+            {
+                response.put("message", "Tình trạng giao hàng đang là đang giao hoặc đã giao, không thể hủy");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
             orderService.deleteOrder(id);
             response.put("success", true);
             response.put("message", "Xóa hóa đơn thành công");

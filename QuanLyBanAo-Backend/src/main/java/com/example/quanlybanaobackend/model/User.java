@@ -71,10 +71,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonBackReference
-<<<<<<< HEAD
     @JsonIgnore
-=======
->>>>>>> 7679b7336ae0f599723e73e28da9466b9c9d4f2c
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

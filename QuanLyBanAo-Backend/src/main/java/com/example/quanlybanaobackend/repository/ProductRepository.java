@@ -15,6 +15,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+    @Query("SELECT p from Product p order by p.name desc ")
+    Page<Product> getAll(Pageable pageable);
+
     @Query("SELECT p from Product p where p.color = :color")
     List<Product> findProductByColor(@Param("color") Constant.Color color);
 
