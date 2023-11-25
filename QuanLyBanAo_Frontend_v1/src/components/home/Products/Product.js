@@ -7,10 +7,12 @@ import Image from "../../designLayouts/Image";
 import Badge from "./Badge";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../redux/orebiSlice";
+import { addItemsToCart } from "../../../actions/cartAction";
+import { useAlert } from "react-alert";
 
 const Product = (props) => {
   const dispatch = useDispatch();
+  const alert = useAlert();
   const id = props.id;
   const navigate = useNavigate();
   const productItem = props;
@@ -21,6 +23,13 @@ const Product = (props) => {
       },
     });
   };
+  const handleAddToCart = () => {
+    dispatch(
+      addItemsToCart(id,1)
+    )
+    alert.success("Item added successfully")
+  }
+
   return (
     <div className="w-full relative group">
       <div className="max-w-80 max-h-80 relative overflow-y-hidden ">
@@ -39,19 +48,7 @@ const Product = (props) => {
               </span>
             </li>
             <li
-              onClick={() =>
-                dispatch(
-                  addToCart({
-                    id: props.id,
-                    name: props.name,
-                    quantity: 1,
-                    image: props.image,
-                    badge: props.badge,
-                    price: props.price,
-                    colors: props.color,
-                  })
-                )
-              }
+              onClick={() => handleAddToCart()}
               className="text-[#767676] hover:text-primeColor text-sm font-normal border-b-[1px] border-b-gray-200 hover:border-b-primeColor flex items-center justify-end gap-2 hover:cursor-pointer pb-1 duration-300 w-full"
             >
               Add to Cart
@@ -88,7 +85,7 @@ const Product = (props) => {
           <p className="text-[#767676] text-[14px]">{props.color}</p>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

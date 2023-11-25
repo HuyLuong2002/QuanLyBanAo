@@ -10,6 +10,7 @@ import { getProduct } from "../../../actions/productAction";
 
 const HeaderBottom = () => {
   const { products } = useSelector((state) => state.products);
+  const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const navigate = useNavigate();
@@ -170,7 +171,7 @@ const HeaderBottom = () => {
               <div className="relative">
                 <FaShoppingCart />
                 <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
-                  {products.length > 0 ? products.length : 0}
+                  {cartItems.length > 0 ? cartItems.length : 0}
                 </span>
               </div>
             </Link>

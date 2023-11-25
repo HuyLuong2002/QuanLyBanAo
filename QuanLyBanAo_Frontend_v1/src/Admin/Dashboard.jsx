@@ -35,22 +35,9 @@ const Dashboard = () => {
                 outOfStock += 1;
             }
         });
-
-    const [data, setData] = useState([])
-    useEffect(() => {
-        axios.get('localhost:8081/api/v1/users')
-            .then(response => {
-                setData(response.data.users);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }, []);
-    console.log("users1: ", data);
-
     useEffect(() => {
         dispatch(getProduct());
-        // dispatch(getAllUsers());
+        dispatch(getAllUsers());
         // dispatch(getAllOrders());
     }, [dispatch]);
 
