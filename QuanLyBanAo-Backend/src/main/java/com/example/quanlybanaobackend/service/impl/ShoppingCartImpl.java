@@ -117,7 +117,7 @@ public class ShoppingCartImpl implements ShoppingCartService {
     private double totalPrice(Set<CartItem> cartItems) {
         double totalPrice = 0.0;
         for (CartItem cartItem : cartItems) {
-            totalPrice += cartItem.getTotalPrice() * cartItem.getQuantity();
+            totalPrice += cartItem.getTotalPrice();
         }
         return totalPrice;
     }
