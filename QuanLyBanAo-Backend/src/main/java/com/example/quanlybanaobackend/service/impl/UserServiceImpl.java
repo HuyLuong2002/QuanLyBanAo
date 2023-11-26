@@ -76,6 +76,24 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public User updateUserProfile(int id, User user) {
+        User oldUser = getUserById(id);
+        if (oldUser != null) {
+            oldUser.setId(user.getId());
+            oldUser.setFirstName(user.getFirstName());
+            oldUser.setLastName(user.getLastName());
+            oldUser.setSex(user.getSex());
+            oldUser.setDateOfBirth(user.getDateOfBirth());
+            oldUser.setAddress(user.getAddress());
+            oldUser.setTel(user.getTel());
+            oldUser.setUpdatedAt(new Date());
+
+            return userRepository.save(oldUser);
+        }
+        return null;
+    }
+
     public void deleteUser(int id) {
         boolean isPresent = userRepository.findById(id).isPresent();
         if (isPresent) {

@@ -9,6 +9,7 @@ import com.example.quanlybanaobackend.service.CloudinaryService;
 import com.example.quanlybanaobackend.service.ProductService;
 import com.example.quanlybanaobackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -141,6 +142,52 @@ public class ProductController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("products", productService.findBetweenCertainPrice(priceA, priceB));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/filterByPrice")
+    public ResponseEntity<Map<String, Object>> getProductsByPrice(
+            @RequestParam(name = "minPrice", required = false) int minPrice,
+            @RequestParam(name = "maxPrice", required = false) int maxPrice,
+            @RequestParam(name = "priceCondition", defaultValue = "eq") String priceCondition,
+            @RequestParam(defaultValue = "0") int page) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(page, 10);
+        switch (priceCondition) {
+            case "gt":
+                products = productService.getProductsByPriceGreaterThan(minPrice, pageable);
+                response.put("success", true);
+                response.put("products", products);
+                break;
+            case "ge":
+                products = productService.getProductsByPriceGreaterThanOrEqual(minPrice, pageable);
+                response.put("success", true);
+                response.put("products", products);
+                break;
+            case "lt":
+                products = productService.getProductsByPriceLessThan(maxPrice, pageable);
+                response.put("success", true);
+                response.put("products", products);
+                break;
+            case "le":
+                products = productService.getProductsByPriceLessThanOrEqual(maxPrice, pageable);
+                response.put("success", true);
+                response.put("products", products);
+                break;
+            case "between":
+                products = productService.getProductsByPriceBetween(minPrice, maxPrice, pageable);
+                response.put("success", true);
+                response.put("products", products);
+                break;
+            default:
+                products = productService.getProducts(pageable);
+                response.put("success", true);
+                response.put("products", products);
+        }
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

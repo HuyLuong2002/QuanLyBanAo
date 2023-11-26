@@ -52,4 +52,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.price BETWEEN :priceA AND :priceB")
     List<Product> findProductBetweenCertainPrice(@Param("priceA") String priceA, @Param("priceB") String priceB);
 
+
+    Page<Product> findByPriceGreaterThan(int minPrice, Pageable pageable);
+    Page<Product> findByPriceGreaterThanEqual(int minPrice, Pageable pageable);
+    Page<Product> findByPriceLessThan(int maxPrice, Pageable pageable);
+    Page<Product> findByPriceLessThanEqual(int maxPrice, Pageable pageable);
+    Page<Product> findByPriceBetween(int minPrice, int maxPrice, Pageable pageable);
 }

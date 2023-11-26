@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -51,7 +52,22 @@ public class CartController {
         response.put("success", true);
         response.put("cart", cart);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
+    @GetMapping("/reset")
+    public ResponseEntity<Map<String, Object>> reset() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if (authController.getUserLogin() == null) {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+        shoppingCartService.deleteAllItem(user);
+        response.put("success", true);
+        response.put("message", "Xóa thành công");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -88,6 +104,9 @@ public class CartController {
             User user = userService.findByUsername(username);
             Product product = productService.findById(productId);
             ShoppingCart cart = shoppingCartService.updateItemInCart(product, quantity, user);
+            cart.setCartItem(cart.getCartItem().stream()
+                    .sorted(Comparator.comparing(CartItem::getId))
+                    .collect(Collectors.toCollection(LinkedHashSet::new)));
             response.put("success", true);
             response.put("cart", cart);
             return new ResponseEntity<>(response, HttpStatus.OK);

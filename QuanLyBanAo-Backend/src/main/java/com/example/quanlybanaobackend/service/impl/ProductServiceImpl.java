@@ -120,4 +120,29 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
         return productRepository.findByCategoryDESC(category, color, price, keyword, pageable);
     }
+
+    @Override
+    public Page<Product> getProductsByPriceGreaterThan(int minPrice, Pageable pageable) {
+        return productRepository.findByPriceGreaterThan(minPrice, pageable);
+    }
+
+    @Override
+    public Page<Product> getProductsByPriceGreaterThanOrEqual(int minPrice, Pageable pageable) {
+        return productRepository.findByPriceGreaterThanEqual(minPrice, pageable);
+    }
+
+    @Override
+    public Page<Product> getProductsByPriceLessThan(int maxPrice, Pageable pageable) {
+        return productRepository.findByPriceLessThan(maxPrice, pageable);
+    }
+
+    @Override
+    public Page<Product> getProductsByPriceLessThanOrEqual(int maxPrice, Pageable pageable) {
+        return productRepository.findByPriceLessThanEqual(maxPrice, pageable);
+    }
+
+    @Override
+    public Page<Product> getProductsByPriceBetween(int minPrice, int maxPrice, Pageable pageable) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+    }
 }

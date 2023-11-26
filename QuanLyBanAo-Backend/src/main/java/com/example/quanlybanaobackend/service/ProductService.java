@@ -35,4 +35,14 @@ public interface ProductService {
     List<Product> findBetweenCertainPrice(String priceA, String priceB);
     Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
     Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
+
+    Page<Product> getProductsByPriceGreaterThan(int minPrice, Pageable pageable);
+
+    Page<Product> getProductsByPriceGreaterThanOrEqual(int minPrice, Pageable pageable);
+
+    Page<Product> getProductsByPriceLessThan(int maxPrice, Pageable pageable);
+
+    Page<Product> getProductsByPriceLessThanOrEqual(int maxPrice, Pageable pageable);
+
+    Page<Product> getProductsByPriceBetween(int minPrice, int maxPrice, Pageable pageable);
 }

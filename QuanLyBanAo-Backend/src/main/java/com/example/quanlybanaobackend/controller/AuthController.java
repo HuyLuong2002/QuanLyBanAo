@@ -34,7 +34,6 @@ public class AuthController {
     private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private JWTGenerator jwtGenerator;
 
@@ -107,12 +106,27 @@ public class AuthController {
         String username = getUserLogin();
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
-        if(username == null)
-        {
+        if (username == null) {
             response.put("message", "Bạn chưa đăng nhập");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         User user = userService.findByUsername(username);
+        response.put("success", true);
+        response.put("user", user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<Map<String, Object>> updateProfile(@RequestBody User userUpdate) {
+        String username = getUserLogin();
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if (username == null) {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        User currentUser = userService.findByUsername(username);
+        User user = userService.updateUserProfile(currentUser.getId(), userUpdate);
         response.put("success", true);
         response.put("user", user);
         return new ResponseEntity<>(response, HttpStatus.OK);
