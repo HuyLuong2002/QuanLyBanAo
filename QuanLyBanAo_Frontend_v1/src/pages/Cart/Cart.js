@@ -6,33 +6,55 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
+import axios from "axios";
+import { getCurrentUserCart, removeItemsFromCart, updateItemCart } from "../../actions/cartAction";
+import { useAlert } from "react-alert";
 
 const Cart = () => {
     const dispatch = useDispatch();
-    const { products } = useSelector((state) => state.products);
-    const [totalAmt, setTotalAmt] = useState("");
+    // const [totalAmt, setTotalAmt] = useState("");
     const [shippingCharge, setShippingCharge] = useState("");
+    const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
+    const alert = useAlert();
+
+    const handleRemoveItem = (id) => {
+        dispatch(removeItemsFromCart(id))
+        dispatch(getCurrentUserCart());
+        alert.success("Item removed successfully")
+    }
+
+    const handleUpdateItemCart = (id, quantity) => {
+        if(quantity === 0) {
+            alert.info("Quantity not less than 1")
+            return;
+        }
+        dispatch(updateItemCart(id, quantity))
+    }
+
+    console.log("current cart: ", cartItems);
+
+    const handleCheckout = () => {
+        // dispatch(checkout)
+    }
+
     useEffect(() => {
-        let price = 0;
-        products.map((item) => {
-            price += item.price * item.quantity;
-            return price;
-        });
-        setTotalAmt(price);
-    }, [products]);
+        dispatch(getCurrentUserCart());
+    }, [dispatch]);
+
     useEffect(() => {
-        if (totalAmt <= 200) {
+        if (totalPrices <= 200) {
             setShippingCharge(30);
-        } else if (totalAmt <= 400) {
+        } else if (totalPrices <= 400) {
             setShippingCharge(25);
-        } else if (totalAmt > 401) {
+        } else if (totalPrices > 401) {
             setShippingCharge(20);
         }
-    }, [totalAmt]);
+    }, [totalPrices]);
+
     return (
         <div className="max-w-container mx-auto px-4">
             <Breadcrumbs title="Cart" />
-            {products.length > 0 ? (
+            {cartItems?.length > 0 ? (
                 <div className="pb-20">
                     <div className="w-full h-20 bg-[#F5F7F7] text-primeColor hidden lgl:grid grid-cols-5 place-content-center px-6 text-lg font-titleFont font-semibold">
                         <h2 className="col-span-2">Product</h2>
@@ -41,9 +63,9 @@ const Cart = () => {
                         <h2>Sub Total</h2>
                     </div>
                     <div className="mt-5">
-                        {products.map((item) => (
+                        {cartItems?.map((item) => (
                             <div key={item.id}>
-                                <ItemCard item={item} />
+                                <ItemCard item={item} handleRemoveItem={handleRemoveItem} handleUpdateItemCart={handleUpdateItemCart} />
                             </div>
                         ))}
                     </div>
@@ -75,7 +97,7 @@ const Cart = () => {
                                 <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
                                     Subtotal
                                     <span className="font-semibold tracking-wide font-titleFont">
-                                        ${totalAmt}
+                                        ${totalPrices}
                                     </span>
                                 </p>
                                 <p className="flex items-center justify-between border-[1px] border-gray-400 border-b-0 py-1.5 text-lg px-4 font-medium">
@@ -87,12 +109,12 @@ const Cart = () => {
                                 <p className="flex items-center justify-between border-[1px] border-gray-400 py-1.5 text-lg px-4 font-medium">
                                     Total
                                     <span className="font-bold tracking-wide text-lg font-titleFont">
-                                        ${totalAmt + shippingCharge}
+                                        ${totalPrices + shippingCharge}
                                     </span>
                                 </p>
                             </div>
                             <div className="flex justify-end">
-                                <Link to="/paymentgateway">
+                                <Link to="#" onClick={handleCheckout}>
                                     <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
                                         Proceed to Checkout
                                     </button>

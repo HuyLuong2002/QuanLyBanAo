@@ -84,6 +84,32 @@ export const getProduct = () => async (dispatch) => {
     }
 };
 
+// Filter products
+export const filterProducts = (category ) => async (dispatch) => {
+    try {
+        dispatch({ type: ALL_PRODUCT_REQUEST });
+
+        let link = `http://localhost:8081/api/v1/products/filter?categoryId=${category}`;
+
+        const { data } = await axios.get(link);
+
+        const newData = {}
+        newData.products = data.products.content
+        newData.productsCount = data.products.numberOfElements
+        newData.resultPerPage = data.products.resultPerPage
+
+        dispatch({
+            type: ALL_PRODUCT_SUCCESS,
+            payload: newData,
+        });
+    } catch (error) {
+        dispatch({
+            type: ALL_PRODUCT_FAIL,
+            payload: error.response.data.message,
+        });
+    }
+};
+
 // Get All Products For Admin
 export const getAdminProduct = () => async (dispatch) => {
     try {

@@ -102,10 +102,10 @@ const UsersList = () => {
     users &&
         users.forEach((item) => {
             rows.push({
-                id: item._id,
-                role: item.role,
+                id: item.id,
+                role: item && item.roles && item.roles[0].name,
                 email: item.email,
-                name: item.username,
+                name: item.lastName,
             });
         });
 

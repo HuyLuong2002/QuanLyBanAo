@@ -178,7 +178,7 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 export const getAllUsers = () => async (dispatch) => {
     try {
         dispatch({ type: ALL_USERS_REQUEST });
-        const { data } = await axios.get(`api/v1/users`);
+        const { data } = await axios.get(`http://localhost:8081/api/v1/users`);
         dispatch({ type: ALL_USERS_SUCCESS, payload: data.users });
     } catch (error) {
         dispatch({ type: ALL_USERS_FAIL, payload: error.response?.data?.message });
