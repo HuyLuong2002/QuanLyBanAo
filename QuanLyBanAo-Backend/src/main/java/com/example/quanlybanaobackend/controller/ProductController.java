@@ -77,13 +77,16 @@ public class ProductController {
     }
 
     @GetMapping(path = {"/filter"})
-    public ResponseEntity<Map<String, Object>> getProductByCategory(@RequestParam(defaultValue = "0") int categoryId,
-                                                                    @RequestParam(required = false) Constant.Color color,
-                                                                    @RequestParam(required = false) String price,
-                                                                    @RequestParam(required = false) String keyword,
+    public ResponseEntity<Map<String, Object>> getProductByCategory(@RequestParam(defaultValue = "1") int categoryId,
+                                                                    @RequestParam(required = false, defaultValue = "") Constant.Color color,
+                                                                    @RequestParam(name = "minPrice", required = false, defaultValue = "0") int minPrice,
+                                                                    @RequestParam(name = "maxPrice", required = false, defaultValue = "0") int maxPrice,
+                                                                    @RequestParam(name = "priceCondition", defaultValue = "eq") String priceCondition,
+                                                                    @RequestParam(required = false, defaultValue = "") String keyword,
                                                                     @RequestParam(required = false, defaultValue = "1") int orderById,
                                                                     @RequestParam(defaultValue = "0") int page) {
         Map<String, Object> response = new HashMap<>();
+        Page<Product> products;
         response.put("success", false);
         Category category = categoryService.findById(categoryId);
         if (category != null) {
@@ -91,11 +94,72 @@ public class ProductController {
             if (orderById == 1)
             {
                 response.put("success", true);
-                response.put("products", productService.findByCategoryASC(category, color, price, keyword, pageable));
+                switch (priceCondition) {
+                    case "gt":
+                        products = productService.findByCategoryASCGreaterThan(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "ge":
+                        products = productService.findByCategoryASCGreaterThanOrEqual(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "lt":
+                        products = productService.findByCategoryASCLessThan(category, color, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "le":
+                        products = productService.findByCategoryASCLessThanOrEqual(category, color, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "between":
+                        products = productService.findByCategoryASCBetween(category, color, minPrice, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    default:
+                        products = productService.findByCategoryASC(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                }
+
             }
             else if(orderById == 2) {
                 response.put("success", true);
-                response.put("products", productService.findByCategoryDESC(category, color, price, keyword, pageable));
+                switch (priceCondition) {
+                    case "gt":
+                        products = productService.findByCategoryDESCGreaterThan(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "ge":
+                        products = productService.findByCategoryDESCGreaterThanOrEqual(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "lt":
+                        products = productService.findByCategoryDESCLessThan(category, color, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "le":
+                        products = productService.findByCategoryDESCLessThanOrEqual(category, color, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    case "between":
+                        products = productService.findByCategoryDESCBetween(category, color, minPrice, maxPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                        break;
+                    default:
+                        products = productService.findByCategoryDESC(category, color, minPrice, keyword, pageable);
+                        response.put("success", true);
+                        response.put("products", products);
+                }
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);

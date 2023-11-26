@@ -112,13 +112,63 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
-        return productRepository.findByCategoryASC(category, color, price, keyword, pageable);
+    public Page<Product> findByCategoryASC(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASC(category, color, minPrice, keyword, pageable);
     }
 
     @Override
-    public Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable) {
-        return productRepository.findByCategoryDESC(category, color, price, keyword, pageable);
+    public Page<Product> findByCategoryASCGreaterThan(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASCGreaterThan(category, color, minPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryASCGreaterThanOrEqual(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASCGreaterThanOrEqual(category, color, minPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryASCLessThan(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASCLessThan(category, color, maxPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryASCLessThanOrEqual(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASCLessThanOrEqual(category, color, maxPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryASCBetween(Category category, Constant.Color color, int minPrice, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryASCBetween(category, color, minPrice, maxPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESC(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESC(category, color, minPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESCGreaterThan(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESCGreaterThan(category, color, minPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESCGreaterThanOrEqual(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESCGreaterThanOrEqual(category, color, minPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESCLessThan(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESCLessThan(category, color, maxPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESCLessThanOrEqual(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESCLessThanOrEqual(category, color, maxPrice, keyword, pageable);
+    }
+
+    @Override
+    public Page<Product> findByCategoryDESCBetween(Category category, Constant.Color color, int minPrice, int maxPrice, String keyword, Pageable pageable) {
+        return productRepository.findByCategoryDESCBetween(category, color, minPrice, maxPrice, keyword, pageable);
     }
 
     @Override

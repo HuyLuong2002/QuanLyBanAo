@@ -33,9 +33,22 @@ public interface ProductService {
     List<Product> findOverCertainPrice(String price);
 
     List<Product> findBetweenCertainPrice(String priceA, String priceB);
-    Page<Product> findByCategoryASC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
-    Page<Product> findByCategoryDESC(Category category, Constant.Color color, String price, String keyword, Pageable pageable);
 
+    Page<Product> findByCategoryASC(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable);
+
+    Page<Product> findByCategoryASCGreaterThan(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryASCGreaterThanOrEqual(Category category, Constant.Color color, int minPrice,String keyword, Pageable pageable);
+    Page<Product> findByCategoryASCLessThan(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryASCLessThanOrEqual(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryASCBetween(Category category, Constant.Color color, int minPrice, int maxPrice, String keyword, Pageable pageable);
+
+    Page<Product> findByCategoryDESC(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable);
+
+    Page<Product> findByCategoryDESCGreaterThan(Category category, Constant.Color color, int minPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryDESCGreaterThanOrEqual(Category category, Constant.Color color, int minPrice,String keyword, Pageable pageable);
+    Page<Product> findByCategoryDESCLessThan(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryDESCLessThanOrEqual(Category category, Constant.Color color, int maxPrice, String keyword, Pageable pageable);
+    Page<Product> findByCategoryDESCBetween(Category category, Constant.Color color, int minPrice, int maxPrice, String keyword, Pageable pageable);
     Page<Product> getProductsByPriceGreaterThan(int minPrice, Pageable pageable);
 
     Page<Product> getProductsByPriceGreaterThanOrEqual(int minPrice, Pageable pageable);
