@@ -1,6 +1,7 @@
 package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.dto.OrderInformation;
 import com.example.quanlybanaobackend.model.*;
 import com.example.quanlybanaobackend.service.OrderService;
 import com.example.quanlybanaobackend.service.ProductService;
@@ -140,7 +141,7 @@ public class CartController {
     }
 
     @GetMapping("/check-out")
-    public ResponseEntity<Map<String, Object>> checkout(@RequestParam String paymentMethod, @RequestParam String notes) {
+    public ResponseEntity<Map<String, Object>> checkout(@RequestBody OrderInformation orderInformation) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -159,11 +160,11 @@ public class CartController {
                 order.setOrderStatus(Constant.OrderStatus.ACTIVE);
                 order.setShipStatus(Constant.ShipStatus.APPROVAL);
                 order.setPaymentStatus(Constant.PaymentStatus.UNPAID);
-                order.setNotes(notes);
+                order.setNotes(orderInformation.getNotes());
                 order.setUser(user);
-                if (paymentMethod.equals("Cash")) {
+                if (orderInformation.getPaymentMethod().name().equals("CASH")) {
                     order.setPaymentMethod(Constant.PaymentMethod.CASH);
-                } else if (paymentMethod.equals("Banking")) {
+                } else if (orderInformation.getPaymentMethod().name().equals("BANKING")) {
                     order.setPaymentMethod(Constant.PaymentMethod.BANKING);
                 }
                 for (CartItem item :
