@@ -55,8 +55,10 @@ public class ProductController {
     @GetMapping(path = {"/{id}"})
     public ResponseEntity<Map<String, Object>> getProductById(@PathVariable int id) {
         Map<String, Object> response = new HashMap<>();
+        Product product = productService.findById(id);
         response.put("success", true);
-        response.put("products", productService.findById(id));
+        response.put("product", product);
+        response.put("related", productService.getRelatedProducts(product.getCategory().getId(), product.getId()));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

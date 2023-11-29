@@ -115,9 +115,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order approveOrder(int id) {
+    public Order approveOrder(int id, User user) {
         Order order = findById(id);
         order.setShipStatus(Constant.ShipStatus.SHIPPING);
+        order.setEmployee(user);
         return orderRepository.save(order);
     }
 

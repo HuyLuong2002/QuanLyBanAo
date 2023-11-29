@@ -2,10 +2,7 @@ package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.config.JWTGenerator;
 import com.example.quanlybanaobackend.constant.Constant;
-import com.example.quanlybanaobackend.dto.AuthResponseDTO;
-import com.example.quanlybanaobackend.dto.LoginDTO;
-import com.example.quanlybanaobackend.dto.RegisterDTO;
-import com.example.quanlybanaobackend.dto.UserDTO;
+import com.example.quanlybanaobackend.dto.*;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
@@ -20,6 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +58,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             UserDTO userDTO = mapToDTO(userService.findByUsername(username));
+
             return new ResponseEntity<>(new AuthResponseDTO(token, true, userDTO), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new AuthResponseDTO(false, "Tài khoản hoặc mật khẩu không đúng"), HttpStatus.BAD_REQUEST);
@@ -102,7 +103,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Map<String, Object>> getCurrentUser() {
+    public ResponseEntity<Map<String, Object>> getCurrentUser() throws ParseException {
         String username = getUserLogin();
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
@@ -111,8 +112,9 @@ public class AuthController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         User user = userService.findByUsername(username);
+        UserDTO userDTO = mapToDTO(user);
         response.put("success", true);
-        response.put("user", user);
+        response.put("user", userDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -127,6 +129,22 @@ public class AuthController {
         }
         User currentUser = userService.findByUsername(username);
         User user = userService.updateUserProfile(currentUser.getId(), userUpdate);
+        response.put("success", true);
+        response.put("user", user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/forgot")
+    public ResponseEntity<Map<String, Object>> forgot(@RequestBody User userUpdate) {
+        String username = getUserLogin();
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if (username == null) {
+            response.put("message", "Bạn chưa đăng nhập");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        User currentUser = userService.findByUsername(username);
+        User user = userService.updateUserPassword(currentUser, userUpdate);
         response.put("success", true);
         response.put("user", user);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -156,7 +174,7 @@ public class AuthController {
         return null;
     }
 
-    public UserDTO mapToDTO(User user) {
+    public UserDTO mapToDTO(User user) throws ParseException {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
@@ -164,11 +182,12 @@ public class AuthController {
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setSex(user.getSex());
-        userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setDateOfBirth(String.valueOf(user.getDateOfBirth()));
         userDTO.setAddress(user.getAddress());
         userDTO.setTel(user.getTel());
         userDTO.setStatus(user.getStatus());
-        userDTO.setUpdatedAt(new Date());
+        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
+        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
         userDTO.setRoles(user.getRoles());
         userDTO.setDeleted(user.isDeleted());
         return userDTO;

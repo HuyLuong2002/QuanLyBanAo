@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -108,41 +110,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(username);
     }
 
-    public UserDTO mapToDTO(User user)
-    {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setSex(user.getSex());
-        userDTO.setDateOfBirth(user.getDateOfBirth());
-        userDTO.setAddress(user.getAddress());
-        userDTO.setTel(user.getTel());
-        userDTO.setStatus(user.getStatus());
-        userDTO.setUpdatedAt(new Date());
-        userDTO.setRoles(user.getRoles());
-        userDTO.setDeleted(user.isDeleted());
-        return userDTO;
+    @Override
+    public User updateUserPassword(User currentUser, User userUpdate) {
+        currentUser.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+        return userRepository.save(currentUser);
     }
 
-    public User mapToModel(UserDTO userDTO)
-    {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setSex(userDTO.getSex());
-        user.setDateOfBirth(userDTO.getDateOfBirth());
-        user.setAddress(userDTO.getAddress());
-        user.setTel(userDTO.getTel());
-        user.setStatus(userDTO.getStatus());
-        user.setUpdatedAt(new Date());
-        user.setRoles(userDTO.getRoles());
-        user.setDeleted(userDTO.isDeleted());
-        return user;
-    }
 }

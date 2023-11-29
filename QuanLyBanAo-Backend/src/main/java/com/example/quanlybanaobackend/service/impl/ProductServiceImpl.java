@@ -27,6 +27,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getRelatedProducts(int categoryId, int productId) {
+        return productRepository.getRelatedProduct(categoryId, productId);
+    }
+
+    @Override
     public Product save(Product product) {
         return productRepository.save(product);
     }

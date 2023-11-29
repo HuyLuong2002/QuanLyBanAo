@@ -4,7 +4,7 @@ import com.example.quanlybanaobackend.constant.Constant;
 import lombok.Data;
 
 @Data
-public class OrderInformation {
+public class OrderInformationRequest {
     private Constant.PaymentMethod paymentMethod;
     private String notes;
 }

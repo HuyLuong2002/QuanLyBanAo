@@ -39,6 +39,6 @@ public interface OrderService {
 
     List<Order> getApprovalOrder();
 
-    Order approveOrder(int id);
+    Order approveOrder(int id, User user);
     boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException;
 }
