@@ -28,7 +28,7 @@ public class UserDTO {
 
     private Constant.Gender sex;
 
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
     private String address;
 
@@ -36,9 +36,9 @@ public class UserDTO {
 
     private Constant.UserStatus status;
 
-    private Date createdAt;
+    private String createdAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
     private boolean isDeleted;
 

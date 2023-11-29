@@ -21,4 +21,6 @@ public interface UserService {
     void deleteUser(int id);
 
     User findByUsername(String username);
+
+    User updateUserPassword(User currentUser, User user);
 }

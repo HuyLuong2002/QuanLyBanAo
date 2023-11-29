@@ -1,6 +1,8 @@
 package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.dto.OrderDTO;
+import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Order;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.service.OrderService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +34,7 @@ public class OrderController {
     private AuthController authController;
 
     @GetMapping()
-    public ResponseEntity<Map<String, Object>> getOrders() {
+    public ResponseEntity<Map<String, Object>> getOrders() throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(authController.getUserLogin() != null)
@@ -41,8 +44,13 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            List<OrderDTO> orderDTOS = new ArrayList<>();
+            List<Order> orders = orderService.getOrders();
+            for (Order order : orders) {
+                orderDTOS.add(mapToDTO(order));
+            }
             response.put("success", true);
-            response.put("orders", orderService.getOrders());
+            response.put("orders", orderDTOS);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -51,7 +59,7 @@ public class OrderController {
 
 
     @GetMapping(path = {"/my-orders"})
-    public ResponseEntity<Map<String, Object>> getUserOrders() {
+    public ResponseEntity<Map<String, Object>> getUserOrders() throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         User user = null;
@@ -59,13 +67,18 @@ public class OrderController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             user = userService.findByUsername(username);
         }
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        List<Order> orders = orderService.findAllUserOrder(user);
+        for (Order order : orders) {
+            orderDTOS.add(mapToDTO(order));
+        }
         response.put("success", true);
-        response.put("order", orderService.findAllUserOrder(user));
+        response.put("orders", orderDTOS);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/{id}"})
-    public ResponseEntity<Map<String, Object>> getOrderById(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> getOrderById(@PathVariable int id) throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(authController.getUserLogin() != null)
@@ -75,8 +88,9 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+
             response.put("success", true);
-            response.put("order", orderService.findById(id));
+            response.put("order", mapToDTO(orderService.findById(id)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -85,7 +99,7 @@ public class OrderController {
     }
 
     @PutMapping(path = {"/{id}"})
-    public ResponseEntity<Map<String, Object>> updateOrders(@PathVariable int id, @RequestBody Order order) {
+    public ResponseEntity<Map<String, Object>> updateOrders(@PathVariable int id, @RequestBody Order order) throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(authController.getUserLogin() != null)
@@ -101,7 +115,7 @@ public class OrderController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             response.put("success", true);
-            response.put("order", orderService.updateOrders(id, order));
+            response.put("order", mapToDTO(orderService.updateOrders(id, order)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -143,15 +157,19 @@ public class OrderController {
     @GetMapping(path = {"/getOrderByDay"})
     public ResponseEntity<Map<String, Object>> getOrderByDay(@RequestParam String firstDate, @RequestParam String secondDate) throws ParseException {
         Map<String, Object> response = new HashMap<>();
+        List<OrderDTO> orderDTOS = new ArrayList<>();
+        List<Order> orders = orderService.getOrderByDay(firstDate, secondDate);
+        for (Order order : orders) {
+            orderDTOS.add(mapToDTO(order));
+        }
         response.put("success", true);
-        response.put("order", orderService.getOrderByDay(firstDate, secondDate));
+        response.put("order", orderDTOS);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(path = {"/getApprovalOrder"})
-    public ResponseEntity<Map<String, Object>> getApprovalOrder()
-    {
+    public ResponseEntity<Map<String, Object>> getApprovalOrder() throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(authController.getUserLogin() != null)
@@ -161,8 +179,13 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            List<OrderDTO> orderDTOS = new ArrayList<>();
+            List<Order> orders = orderService.getApprovalOrder();
+            for (Order order : orders) {
+                orderDTOS.add(mapToDTO(order));
+            }
             response.put("success", true);
-            response.put("order", orderService.getApprovalOrder());
+            response.put("orders", orderDTOS);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -171,8 +194,7 @@ public class OrderController {
     }
 
     @PutMapping(path = {"/approve/{id}"})
-    public ResponseEntity<Map<String, Object>> approveOrder(@PathVariable int id)
-    {
+    public ResponseEntity<Map<String, Object>> approveOrder(@PathVariable int id) throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(authController.getUserLogin() != null)
@@ -183,7 +205,7 @@ public class OrderController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             response.put("success", true);
-            response.put("order", orderService.approveOrder(id));
+            response.put("order", mapToDTO(orderService.approveOrder(id, user)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -204,5 +226,45 @@ public class OrderController {
         }
         response.put("message", "Xuất file thất bại");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    public OrderDTO mapToDTO(Order order) throws ParseException {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setOrderDate(String.valueOf(order.getOrderDate()));
+        orderDTO.setTotalQuantity(order.getTotalQuantity());
+        orderDTO.setTotalPrice(order.getTotalPrice());
+        orderDTO.setShippingFee(order.getShippingFee());
+        orderDTO.setOrderStatus(order.getOrderStatus());
+        orderDTO.setShipStatus(order.getShipStatus());
+        orderDTO.setPaymentStatus(order.getPaymentStatus());
+        orderDTO.setPaymentMethod(order.getPaymentMethod());
+        orderDTO.setNotes(order.getNotes());
+        orderDTO.setUser(mapToDTO(order.getUser()));
+        if(order.getEmployee() == null)
+        {
+            orderDTO.setEmployee(null);
+        }
+        else orderDTO.setEmployee(mapToDTO(order.getEmployee()));
+        orderDTO.setOrderDetails(order.getOrderDetails());
+        return orderDTO;
+    }
+    public UserDTO mapToDTO(User user) throws ParseException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setSex(user.getSex());
+        userDTO.setDateOfBirth(String.valueOf(user.getDateOfBirth()));
+        userDTO.setAddress(user.getAddress());
+        userDTO.setTel(user.getTel());
+        userDTO.setStatus(user.getStatus());
+        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
+        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+        userDTO.setRoles(user.getRoles());
+        userDTO.setDeleted(user.isDeleted());
+        return userDTO;
     }
 }

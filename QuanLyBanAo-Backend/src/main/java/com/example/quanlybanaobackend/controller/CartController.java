@@ -1,7 +1,7 @@
 package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.constant.Constant;
-import com.example.quanlybanaobackend.dto.OrderInformation;
+import com.example.quanlybanaobackend.dto.OrderInformationRequest;
 import com.example.quanlybanaobackend.model.*;
 import com.example.quanlybanaobackend.service.OrderService;
 import com.example.quanlybanaobackend.service.ProductService;
@@ -141,7 +141,7 @@ public class CartController {
     }
 
     @GetMapping("/check-out")
-    public ResponseEntity<Map<String, Object>> checkout(@RequestBody OrderInformation orderInformation) {
+    public ResponseEntity<Map<String, Object>> checkout(@RequestBody OrderInformationRequest orderInformationRequest) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -160,11 +160,11 @@ public class CartController {
                 order.setOrderStatus(Constant.OrderStatus.ACTIVE);
                 order.setShipStatus(Constant.ShipStatus.APPROVAL);
                 order.setPaymentStatus(Constant.PaymentStatus.UNPAID);
-                order.setNotes(orderInformation.getNotes());
+                order.setNotes(orderInformationRequest.getNotes());
                 order.setUser(user);
-                if (orderInformation.getPaymentMethod().name().equals("CASH")) {
+                if (orderInformationRequest.getPaymentMethod().name().equals("CASH")) {
                     order.setPaymentMethod(Constant.PaymentMethod.CASH);
-                } else if (orderInformation.getPaymentMethod().name().equals("BANKING")) {
+                } else if (orderInformationRequest.getPaymentMethod().name().equals("BANKING")) {
                     order.setPaymentMethod(Constant.PaymentMethod.BANKING);
                 }
                 for (CartItem item :
@@ -173,7 +173,7 @@ public class CartController {
                     orderDetail.setOrder(order);
                     orderDetail.setProduct(item.getProduct());
                     orderDetail.setQuantity(item.getQuantity());
-                    orderDetail.setUnitPrice(item.getTotalPrice());
+                    orderDetail.setUnitPrice(item.getProduct().getPrice());
                     orderDetailList.add(orderDetail);
                 }
                 order.setOrderDetails(orderDetailList);

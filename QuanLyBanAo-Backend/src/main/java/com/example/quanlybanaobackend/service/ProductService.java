@@ -12,6 +12,7 @@ public interface ProductService {
 
     Page<Product> getProducts(Pageable pageable);
 
+    List<Product> getRelatedProducts(int categoryId, int productId);
     Product save(Product product);
 
     Product updateProduct(int id, Product product);
