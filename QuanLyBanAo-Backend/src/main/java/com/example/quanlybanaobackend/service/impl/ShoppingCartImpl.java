@@ -146,8 +146,8 @@ public class ShoppingCartImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteAllItem(User user) {
-        shoppingCartRepository.deleteAllItem(user);
+    public void deleteAllItem(ShoppingCart shoppingCart) {
+        itemRepository.deleteCartItemsByCart(shoppingCart);
     }
 
     @Override
