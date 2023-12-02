@@ -37,13 +37,15 @@ import OrderList from "./Admin/OrderList";
 import UsersList from "./Admin/UsersList";
 import UpdateUser from "./Admin/UpdateUser";
 import ProcessOrder from "./Admin/ProcessOrder";
+import Supplier from "./Admin/Supplier";
+import Categories from "./Admin/Categories";
 
 const Layout = () => {
   return (
     <div>
       <Header />
       <HeaderBottom />
-      <SpecialCase/>
+      <SpecialCase />
       <ScrollRestoration />
       <Outlet />
       <Footer />
@@ -95,7 +97,7 @@ const router = createBrowserRouter(
         exact
         path="/admin/dashboard"
         element={
-            <Dashboard />
+          <Dashboard />
         }
       />
       <Route
@@ -166,7 +168,17 @@ const router = createBrowserRouter(
         path="/admin/suppliers"
         element={
           <ProtectedRoute>
-            {/* <ProductReviews /> */}
+            <Supplier />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        exact
+        path="/admin/categories"
+        element={
+          <ProtectedRoute>
+            <Categories />
           </ProtectedRoute>
         }
       />
@@ -177,7 +189,11 @@ const router = createBrowserRouter(
 function App() {
 
   useEffect(() => {
-    store.dispatch(loadUser());
+    const handleLoadUser = async () => {
+      await store.dispatch(loadUser());
+    }
+
+    handleLoadUser()
   }, [])
 
   return (

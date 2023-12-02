@@ -15,7 +15,7 @@ const SignIn = () => {
     const [errEmail, setErrEmail] = useState("");
     const [errPassword, setErrPassword] = useState("");
 
-    const [openForgot, setOpenForgot] = useState(false);
+    const [openForgot, setOpenForgot] = useState(true);
 
     const alert = useAlert();
 
@@ -70,7 +70,7 @@ const SignIn = () => {
             dispatch(clearErrors());
         }
 
-        if (isAuthenticated) {
+        if (isAuthenticated && user) {
             navigate(redirect);
         }
 

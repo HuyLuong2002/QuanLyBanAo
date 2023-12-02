@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
-import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
 import axios from "axios";
-import { checkout, getCurrentUserCart, removeItemsFromCart, updateItemCart } from "../../actions/cartAction";
+import { checkout, getCurrentUserCart, removeItemsFromCart, resetCart, updateItemCart } from "../../actions/cartAction";
 import { useAlert } from "react-alert";
 
 const Cart = () => {
@@ -15,6 +14,7 @@ const Cart = () => {
     // const [totalAmt, setTotalAmt] = useState("");
     const [shippingCharge, setShippingCharge] = useState("");
     const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
+    const { error, loading, isAuthenticated, user } = useSelector((state) => state.user);
     const alert = useAlert();
     const ref = useRef();
     const paymentMethod = "CASH"
@@ -33,10 +33,16 @@ const Cart = () => {
         dispatch(updateItemCart(id, quantity))
     }
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         const notes = ref.current.value
-        dispatch(checkout(paymentMethod, notes))
+        await dispatch(checkout(paymentMethod, notes))
         alert.success("Checkout successfuly")
+        handleResetCart()
+    }
+
+    const handleResetCart = async () => {
+        await dispatch(resetCart())
+        await dispatch(getCurrentUserCart());
     }
 
     useEffect(() => {
@@ -73,7 +79,7 @@ const Cart = () => {
                     </div>
 
                     <button
-                        onClick={() => dispatch(resetCart())}
+                        onClick={() => handleResetCart()}
                         className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
                     >
                         Reset cart

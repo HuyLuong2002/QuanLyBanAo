@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
+import { useDispatch, useSelector } from "react-redux";
+import { clearErrors, register } from "../../actions/userAction";
+import { useAlert } from "react-alert";
 
 const SignUp = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const alert = useAlert();
+
+  const { error, loading, isAuthenticated, user } = useSelector((state) => state.user);
   // ============= Initial State Start here =============
   const [formData, setFormData] = useState({
     email: "",
@@ -57,7 +65,7 @@ const SignUp = () => {
     handleFieldChange("lastName", e.target.value);
     setErrLastName("");
   };
-  
+
   const handlePhone = (e) => {
     setPhone(e.target.value);
     handleFieldChange("tel", e.target.value);
@@ -139,9 +147,7 @@ const SignUp = () => {
         sex &&
         dateBirth
       ) {
-        setSuccessMsg(
-          `Hello dear ${firstName}, Welcome you to OREBI Admin panel. We received your Sign up request. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-        );
+        
         // setFistName("");
         // setLastName("");
         // setEmail("");
@@ -150,10 +156,21 @@ const SignUp = () => {
         // setAddress("");
         // setSex("");
         // setDateBirth("");
-        console.log("form data: ", formData);
+        console.log("form data: ", {...formData});
+        dispatch(register(formData))
+        if(error) {
+          alert.error(error);
+        } else {
+          setSuccessMsg(
+            `Hello dear ${firstName}, Welcome you to OREBI Admin panel. We received your Sign up request. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
+          );
+          navigate('/signin');
+          alert.success("Register successfully!");
+        }
       }
     }
   };
+
   return (
     <div className="w-full h-screen flex items-center justify-start">
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
@@ -309,7 +326,7 @@ const SignUp = () => {
                   </p>
                   <input
                     onChange={handleLastName}
-                    value={firstName}
+                    value={lastName}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="text"
                     placeholder="eg. John Doe"

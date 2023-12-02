@@ -1,28 +1,26 @@
-import React, { Fragment, useEffect } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearErrors, getAdminProduct, deleteProduct, getProduct } from '../actions/productAction';
-import { Link } from 'react-router-dom';
+import React, { Fragment, useEffect } from 'react'
 import { useAlert } from 'react-alert';
-import { Button } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SideBar from './Sidebar';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { deleteProduct, getProduct, getSuppliers } from '../actions/productAction';
+import { clearErrors } from '../actions/userAction';
 import { DELETE_PRODUCT_RESET } from '../constants/productConstants';
-import { useNavigate } from 'react-router-dom';
+import EditIcon from '@material-ui/icons/Edit';
+import { Button } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import MetaData from '../components/layout/MetaData';
+import Sidebar from './Sidebar';
+import { DataGrid } from '@material-ui/data-grid';
 import './productList.css';
 
-
-const ProductList = () => {
+const Supplier = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const alert = useAlert();
 
-    const { error, products } = useSelector((state) => state.products);
+    const { error, suplliers } = useSelector((state) => state.suppliers);
 
-    const { error: deleteError, isDeleted } = useSelector((state) => state.product);
 
     const deleteProductHandler = (id) => {
         dispatch(deleteProduct(id));
@@ -34,19 +32,9 @@ const ProductList = () => {
             dispatch(clearErrors());
         }
 
-        if (deleteError) {
-            alert.error(deleteError);
-            dispatch(clearErrors());
-        }
 
-        if (isDeleted) {
-            alert.success('Product Deleted Successfully');
-            navigate('/admin/dashboard');
-            dispatch({ type: DELETE_PRODUCT_RESET });
-        }
-
-        dispatch(getProduct());
-    }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
+        dispatch(getSuppliers());
+    }, [dispatch, alert, error]);
 
     const columns = [
         { field: 'id', headerName: 'ID', minWidth: 50 },
@@ -55,22 +43,6 @@ const ProductList = () => {
             field: 'name',
             headerName: 'Name',
             minWidth: 250,
-        },
-        {
-            field: 'price',
-            headerName: 'Price',
-            // type: 'number',
-            minWidth: 185,
-        },
-        {
-            field: 'size',
-            headerName: 'Size',
-            minWidth: 185,
-        },
-        {
-            field: 'color',
-            headerName: 'Color',
-            minWidth: 185,
         },
         {
             field: 'deleted',
@@ -100,28 +72,25 @@ const ProductList = () => {
 
     const rows = [];
 
-    console.log("products: ", products);
+    console.log("suplliers: ", suplliers);
 
-    products &&
-        products.forEach((item) => {
+    suplliers &&
+    suplliers.forEach((item) => {
             rows.push({
                 id: item.id,
                 name: item.name,
-                price: item.price,
-                size: item.size,
-                color: item.color,
                 deleted: item.deleted,
             });
         });
 
     return (
         <Fragment>
-            <MetaData title={`ALL PRODUCTS - Admin`} />
+            <MetaData title={`ALL SUPPLIERS - Admin`} />
 
             <div className="dashboard">
-                <SideBar />
+                <Sidebar />
                 <div className="productListContainer">
-                    <h1 id="productListHeading">ALL PRODUCTS</h1>
+                    <h1 id="productListHeading">ALL SUPPLIERS</h1>
 
                     <DataGrid
                         rows={rows}
@@ -135,6 +104,6 @@ const ProductList = () => {
             </div>
         </Fragment>
     );
-};
+}
 
-export default ProductList;
+export default Supplier

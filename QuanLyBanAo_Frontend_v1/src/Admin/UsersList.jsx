@@ -115,7 +115,7 @@ const UsersList = () => {
 
             <div className="dashboard">
                 <SideBar />
-                <div className="productListContainer">
+                <div className="w-full bg-white border-l border-[#00000028] flex flex-col h-screen" >
                     <h1 id="productListHeading">ALL USERS</h1>
 
                     <DataGrid

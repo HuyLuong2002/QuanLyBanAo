@@ -29,6 +29,12 @@ import {
     DELETE_REVIEW_SUCCESS,
     DELETE_REVIEW_FAIL,
     CLEAR_ERRORS,
+    SUPPLIER_REQUEST,
+    SUPPLIER_SUCCESS,
+    SUPPLIER_FAIL,
+    GET_CATE_REQUEST,
+    GET_CATE_SUCCESS,
+    GET_CATE_FAIL,
 } from '../constants/productConstants';
 
 // Get All Products
@@ -288,18 +294,37 @@ export const clearErrors = () => async (dispatch) => {
 // Get categories
 export const getCategories = () => async (dispatch) => {
     try {
-        dispatch({ type: DELETE_REVIEW_REQUEST });
+        dispatch({ type: GET_CATE_REQUEST });
 
-        const { data } = await axios.delete(`http://localhost:8081/api/v1/categoriesa`);
+        const { data } = await axios.get(`http://localhost:8081/api/v1/categories`);
 
         dispatch({
-            type: DELETE_REVIEW_SUCCESS,
-            payload: data.success,
+            type: GET_CATE_SUCCESS,
+            payload: data.categories,
         });
     } catch (error) {
         dispatch({
-            type: DELETE_REVIEW_FAIL,
-            payload: error.response.data.message,
+            type: GET_CATE_FAIL,
+            payload: error?.response?.data?.message,
+        });
+    }
+}
+
+// Get supplier
+export const getSuppliers = () => async (dispatch) => {
+    try {
+        dispatch({ type: SUPPLIER_REQUEST });
+
+        const { data } = await axios.get(`http://localhost:8081/api/v1/suppliers`);
+
+        dispatch({
+            type: SUPPLIER_SUCCESS,
+            payload: data.suppliers,
+        });
+    } catch (error) {
+        dispatch({
+            type: SUPPLIER_FAIL,
+            payload: error?.response?.data?.message,
         });
     }
 }

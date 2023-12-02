@@ -81,9 +81,15 @@ export const updateItemCart = (id, quantity) => async (dispatch, getState) => {
 export const checkout = (paymentMethod = "CASH", notes = "") => async () => {
     const config = { headers: { 'Content-Type': 'application/json' } };
     await axios.post(`/api/v1/cart/check-out`, { paymentMethod, notes }, config);
-    // await axios.get('/api/v1/cart/reset')
+    resetCart()
     
     localStorage.setItem('cartItems', JSON.stringify([]));
 }
 
+
+// Reset cart 
+export const resetCart = () => async () => {
+    await axios.get(`/api/v1/cart/reset`);
+    localStorage.setItem('cartItems', JSON.stringify([]));
+}
 

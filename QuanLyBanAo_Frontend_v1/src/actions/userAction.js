@@ -57,12 +57,14 @@ export const login = (email, password) => async (dispatch, getState) => {
 
 // Register
 export const register = (userData) => async (dispatch) => {
+    let {address, dateOfBirth, email, firstName, lastName, password, sex, tel} = userData;
+    sex = sex.toUpperCase()
     try {
         dispatch({ type: REGISTER_USER_REQUEST });
 
-        const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+        const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const { data } = await axios.post(`api/v1/auth/register`, userData, config);
+        const { data } = await axios.post(`api/v1/auth/register`, { address, dateOfBirth, email, firstName, lastName, password, sex, tel }, config);
 
         dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
     } catch (error) {

@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { useEffect } from 'react';
 import { getProduct } from "../../actions/productAction";
-import { getAllUsers } from "../../actions/userAction";
+import { getAllUsers, loadUser } from "../../actions/userAction";
 import axios from "axios";
 
 const Home = () => {
@@ -23,6 +23,7 @@ const Home = () => {
         if (error) return alert.error(error);
         dispatch(getProduct());
         dispatch(getAllUsers());
+        dispatch(loadUser());
     }, [dispatch, error, alert]);
 
 

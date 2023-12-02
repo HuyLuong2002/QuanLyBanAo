@@ -11,12 +11,13 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import RateReviewIcon from '@material-ui/icons/RateReview';
+import CategoryIcon from '@material-ui/icons/Category';
 
 const Sidebar = () => {
     return (
         <div className="sidebar">
             <Link to="/">
-                <img className='logo' src={logo} alt="Ecommerce" />
+                <img className='' src={logo} alt="Ecommerce" />
             </Link>
             <Link to="/admin/dashboard">
                 <p>
@@ -51,6 +52,12 @@ const Sidebar = () => {
                 <p>
                     <RateReviewIcon />
                     Suppliers
+                </p>
+            </Link>
+            <Link to="/admin/categories">
+                <p>
+                    <CategoryIcon />
+                    Category
                 </p>
             </Link>
         </div>
