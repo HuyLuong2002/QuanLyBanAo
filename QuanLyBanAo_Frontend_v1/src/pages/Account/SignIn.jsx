@@ -15,6 +15,8 @@ const SignIn = () => {
     const [errEmail, setErrEmail] = useState("");
     const [errPassword, setErrPassword] = useState("");
 
+    const [openForgot, setOpenForgot] = useState(true);
+
     const alert = useAlert();
 
     const navigate = useNavigate();
@@ -68,12 +70,12 @@ const SignIn = () => {
             dispatch(clearErrors());
         }
 
-        if (isAuthenticated) {
+        if (isAuthenticated && user) {
             navigate(redirect);
         }
 
         console.log("first user: ", user)
-        if(user?.user && user.user.roles[0].name === 'ADMIN') {
+        if (user?.user && user.user.roles[0].name === 'ADMIN') {
             navigate(redirectAdmin);
         }
     }, [dispatch, error, alert, navigate, isAuthenticated, redirect, user]);
@@ -166,68 +168,88 @@ const SignIn = () => {
                     <></>
                 )} */}
 
-                <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center" onSubmit={(e) => handleLogin(e)}>
-                    <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
-                        <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
-                            Sign in
-                        </h1>
-                        <div className="flex flex-col gap-3">
-                            {/* Email */}
-                            <div className="flex flex-col gap-.5">
-                                <p className="font-titleFont text-base font-semibold text-gray-600">
-                                    Work Email
-                                </p>
-                                <input
-                                    onChange={handleEmail}
-                                    value={email}
-                                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                                    type="email"
-                                    placeholder="john@workemail.com"
-                                />
-                                {errEmail && (
-                                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
-                                        <span className="font-bold italic mr-1">!</span>
-                                        {errEmail}
-                                    </p>
-                                )}
-                            </div>
+                {
+                    openForgot ? (
+                        <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center" onSubmit={(e) => handleLogin(e)}>
+                            <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
+                                <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
+                                    Sign in
+                                </h1>
+                                <div className="flex flex-col gap-3">
+                                    {/* Email */}
+                                    <div className="flex flex-col gap-.5">
+                                        <p className="font-titleFont text-base font-semibold text-gray-600">
+                                            Work Email
+                                        </p>
+                                        <input
+                                            onChange={handleEmail}
+                                            value={email}
+                                            className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                                            type="email"
+                                            placeholder="john@workemail.com"
+                                        />
+                                        {errEmail && (
+                                            <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                                                <span className="font-bold italic mr-1">!</span>
+                                                {errEmail}
+                                            </p>
+                                        )}
+                                    </div>
 
-                            {/* Password */}
-                            <div className="flex flex-col gap-.5">
-                                <p className="font-titleFont text-base font-semibold text-gray-600">
-                                    Password
-                                </p>
-                                <input
-                                    onChange={handlePassword}
-                                    value={password}
-                                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                                    type="password"
-                                    placeholder="Create password"
-                                />
-                                {errPassword && (
-                                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
-                                        <span className="font-bold italic mr-1">!</span>
-                                        {errPassword}
-                                    </p>
-                                )}
-                            </div>
+                                    {/* Password */}
+                                    <div className="flex flex-col gap-.5">
+                                        <p className="font-titleFont text-base font-semibold text-gray-600">
+                                            Password
+                                        </p>
+                                        <input
+                                            onChange={handlePassword}
+                                            value={password}
+                                            className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                                            type="password"
+                                            placeholder="Create password"
+                                        />
+                                        {errPassword && (
+                                            <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                                                <span className="font-bold italic mr-1">!</span>
+                                                {errPassword}
+                                            </p>
+                                        )}
+                                    </div>
 
-                            <input
-                                type="submit"
-                                className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
-                                value="Sign In"
-                            />
-                            <p className="text-sm text-center font-titleFont font-medium">
-                                Don't have an Account?{" "}
-                                <Link to="/signup">
-                                    <span className="hover:text-blue-600 duration-300">
-                                        Sign up
-                                    </span>
-                                </Link>
-                            </p>
-                        </div>
+                                    <input
+                                        type="submit"
+                                        className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
+                                        value="Sign In"
+                                    />
+                                    <div className="flex justify-between items-center">
+                                        <p className="text-sm text-center font-titleFont font-medium">
+                                            Don't have an Account?{" "}
+                                            <Link to="/signup">
+                                                <span className="hover:text-blue-600 duration-300">
+                                                    Sign up
+                                                </span>
+                                            </Link>
+                                        </p>
+                                        <i onClick={() => setOpenForgot(false)} className="cursor-pointer">forgot password ?</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    ) : <div className="h-screen w-full flex flex-col justify-center">
+                        <h1>Please enter your email:</h1>
+                        <input
+                            onChange={handlePassword}
+                            value={password}
+                            className="w-1/2 h-8 my-2 placeholder:text-sm placeholder:tracking-wide p-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                            type="text"
+                            placeholder="enter your email"
+                        />
+                        <button className="w-[80px] rounded-lg px-4 py-2 bg-blue-400 my-2">send</button>
+                        <i onClick={() => setOpenForgot(true)} className="cursor-pointer">Back to signin ?</i>
                     </div>
-                </form>
+                }
+
+
             </div>
         </div>
     );

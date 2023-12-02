@@ -2,13 +2,15 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
+    categoriesReducer,
     newProductReducer,
     newReviewReducer,
     productDetailsReducer,
     productReducer,
     productReviewsReducer,
     productsReducer,
-    reviewReducer,
+    // reviewReducer,
+    supplierReducer,
 } from './reducers/productReducer';
 
 import {
@@ -46,7 +48,9 @@ const reducer = combineReducers({
     allUsers: allUsersReducer,
     userDetails: userDetailsReducer,
     productReviews: productReviewsReducer,
-    review: reviewReducer,
+    // review: reviewReducer,
+    suppliers: supplierReducer,
+    categories: categoriesReducer
 });
 
 let initialState = {

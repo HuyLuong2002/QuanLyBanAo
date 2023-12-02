@@ -141,7 +141,7 @@ public class CartController {
 
     }
 
-    @GetMapping("/check-out")
+    @PostMapping("/check-out")
     public ResponseEntity<Map<String, Object>> checkout(@RequestBody OrderInformationRequest orderInformationRequest) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);

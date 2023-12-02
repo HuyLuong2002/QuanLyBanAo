@@ -18,7 +18,7 @@ const Journal = () => {
           reiciendis delectus vitae, aliquid sit iure dolorum commodi eum
           numquam voluptate!
         </h1>
-        <Link to="/shop">
+        <Link to="/shop/0/0/0/0">
           <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
             Continue Shopping
           </button>

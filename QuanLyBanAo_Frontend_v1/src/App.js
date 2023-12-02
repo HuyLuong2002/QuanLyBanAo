@@ -37,6 +37,8 @@ import OrderList from "./Admin/OrderList";
 import UsersList from "./Admin/UsersList";
 import UpdateUser from "./Admin/UpdateUser";
 import ProcessOrder from "./Admin/ProcessOrder";
+import Supplier from "./Admin/Supplier";
+import Categories from "./Admin/Categories";
 
 const Layout = () => {
   return (
@@ -57,7 +59,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         {/* ==================== Header Navlink Start here =================== */}
         <Route index element={<Home />}></Route>
-        <Route path="/shop" element={<Shop />}></Route>
+        <Route path="/shop/:categoryId/:color/:minprice/:maxprice" element={<Shop />}></Route>
         <Route path="/about" element={
           <ProtectedRoute>
             <About />
@@ -95,7 +97,7 @@ const router = createBrowserRouter(
         exact
         path="/admin/dashboard"
         element={
-            <Dashboard />
+          <Dashboard />
         }
       />
       <Route
@@ -166,7 +168,17 @@ const router = createBrowserRouter(
         path="/admin/suppliers"
         element={
           <ProtectedRoute>
-            {/* <ProductReviews /> */}
+            <Supplier />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        exact
+        path="/admin/categories"
+        element={
+          <ProtectedRoute>
+            <Categories />
           </ProtectedRoute>
         }
       />
@@ -175,13 +187,13 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  // dispatch action load user
-  const dispatch = useDispatch()
-
-  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    store.dispatch(loadUser());
+    const handleLoadUser = async () => {
+      await store.dispatch(loadUser());
+    }
+
+    handleLoadUser()
   }, [])
 
   return (

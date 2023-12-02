@@ -52,9 +52,9 @@ export const getCurrentUserCart = () => async (dispatch, getState) => {
     dispatch({
         type: GET_CURRENT_USER_CART,
         payload: {
-            products: data.cart.cartItem,
-            totalItem: data.cart.totalItems,
-            totalPrices: data.cart.totalPrices
+            products: data?.cart?.cartItem,
+            totalItem: data?.cart?.totalItems,
+            totalPrices: data?.cart?.totalPrices
         },
     });
 
@@ -77,4 +77,19 @@ export const updateItemCart = (id, quantity) => async (dispatch, getState) => {
 };
 
 
+// CHECKOUT
+export const checkout = (paymentMethod = "CASH", notes = "") => async () => {
+    const config = { headers: { 'Content-Type': 'application/json' } };
+    await axios.post(`/api/v1/cart/check-out`, { paymentMethod, notes }, config);
+    resetCart()
+    
+    localStorage.setItem('cartItems', JSON.stringify([]));
+}
+
+
+// Reset cart 
+export const resetCart = () => async () => {
+    await axios.get(`/api/v1/cart/reset`);
+    localStorage.setItem('cartItems', JSON.stringify([]));
+}
 

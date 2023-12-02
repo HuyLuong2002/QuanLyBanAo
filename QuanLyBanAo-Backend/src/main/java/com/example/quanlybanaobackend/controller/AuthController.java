@@ -121,7 +121,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/profile")
+    @PutMapping("/profile")
     public ResponseEntity<Map<String, Object>> updateProfile(@RequestBody User userUpdate) {
         String username = getUserLogin();
         Map<String, Object> response = new HashMap<>();

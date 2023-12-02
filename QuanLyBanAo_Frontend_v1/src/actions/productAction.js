@@ -29,6 +29,12 @@ import {
     DELETE_REVIEW_SUCCESS,
     DELETE_REVIEW_FAIL,
     CLEAR_ERRORS,
+    SUPPLIER_REQUEST,
+    SUPPLIER_SUCCESS,
+    SUPPLIER_FAIL,
+    GET_CATE_REQUEST,
+    GET_CATE_SUCCESS,
+    GET_CATE_FAIL,
 } from '../constants/productConstants';
 
 // Get All Products
@@ -85,11 +91,11 @@ export const getProduct = () => async (dispatch) => {
 };
 
 // Filter products
-export const filterProducts = (category ) => async (dispatch) => {
+export const filterProducts = (categoryId, color, minPrice, maxPrice, priceCondition,keyword = '', orderId = 1, page = 0 ) => async (dispatch) => {
     try {
         dispatch({ type: ALL_PRODUCT_REQUEST });
 
-        let link = `http://localhost:8081/api/v1/products/filter?categoryId=${category}`;
+        let link = `http://localhost:8081/api/v1/products/filter?categoryId=${categoryId}&color=${color}&minPrice=${minPrice}&maxPrice=${maxPrice}&priceCondition=${priceCondition}&keyword=${keyword}&orderById=${orderId}&page=${page}`;
 
         const { data } = await axios.get(link);
 
@@ -283,3 +289,42 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
 export const clearErrors = () => async (dispatch) => {
     dispatch({ type: CLEAR_ERRORS });
 };
+
+
+// Get categories
+export const getCategories = () => async (dispatch) => {
+    try {
+        dispatch({ type: GET_CATE_REQUEST });
+
+        const { data } = await axios.get(`http://localhost:8081/api/v1/categories`);
+
+        dispatch({
+            type: GET_CATE_SUCCESS,
+            payload: data.categories,
+        });
+    } catch (error) {
+        dispatch({
+            type: GET_CATE_FAIL,
+            payload: error?.response?.data?.message,
+        });
+    }
+}
+
+// Get supplier
+export const getSuppliers = () => async (dispatch) => {
+    try {
+        dispatch({ type: SUPPLIER_REQUEST });
+
+        const { data } = await axios.get(`http://localhost:8081/api/v1/suppliers`);
+
+        dispatch({
+            type: SUPPLIER_SUCCESS,
+            payload: data.suppliers,
+        });
+    } catch (error) {
+        dispatch({
+            type: SUPPLIER_FAIL,
+            payload: error?.response?.data?.message,
+        });
+    }
+}

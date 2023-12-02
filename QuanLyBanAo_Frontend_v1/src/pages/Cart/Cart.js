@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
-import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
 import axios from "axios";
-import { getCurrentUserCart, removeItemsFromCart, updateItemCart } from "../../actions/cartAction";
+import { checkout, getCurrentUserCart, removeItemsFromCart, resetCart, updateItemCart } from "../../actions/cartAction";
 import { useAlert } from "react-alert";
 
 const Cart = () => {
@@ -15,7 +14,10 @@ const Cart = () => {
     // const [totalAmt, setTotalAmt] = useState("");
     const [shippingCharge, setShippingCharge] = useState("");
     const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
+    const { error, loading, isAuthenticated, user } = useSelector((state) => state.user);
     const alert = useAlert();
+    const ref = useRef();
+    const paymentMethod = "CASH"
 
     const handleRemoveItem = (id) => {
         dispatch(removeItemsFromCart(id))
@@ -31,10 +33,16 @@ const Cart = () => {
         dispatch(updateItemCart(id, quantity))
     }
 
-    console.log("current cart: ", cartItems);
+    const handleCheckout = async () => {
+        const notes = ref.current.value
+        await dispatch(checkout(paymentMethod, notes))
+        alert.success("Checkout successfuly")
+        handleResetCart()
+    }
 
-    const handleCheckout = () => {
-        // dispatch(checkout)
+    const handleResetCart = async () => {
+        await dispatch(resetCart())
+        await dispatch(getCurrentUserCart());
     }
 
     useEffect(() => {
@@ -71,7 +79,7 @@ const Cart = () => {
                     </div>
 
                     <button
-                        onClick={() => dispatch(resetCart())}
+                        onClick={() => handleResetCart()}
                         className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
                     >
                         Reset cart
@@ -82,10 +90,11 @@ const Cart = () => {
                             <input
                                 className="w-44 mdl:w-52 h-8 px-4 border text-primeColor text-sm outline-none border-gray-400"
                                 type="text"
-                                placeholder="Coupon Number"
+                                placeholder="message..."
+                                ref={ref}
                             />
-                            <p className="text-sm mdl:text-base font-semibold">
-                                Apply Coupon
+                            <p className="text-sm mdl:text-base font-semibold" >
+                                Write your message...
                             </p>
                         </div>
                         <p className="text-lg font-semibold">Update Cart</p>
@@ -145,7 +154,7 @@ const Cart = () => {
                             Your Shopping cart lives to serve. Give it purpose - fill it with
                             books, electronics, videos, etc. and make it happy.
                         </p>
-                        <Link to="/shop">
+                        <Link to="/shop/0/0/0/0">
                             <button className="bg-primeColor rounded-md cursor-pointer hover:bg-black active:bg-gray-900 px-8 py-2 font-titleFont font-semibold text-lg text-gray-200 hover:text-white duration-300">
                                 Continue Shopping
                             </button>

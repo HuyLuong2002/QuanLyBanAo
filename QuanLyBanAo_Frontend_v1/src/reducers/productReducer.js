@@ -32,6 +32,12 @@ import {
     DELETE_REVIEW_FAIL,
     DELETE_REVIEW_RESET,
     CLEAR_ERRORS,
+    GET_CATE_REQUEST,
+    GET_CATE_SUCCESS,
+    GET_CATE_FAIL,
+    SUPPLIER_REQUEST,
+    SUPPLIER_SUCCESS,
+    SUPPLIER_FAIL,
 } from '../constants/productConstants';
 
 export const productsReducer = (state = { products: [] }, action) => {
@@ -244,34 +250,49 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
     }
 };
 
-export const reviewReducer = (state = {}, action) => {
+export const supplierReducer = (state = { suplliers: []}, action) => {
     switch (action.type) {
-        case DELETE_REVIEW_REQUEST:
+        case SUPPLIER_REQUEST:
             return {
                 ...state,
                 loading: true,
             };
-        case DELETE_REVIEW_SUCCESS:
+        case SUPPLIER_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                isDeleted: action.payload,
+                suplliers: action.payload,
             };
-        case DELETE_REVIEW_FAIL:
+        case SUPPLIER_FAIL:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
-        case DELETE_REVIEW_RESET:
+        default:
+            return state;
+    }
+};
+
+
+export const categoriesReducer = (state = {categories: []}, action) => {
+    switch (action.type) {
+        case GET_CATE_REQUEST:
             return {
                 ...state,
-                isDeleted: false,
+                loading: true,
             };
-        case CLEAR_ERRORS:
+        case GET_CATE_SUCCESS:
             return {
                 ...state,
-                error: null,
+                loading: false,
+                categories: action.payload,
+            };
+        case GET_CATE_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
             };
         default:
             return state;

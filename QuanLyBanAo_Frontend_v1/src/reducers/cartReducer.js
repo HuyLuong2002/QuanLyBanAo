@@ -32,7 +32,7 @@ export const cartReducer = (
         ...state,
         totalItem: action.payload.totalItem,
         totalPrices: action.payload.totalPrices,
-        cartItems: action.payload.products,
+        cartItems: action.payload.products ? action.payload.products : [],
       };
     case UPDATE_ITEM_CART:
       return {

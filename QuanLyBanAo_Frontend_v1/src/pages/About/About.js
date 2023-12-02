@@ -18,7 +18,7 @@ const About = () => {
           recognized for celebrating the essence of classic Worldwide cool
           looking style.
         </h1>
-        <Link to="/shop">
+        <Link to="/shop/0/0/0/0">
           <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
             Continue Shopping
           </button>
