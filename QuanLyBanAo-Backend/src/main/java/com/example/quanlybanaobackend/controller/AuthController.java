@@ -3,6 +3,7 @@ package com.example.quanlybanaobackend.controller;
 import com.example.quanlybanaobackend.config.JWTGenerator;
 import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.dto.*;
+import com.example.quanlybanaobackend.model.EmailDetails;
 import com.example.quanlybanaobackend.model.Role;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.RoleRepository;
@@ -36,6 +37,8 @@ public class AuthController {
     private RoleRepository roleRepository;
     @Autowired
     private JWTGenerator jwtGenerator;
+    @Autowired
+    private EmailController emailController;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserService userService,
@@ -134,8 +137,8 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/forgot")
-    public ResponseEntity<Map<String, Object>> forgot(@RequestBody User userUpdate) {
+    @PutMapping("/update_password")
+    public ResponseEntity<Map<String, Object>> updateUserPassword(@RequestBody User userUpdate) {
         String username = getUserLogin();
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
@@ -157,6 +160,22 @@ public class AuthController {
 
         response.put("success", true);
         response.put("user", null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/forgot")
+    public ResponseEntity<Map<String, Object>> forgot(@RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        EmailDetails emailDetails = new EmailDetails();
+        String htmlMsg = "Mời truy cập đường dẫn sau để khôi phục mật khẩu của bạn: <a href='http://localhost:3000/recovery_passs'> Nhấn vào đây </a>";
+        emailDetails.setRecipient(user.getEmail());
+        emailDetails.setSubject("Khôi phục mật khẩu");
+        emailDetails.setMsgBody(htmlMsg);
+        String result = emailController.sendMail(emailDetails);
+        response.put("success", true);
+        response.put("message", "Hệ thống đã gửi email khôi phục mật khẩu. Mời bạn kiểm tra email của mình");
+        System.out.println(result);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

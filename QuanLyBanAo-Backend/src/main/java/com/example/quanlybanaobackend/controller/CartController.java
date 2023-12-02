@@ -65,7 +65,8 @@ public class CartController {
         }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        shoppingCartService.deleteAllItem(user);
+        ShoppingCart cart = user.getShoppingCart();
+        shoppingCartService.deleteAllItem(cart);
         response.put("success", true);
         response.put("message", "Xóa thành công");
         return new ResponseEntity<>(response, HttpStatus.OK);

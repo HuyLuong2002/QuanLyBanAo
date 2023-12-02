@@ -16,8 +16,5 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Inte
 //    ShoppingCart findShoppingCartByUsername(@Param("username") String username);
 
 
-    @Query("DELETE FROM ShoppingCart sp where sp.user = :user")
-    void deleteAllItem(@Param("user") User user);
-
     void delete(ShoppingCart shoppingCart);
 }
