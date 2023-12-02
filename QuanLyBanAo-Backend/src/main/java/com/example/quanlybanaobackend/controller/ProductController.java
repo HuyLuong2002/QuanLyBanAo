@@ -258,8 +258,11 @@ public class ProductController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        return cloudinaryService.uploadImage(file);
+    public ResponseEntity<Map<String, Object>> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("image", cloudinaryService.uploadImage(file));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping(path = {"/create"})
