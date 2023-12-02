@@ -20,9 +20,10 @@
   margin: auto;
   padding: 3vmax;
   justify-content: space-evenly;
-  height: 70%;
-  width: 40vh;
+  height: 100%;
+  width: 70vh;
   background-color: white;
+  gap: .5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.267);
 }
 

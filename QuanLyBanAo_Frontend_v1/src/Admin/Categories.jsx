@@ -31,7 +31,6 @@ const Categories = () => {
             dispatch(clearErrors());
         }
 
-
         dispatch(getCategories());
     }, [dispatch, alert, error]);
 
