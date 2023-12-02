@@ -60,16 +60,14 @@ const OrderList = () => {
         },
         {
             field: 'itemsQty',
-            headerName: 'Items Qty',
-            type: 'number',
+            headerName: 'Quantity',
             minWidth: 150,
             flex: 0.4,
         },
 
         {
             field: 'amount',
-            headerName: 'Amount',
-            type: 'number',
+            headerName: 'Price',
             minWidth: 270,
             flex: 0.5,
         },
@@ -79,7 +77,6 @@ const OrderList = () => {
             flex: 0.3,
             headerName: 'Actions',
             minWidth: 150,
-            type: 'number',
             sortable: false,
             renderCell: (params) => {
                 return (

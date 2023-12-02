@@ -39,6 +39,8 @@ import UpdateUser from "./Admin/UpdateUser";
 import ProcessOrder from "./Admin/ProcessOrder";
 import Supplier from "./Admin/Supplier";
 import Categories from "./Admin/Categories";
+import UpdateSupplier from "./Admin/UpdateSupplier";
+import UpdateCategories from "./Admin/UpdateCategories";
 
 const Layout = () => {
   return (
@@ -175,10 +177,30 @@ const router = createBrowserRouter(
 
       <Route
         exact
+        path="/admin/supplier/:id"
+        element={
+          <ProtectedRoute>
+            <UpdateSupplier />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        exact
         path="/admin/categories"
         element={
           <ProtectedRoute>
             <Categories />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        exact
+        path="/admin/category/:id"
+        element={
+          <ProtectedRoute>
+            <UpdateCategories />
           </ProtectedRoute>
         }
       />

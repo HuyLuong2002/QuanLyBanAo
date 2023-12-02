@@ -107,10 +107,6 @@ const UpdateProduct = () => {
         dispatch(updateProduct(productId, myForm));
     };
 
-    
-
-
-
     return (
         <Fragment>
             {loading ? (
@@ -157,7 +153,7 @@ const UpdateProduct = () => {
                                         value={product?.description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         cols="40"
-                                        rows="3"
+                                        rows="1"
                                     ></textarea>
                                 </div>
 

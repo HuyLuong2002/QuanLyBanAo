@@ -20,7 +20,7 @@
   margin: auto;
   padding: 3vmax;
   justify-content: space-evenly;
-  height: 100%;
+  height: auto;
   width: 70vh;
   background-color: white;
   gap: .5rem;
