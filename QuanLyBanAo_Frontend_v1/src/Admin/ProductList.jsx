@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import './productList.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearErrors, getAdminProduct, deleteProduct, getProduct } from '../actions/productAction';
 import { Link } from 'react-router-dom';
@@ -12,6 +11,8 @@ import SideBar from './Sidebar';
 import { DELETE_PRODUCT_RESET } from '../constants/productConstants';
 import { useNavigate } from 'react-router-dom';
 import MetaData from '../components/layout/MetaData';
+import './productList.css';
+
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -102,8 +103,8 @@ const ProductList = () => {
     products &&
         products.forEach((item) => {
             rows.push({
-                id: item._id,
-                stock: item.Stock,
+                id: item.id,
+                stock: 1,
                 price: item.price,
                 name: item.name,
             });

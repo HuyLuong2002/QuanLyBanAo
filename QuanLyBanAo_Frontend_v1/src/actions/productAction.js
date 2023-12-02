@@ -85,11 +85,11 @@ export const getProduct = () => async (dispatch) => {
 };
 
 // Filter products
-export const filterProducts = (category ) => async (dispatch) => {
+export const filterProducts = (categoryId, color, minPrice, maxPrice, priceCondition,keyword = '', orderId = 1, page = 0 ) => async (dispatch) => {
     try {
         dispatch({ type: ALL_PRODUCT_REQUEST });
 
-        let link = `http://localhost:8081/api/v1/products/filter?categoryId=${category}`;
+        let link = `http://localhost:8081/api/v1/products/filter?categoryId=${categoryId}&color=${color}&minPrice=${minPrice}&maxPrice=${maxPrice}&priceCondition=${priceCondition}&keyword=${keyword}&orderById=${orderId}&page=${page}`;
 
         const { data } = await axios.get(link);
 
@@ -283,3 +283,23 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
 export const clearErrors = () => async (dispatch) => {
     dispatch({ type: CLEAR_ERRORS });
 };
+
+
+// Get categories
+export const getCategories = () => async (dispatch) => {
+    try {
+        dispatch({ type: DELETE_REVIEW_REQUEST });
+
+        const { data } = await axios.delete(`http://localhost:8081/api/v1/categoriesa`);
+
+        dispatch({
+            type: DELETE_REVIEW_SUCCESS,
+            payload: data.success,
+        });
+    } catch (error) {
+        dispatch({
+            type: DELETE_REVIEW_FAIL,
+            payload: error.response.data.message,
+        });
+    }
+}

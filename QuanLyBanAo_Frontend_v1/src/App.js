@@ -43,7 +43,7 @@ const Layout = () => {
     <div>
       <Header />
       <HeaderBottom />
-      <SpecialCase />
+      <SpecialCase/>
       <ScrollRestoration />
       <Outlet />
       <Footer />
@@ -57,7 +57,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         {/* ==================== Header Navlink Start here =================== */}
         <Route index element={<Home />}></Route>
-        <Route path="/shop" element={<Shop />}></Route>
+        <Route path="/shop/:categoryId/:color/:minprice/:maxprice" element={<Shop />}></Route>
         <Route path="/about" element={
           <ProtectedRoute>
             <About />
@@ -175,10 +175,6 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  // dispatch action load user
-  const dispatch = useDispatch()
-
-  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     store.dispatch(loadUser());

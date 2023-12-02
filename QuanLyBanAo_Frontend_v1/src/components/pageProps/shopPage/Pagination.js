@@ -4,6 +4,7 @@ import Product from "../../home/Products/Product";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../../actions/productAction";
+import { useParams } from "react-router-dom";
 
 function Items({ currentItems }) {
     
@@ -33,6 +34,7 @@ const Pagination = ({ itemsPerPage }) => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const { loading, error, products } = useSelector((state) => state.products);
+    const { categoryId, color, minprice, maxprice } = useParams();
 
     // useEffect to get products
     useEffect(() => {
@@ -40,8 +42,66 @@ const Pagination = ({ itemsPerPage }) => {
         dispatch(getProduct());
     }, [dispatch, error, alert]);
 
-    const items = products;
+    const items = products.filter((item) => {
+        // 0 condition
+        if(color === "0" && categoryId === "0" && minprice === "0" && maxprice === "0") {
+            return item
+        }
 
+        // 1 condition
+        if(color !== "0" && categoryId === "0" && minprice === "0" && maxprice === "0") {
+            return item.color === color 
+        }
+        if(color === "0" && categoryId !== "0" && minprice === "0" && maxprice === "0") {
+            return item.category.id === Number(categoryId)
+        }
+        if(color === "0" && categoryId === "0") {
+            if(minprice === "0")
+                return item.price < Number(maxprice)
+
+            if(maxprice === "0")
+                return item.price > Number(minprice)
+
+            return item.price > Number(minprice) && item.price < Number(maxprice)
+        }
+
+        // 2 conditions
+        if(color !== "0" && categoryId !== "0" && minprice === "0" && maxprice === "0") {
+            return item.color === color && item.category.id === Number(categoryId)
+        }
+
+        if(color !== "0" && categoryId === "0") {
+            if(minprice === "0")
+                return item.price < Number(maxprice) && item.color === color
+            if(maxprice === "0")
+                return item.price > Number(minprice) && item.color === color
+
+            return item.color === color && item.price > Number(minprice) && item.price < Number(maxprice)
+        }
+
+        if(color === "0" && categoryId !== "0") {
+            
+            if(minprice === "0") {
+                return item.price < Number(maxprice) && item.category.id === Number(categoryId)
+            }
+            if(maxprice === "0")
+                return item.price > Number(minprice) && item.category.id === Number(categoryId)
+
+            return item.category.id === Number(categoryId) && item.price > Number(minprice) && item.price < Number(maxprice)
+        }
+
+        // 3 conditions
+        if(color !== "0" && categoryId !== "0") {
+            if(minprice === "0")
+                return item.price < Number(maxprice) && item.category.id === Number(categoryId) && item.color === color
+            if(maxprice === "0")
+                return item.price > Number(minprice) && item.category.id === Number(categoryId) && item.color === color
+
+            return item.category.id === Number(categoryId) && item.price > Number(minprice) && item.price < Number(maxprice)  && item.color === color
+        }
+
+        return item
+    });
 
     // Here we use item offsets; we could also use page offsets
     // following the API or data you're working with.
@@ -65,6 +125,8 @@ const Pagination = ({ itemsPerPage }) => {
         // );
         setItemStart(newOffset);
     };
+
+
 
     return (
         <div>
