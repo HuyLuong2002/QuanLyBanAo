@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p order by p.name desc ")
     Page<Product> getAll(Pageable pageable);
 
+    List<Product> getProductsByCategory(Category category);
+
     @Query(value = "SELECT * FROM products p where p.category_id = ?1 and p.product_id != ?2 limit 4", nativeQuery = true)
     List<Product> getRelatedProduct(int categoryId, int productId);
     @Query("SELECT p from Product p where p.color = :color")

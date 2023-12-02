@@ -12,6 +12,8 @@ public interface ProductService {
 
     Page<Product> getProducts(Pageable pageable);
 
+    List<Product> getProductsByCategory(Category category);
+
     List<Product> getRelatedProducts(int categoryId, int productId);
     Product save(Product product);
 

@@ -1,9 +1,11 @@
 package com.example.quanlybanaobackend.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
+@Data
 public class ProductDTO {
 
     private int id;

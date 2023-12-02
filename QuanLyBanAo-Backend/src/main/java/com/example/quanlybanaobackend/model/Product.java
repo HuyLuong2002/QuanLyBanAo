@@ -4,6 +4,9 @@ import com.example.quanlybanaobackend.constant.Constant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.Serializable;
 
 
 @AllArgsConstructor
@@ -12,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 @Table(name = "products")
 @Getter
 @Setter
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -21,6 +24,9 @@ public class Product {
     private int price;
     private String description;
     private String image;
+
+    @Transient
+    private MultipartFile file;
     private String size;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")

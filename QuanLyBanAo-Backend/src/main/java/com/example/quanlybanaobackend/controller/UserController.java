@@ -13,10 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -31,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllUsers() {
+    public ResponseEntity<Map<String, Object>> getAllUsers() throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -40,8 +38,13 @@ public class UserController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            List<UserDTO> userDTOList = new ArrayList<>();
+            List<User> users = userService.getAllUsers();
+            for (User user : users) {
+                userDTOList.add(mapToDTO(user));
+            }
             response.put("success", true);
-            response.put("users", userService.getAllUsers());
+            response.put("users", userDTOList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -50,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> getUserById(@PathVariable int id) throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -60,7 +63,7 @@ public class UserController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             response.put("success", true);
-            response.put("user", userService.getUserById(id));
+            response.put("user", mapToDTO(userService.getUserById(id)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -125,5 +128,24 @@ public class UserController {
         }
         response.put("message", "Bạn chưa đăng nhập");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    public UserDTO mapToDTO(User user) throws ParseException {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setSex(user.getSex());
+        userDTO.setDateOfBirth(String.valueOf(user.getDateOfBirth()));
+        userDTO.setAddress(user.getAddress());
+        userDTO.setTel(user.getTel());
+        userDTO.setStatus(user.getStatus());
+        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
+        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+        userDTO.setRoles(user.getRoles());
+        userDTO.setDeleted(user.isDeleted());
+        return userDTO;
     }
 }

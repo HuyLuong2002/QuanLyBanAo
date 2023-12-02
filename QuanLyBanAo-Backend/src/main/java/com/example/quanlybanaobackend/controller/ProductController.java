@@ -263,7 +263,7 @@ public class ProductController {
     }
 
     @PostMapping(path = {"/create"})
-    public ResponseEntity<Map<String, Object>> createProducts(@RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> createProducts(@RequestBody Product product) throws IOException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -273,7 +273,6 @@ public class ProductController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-
             Product savedProduct = productService.save(product);
             if (savedProduct != null) {
                 response.put("success", true);
@@ -348,6 +347,14 @@ public class ProductController {
         }
         response.put("message", "Bạn chưa đăng nhập");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
+    @GetMapping("/getByCategory")
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(@RequestBody Category category)
+    {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productService.getProductsByCategory(category));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
