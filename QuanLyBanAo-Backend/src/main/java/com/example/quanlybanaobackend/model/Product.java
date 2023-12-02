@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Table(name = "products")
 @Getter
 @Setter
-public class Product implements Serializable {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -25,15 +25,16 @@ public class Product implements Serializable {
     private String description;
     private String image;
 
-    @Transient
-    private MultipartFile file;
     private String size;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "category_id")
     private Category category;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+
     @Enumerated(EnumType.STRING)
     private Constant.Color color;
 

@@ -29,41 +29,41 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findProductByName(@Param("name") String name);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price > :minPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASCGreaterThan(@Param("category") Category category, @Param("color") Constant.Color color,
                                     @Param("minPrice") int minPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price >= :minPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASCGreaterThanOrEqual(@Param("category") Category category, @Param("color") Constant.Color color,
                                     @Param("minPrice") int minPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price < :maxPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASCLessThan(@Param("category") Category category, @Param("color") Constant.Color color, @Param("maxPrice") int maxPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price <= :maxPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASCLessThanOrEqual(@Param("category") Category category, @Param("color") Constant.Color color, @Param("maxPrice") int maxPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and (p.price >= :minPrice and p.price <= :maxPrice) " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASCBetween(@Param("category") Category category, @Param("color") Constant.Color color,
                                     @Param("minPrice") int minPrice, @Param("maxPrice") int maxPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price = :minPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name ASC ")
     Page<Product> findByCategoryASC(@Param("category") Category category, @Param("color") Constant.Color color,
                                     @Param("minPrice") int minPrice, @Param("keyword") String keyword, Pageable pageable);
 
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price = :minPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name DESC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name DESC ")
     Page<Product> findByCategoryDESC(@Param("category") Category category, @Param("color") Constant.Color color,
                                      @Param("minPrice") int minPrice, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.category = :category and p.color = :color and p.price > :minPrice " +
-            "and LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name DESC ")
+            "or LOWER(p.name) LIKE LOWER(concat('%', :keyword, '%')) order by p.name DESC ")
     Page<Product> findByCategoryDESCGreaterThan(@Param("category") Category category, @Param("color") Constant.Color color,
                                                @Param("minPrice") int minPrice, @Param("keyword") String keyword, Pageable pageable);
 
