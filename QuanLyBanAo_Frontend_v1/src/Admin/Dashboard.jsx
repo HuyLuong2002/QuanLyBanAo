@@ -14,6 +14,7 @@ import { getAdminProduct, getProduct } from '../actions/productAction';
 import MetaData from '../components/layout/MetaData';
 import { getAllUsers } from '../actions/userAction';
 import axios from 'axios';
+import { getAllOrders } from '../actions/orderAction';
 
 const controllers = Object.values(ChartJS).filter((chart) => chart.id !== undefined);
 Chart.register(...controllers);
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
     const { products } = useSelector((state) => state.products);
 
-    // const { orders } = useSelector((state) => state.allOrders);
+    const { orders } = useSelector((state) => state.allOrders);
 
     const { users } = useSelector((state) => state.allUsers);
 
@@ -38,7 +39,7 @@ const Dashboard = () => {
     useEffect(() => {
         dispatch(getProduct());
         dispatch(getAllUsers());
-        // dispatch(getAllOrders());
+        dispatch(getAllOrders());
     }, [dispatch]);
 
     let totalAmount = 0;
@@ -122,7 +123,7 @@ const Dashboard = () => {
                         </Link>
                         <Link to="/admin/orders">
                             <p>Orders</p>
-                            {/* <p>{orders && orders?.length}</p> */}
+                            <p>{orders && orders?.length}</p>
                         </Link>
                         <Link to="/admin/users">
                             <p>Users</p>
@@ -132,15 +133,20 @@ const Dashboard = () => {
                 </div>
 
                 <div className="lineChart">
+                    <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE</h1>
                     <Line data={lineState} />
                 </div>
 
-                <div className="doughnutChart">
-                    <Doughnut data={doughnutState} />
-                </div>
+                <div className='flex justify-around mt-12'>
+                    <div className="w-[30%] h-full">
+                        <h1 className='text-2xl font-semibold text-center mb-4'>PRODUCT</h1>
+                        <Doughnut data={doughnutState} />
+                    </div>
 
-                <div className="barChart">
-                    <Bar data={barState} />
+                    <div className="w-[60%] h-full">
+                        <h1 className='text-2xl font-semibold text-center mb-4'>USER</h1>
+                        <Bar data={barState} />
+                    </div>
                 </div>
             </div>
         </div>
