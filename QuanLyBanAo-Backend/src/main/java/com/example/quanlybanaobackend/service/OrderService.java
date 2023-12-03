@@ -21,7 +21,7 @@ public interface OrderService {
 
     Order updateOrders(int id, Order order);
 
-    void deleteOrder(int id);
+    Order deleteOrder(int id);
 
     Order findById(int id);
 

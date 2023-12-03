@@ -135,19 +135,22 @@ public class OrderController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Order order = orderService.findById(id);
-            if(order == null)
-            {
-                response.put("message", "Hóa đơn không tồn tại");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
+
             if(order.getShipStatus() == Constant.ShipStatus.SHIPPING || order.getShipStatus() == Constant.ShipStatus.SHIPPED)
             {
                 response.put("message", "Tình trạng giao hàng đang là đang giao hoặc đã giao, không thể hủy");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            orderService.deleteOrder(id);
-            response.put("success", true);
-            response.put("message", "Xóa hóa đơn thành công");
+            Order order1 =  orderService.deleteOrder(id);
+            if(order1.getOrderStatus() == Constant.OrderStatus.UNACTIVE)
+            {
+                response.put("success", true);
+                response.put("message", "Xóa hóa đơn thành công");
+            }
+            else {
+                response.put("success", true);
+                response.put("message", "Khôi phục hóa đơn thành công");
+            }
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");

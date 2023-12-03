@@ -19,7 +19,7 @@ public interface ProductService {
 
     Product updateProduct(int id, Product product);
 
-    void deleteProduct(int id);
+    Product deleteProduct(int id);
 
     Product findById(int id);
 

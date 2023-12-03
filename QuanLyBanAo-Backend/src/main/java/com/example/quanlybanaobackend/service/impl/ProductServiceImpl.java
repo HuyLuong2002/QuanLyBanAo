@@ -58,10 +58,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(int id) {
+    public Product deleteProduct(int id) {
         Product removeProduct = findById(id);
-        removeProduct.setDeleted(true);
-        productRepository.save(removeProduct);
+        removeProduct.setDeleted(!removeProduct.isDeleted());
+        return productRepository.save(removeProduct);
     }
 
     @Override

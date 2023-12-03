@@ -110,14 +110,18 @@ public class CategoryController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Category deleteCategory = categoryService.findById(id);
-            if (deleteCategory == null || deleteCategory.isDeleted()) {
-                response.put("message", "Không tìm thấy thể loại");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            deleteCategory.setDeleted(!deleteCategory.isDeleted());
+            Category category = categoryService.save(deleteCategory);
+            if(category.isDeleted())
+            {
+                response.put("success", true);
+                response.put("message", "Xóa thể loại thành công");
             }
-            deleteCategory.setDeleted(true);
-            categoryService.save(deleteCategory);
-            response.put("success", true);
-            response.put("message", "Xóa thể loại thành công");
+            else {
+                response.put("success", true);
+                response.put("message", "Khôi phục thể loại thành công");
+            }
+
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");

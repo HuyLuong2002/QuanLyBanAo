@@ -109,16 +109,19 @@ public class SupplierController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            Supplier getSupplier = supplierService.getSupplierById(id);
-            if (getSupplier == null || getSupplier.isDeleted()) {
-                response.put("message", "Không tìm thấy nhà cung cấp");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            } else {
-                supplierService.deleteSupplier(id);
+
+            Supplier supplier = supplierService.deleteSupplier(id);
+            if(supplier.isDeleted())
+            {
                 response.put("success", true);
                 response.put("message", "Xóa nhà cung cấp thành công");
-                return new ResponseEntity<>(response, HttpStatus.OK);
             }
+            else {
+                response.put("success", true);
+                response.put("message", "Khôi phục nhà cung cấp thành công");
+            }
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         }
         response.put("message", "Bạn chưa đăng nhập");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

@@ -102,13 +102,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    public void deleteUser(int id) {
+    public User deleteUser(int id) {
         boolean isPresent = userRepository.findById(id).isPresent();
         if (isPresent) {
             User user = userRepository.findById(id).get();
-            user.setDeleted(true);
-            userRepository.save(user);
+            user.setDeleted(!user.isDeleted());
+            return userRepository.save(user);
         }
+        return null;
     }
 
     @Override

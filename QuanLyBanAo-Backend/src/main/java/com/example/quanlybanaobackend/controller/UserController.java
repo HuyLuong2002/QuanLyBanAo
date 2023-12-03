@@ -120,9 +120,17 @@ public class UserController {
         if (authController.getUserLogin() != null) {
             User userAdmin = userService.findByUsername(authController.getUserLogin());
             if (userAdmin.getRoles().stream().findFirst().get().getName().equals("ADMIN")) {
-                userService.deleteUser(id);
-                response.put("success", true);
-                response.put("message", "Xóa người dùng thành công");
+                User user = userService.deleteUser(id);
+                if (user.isDeleted())
+                {
+                    response.put("success", true);
+                    response.put("message", "Xóa người dùng thành công");
+                }
+                else {
+                    response.put("success", true);
+                    response.put("message", "Khôi phục người dùng thành công");
+                }
+
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
