@@ -39,6 +39,16 @@ import {
     SUPPLIER_SUCCESS,
     SUPPLIER_FAIL,
 } from '../constants/productConstants';
+import {
+    DELETE_SUPPLIER_FAIL,
+    DELETE_SUPPLIER_REQUEST,
+    DELETE_SUPPLIER_RESET,
+    DELETE_SUPPLIER_SUCCESS, SUPPLIER_DETAILS_FAIL, SUPPLIER_DETAILS_REQUEST, SUPPLIER_DETAILS_SUCCESS,
+    UPDATE_SUPPLIER_FAIL,
+    UPDATE_SUPPLIER_REQUEST,
+    UPDATE_SUPPLIER_RESET,
+    UPDATE_SUPPLIER_SUCCESS
+} from "../constants/supplierConstant";
 
 export const productsReducer = (state = { products: [] }, action) => {
     switch (action.type) {
@@ -189,6 +199,32 @@ export const productDetailsReducer = (state = { product: {}, related: [] }, acti
     }
 };
 
+export const supplierDetailsReducer = (state = { supplier: {} }, action) => {
+    switch (action.type) {
+        case SUPPLIER_DETAILS_REQUEST:
+            return {
+                loading: true,
+                ...state,
+            };
+        case SUPPLIER_DETAILS_SUCCESS:
+            return {
+                loading: false,
+                supplier: action.payload,
+            };
+        case SUPPLIER_DETAILS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+        case CLEAR_ERRORS:
+            return {
+                ...state,
+                error: null,
+            };
+        default:
+            return state;
+    }
+};
 export const newReviewReducer = (state = {}, action) => {
     switch (action.type) {
         case NEW_REVIEW_REQUEST:
@@ -251,7 +287,7 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
     }
 };
 
-export const supplierReducer = (state = { suplliers: []}, action) => {
+export const suppliersReducer = (state = { suplliers: []}, action) => {
     switch (action.type) {
         case SUPPLIER_REQUEST:
             return {
@@ -274,7 +310,54 @@ export const supplierReducer = (state = { suplliers: []}, action) => {
             return state;
     }
 };
-
+export const supplierReducer = (state = {}, action) => {
+    switch (action.type) {
+        case DELETE_SUPPLIER_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case DELETE_SUPPLIER_SUCCESS:
+            return {
+                loading: false,
+                isDeleted: action.payload
+            };
+        case DELETE_SUPPLIER_FAIL:
+            return {
+                ...state,
+                loading: false,
+                isDeleted: action.payload,
+            };
+        case DELETE_SUPPLIER_RESET:
+            return {
+                ...state,
+                success: false,
+            };
+        case UPDATE_SUPPLIER_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case UPDATE_SUPPLIER_SUCCESS:
+            return {
+                loading: false,
+                isUpdated: action.payload
+            };
+        case UPDATE_SUPPLIER_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+            };
+        case UPDATE_SUPPLIER_RESET:
+            return {
+                ...state,
+                isUpdated: false,
+            };
+        default:
+            return state;
+    }
+};
 
 export const categoriesReducer = (state = {categories: []}, action) => {
     switch (action.type) {

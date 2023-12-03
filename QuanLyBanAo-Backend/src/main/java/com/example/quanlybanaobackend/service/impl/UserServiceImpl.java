@@ -67,6 +67,12 @@ public class UserServiceImpl implements UserService {
     public User updateUser(int id, User user) {
         User oldUser = getUserById(id);
         if (oldUser != null) {
+            oldUser.setFirstName(user.getFirstName());
+            oldUser.setLastName(user.getLastName());
+            oldUser.setSex(user.getSex());
+            oldUser.setDateOfBirth(user.getDateOfBirth());
+            oldUser.setAddress(user.getAddress());
+            oldUser.setTel(user.getTel());
             oldUser.setStatus(user.getStatus());
             oldUser.setUpdatedAt(new Date());
             oldUser.setRoles(user.getRoles());
@@ -96,13 +102,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    public void deleteUser(int id) {
+    public User deleteUser(int id) {
         boolean isPresent = userRepository.findById(id).isPresent();
         if (isPresent) {
             User user = userRepository.findById(id).get();
-            user.setDeleted(true);
-            userRepository.save(user);
+            user.setDeleted(!user.isDeleted());
+            return userRepository.save(user);
         }
+        return null;
     }
 
     @Override

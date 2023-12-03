@@ -60,9 +60,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(int id) {
+    public Order deleteOrder(int id) {
         Order removeOrder = findById(id);
-        removeOrder.setOrderStatus(Constant.OrderStatus.UNACTIVE);
+        if(removeOrder.getOrderStatus() == Constant.OrderStatus.ACTIVE)
+            removeOrder.setOrderStatus(Constant.OrderStatus.UNACTIVE);
+        else removeOrder.setOrderStatus(Constant.OrderStatus.ACTIVE);
+        return orderRepository.save(removeOrder);
     }
 
     @Override

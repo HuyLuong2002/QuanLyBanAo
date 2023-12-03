@@ -303,11 +303,7 @@ public class ProductController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            Product getProduct = productService.findById(id);
-            if (getProduct == null || getProduct.isDeleted()) {
-                response.put("message", "Không tìm thấy sản phẩm");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-            }
+
             Product updateProduct = productService.updateProduct(id, product);
             if (updateProduct != null) {
                 response.put("success", true);
@@ -338,14 +334,17 @@ public class ProductController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            Product deleteProduct = productService.findById(id);
-            if (deleteProduct == null || deleteProduct.isDeleted()) {
-                response.put("message", "Không tìm thấy sản phẩm");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
+            Product product = productService.deleteProduct(id);
+            if(product.isDeleted())
+            {
+                response.put("success", true);
+                response.put("message", "Xóa sản phẩm thành công");
             }
-            productService.deleteProduct(id);
-            response.put("success", true);
-            response.put("message", "Xóa sản phẩm thành công");
+            else {
+                response.put("success", true);
+                response.put("message", "Khôi phục sản phẩm thành công");
+            }
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");

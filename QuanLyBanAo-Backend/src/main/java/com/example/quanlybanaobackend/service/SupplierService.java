@@ -11,6 +11,6 @@ public interface SupplierService {
 
     Supplier updateSupplier(int id, Supplier supplier);
 
-    void deleteSupplier(int id);
+    Supplier deleteSupplier(int id);
 
 }

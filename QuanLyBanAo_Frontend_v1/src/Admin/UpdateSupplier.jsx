@@ -8,6 +8,8 @@ import MetaData from '../components/layout/MetaData';
 import Sidebar from './Sidebar';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import { Button } from '@material-ui/core';
+import {UPDATE_SUPPLIER_RESET} from "../constants/supplierConstant";
+import {getSupplierDetails, updateSupplier} from "../actions/supplierAction";
 
 const UpdateSupplier = () => {
   const dispatch = useDispatch();
@@ -15,20 +17,44 @@ const UpdateSupplier = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
+    const { error, supplier } = useSelector((state) => state.supplierDetails);
 
-    const { loading, suplliers } = useSelector((state) => state.suppliers);
+    const { loading, error: updateError, isUpdated } = useSelector((state) => state.supplier);
 
-    const [name, setName] = useState(suplliers.name);
+    const [name, setName] = useState('');
 
-
+    const supplierId = id;
 
     useEffect(() => {
-        
-        // dispatch(getSuppliersById());
-    }, []);
+        dispatch(getSupplierDetails(supplierId));
+
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors());
+        }
+
+        if (updateError) {
+            alert.error(updateError);
+            dispatch(clearErrors());
+        }
+
+        if (isUpdated) {
+            alert.success('Supplier Updated Successfully');
+            navigate('/admin/suppliers');
+            dispatch({ type: UPDATE_SUPPLIER_RESET });
+        }
+
+        // dispatch(getSuppliers());
+    }, [dispatch, alert, error, navigate, isUpdated, supplierId, updateError]);
 
     const updateProductSubmitHandler = (e) => {
-        
+        e.preventDefault();
+
+        const myForm = new FormData();
+
+        myForm.set('name', name);
+
+        dispatch(updateSupplier(supplierId, myForm));
     };
 
     return (
@@ -52,9 +78,9 @@ const UpdateSupplier = () => {
                                     <FormatColorTextIcon />
                                     <input
                                         type="text"
-                                        placeholder="Product Name"
+                                        placeholder="Supplier Name"
                                         required
-                                        value=""
+                                        value={supplier?.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
