@@ -21,7 +21,7 @@ const UpdateSupplier = () => {
 
     const { loading, error: updateError, isUpdated } = useSelector((state) => state.supplier);
 
-    const [name, setName] = useState('');
+    const [name, setName] = useState(supplier.name);
 
     const supplierId = id;
 
@@ -80,7 +80,7 @@ const UpdateSupplier = () => {
                                         type="text"
                                         placeholder="Supplier Name"
                                         required
-                                        value={supplier?.name}
+                                        value={name ? name : supplier?.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
