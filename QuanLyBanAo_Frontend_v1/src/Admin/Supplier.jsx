@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteProduct, getProduct, getSuppliers } from '../actions/productAction';
+import { getSuppliers } from '../actions/productAction';
 import { clearErrors } from '../actions/userAction';
 import { DELETE_PRODUCT_RESET } from '../constants/productConstants';
 import EditIcon from '@material-ui/icons/Edit';
@@ -12,6 +12,8 @@ import MetaData from '../components/layout/MetaData';
 import Sidebar from './Sidebar';
 import { DataGrid } from '@material-ui/data-grid';
 import './productList.css';
+import {deleteSupplier} from "../actions/supplierAction";
+import {DELETE_SUPPLIER_RESET} from "../constants/supplierConstant";
 
 const Supplier = () => {
     const dispatch = useDispatch();
@@ -21,9 +23,10 @@ const Supplier = () => {
 
     const { error, suplliers } = useSelector((state) => state.suppliers);
 
+    const { error: deleteError, isDeleted } = useSelector((state) => state.supplier);
 
-    const deleteProductHandler = (id) => {
-        dispatch(deleteProduct(id));
+    const deleteSupplierHandler = (id) => {
+        dispatch(deleteSupplier(id));
     };
 
     useEffect(() => {
@@ -32,9 +35,19 @@ const Supplier = () => {
             dispatch(clearErrors());
         }
 
+        if (deleteError) {
+            alert.error(deleteError);
+            dispatch(clearErrors());
+        }
+
+        if (isDeleted) {
+            alert.success('Supplier Deleted Successfully');
+            navigate('/admin/suppliers');
+            dispatch({ type: DELETE_SUPPLIER_RESET });
+        }
 
         dispatch(getSuppliers());
-    }, [dispatch, alert, error]);
+    }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
         { field: 'id', headerName: 'ID', minWidth: 50 },
@@ -61,7 +74,7 @@ const Supplier = () => {
                             <EditIcon />
                         </Link>
 
-                        <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
+                        <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon />
                         </Button>
                     </Fragment>

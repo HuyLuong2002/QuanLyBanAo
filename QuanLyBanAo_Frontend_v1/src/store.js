@@ -10,7 +10,8 @@ import {
     productReviewsReducer,
     productsReducer,
     // reviewReducer,
-    supplierReducer,
+    suppliersReducer,
+    supplierReducer, supplierDetailsReducer
 } from './reducers/productReducer';
 
 import {
@@ -49,7 +50,9 @@ const reducer = combineReducers({
     userDetails: userDetailsReducer,
     productReviews: productReviewsReducer,
     // review: reviewReducer,
-    suppliers: supplierReducer,
+    suppliers: suppliersReducer,
+    supplier: supplierReducer,
+    supplierDetails: supplierDetailsReducer,
     categories: categoriesReducer
 });
 

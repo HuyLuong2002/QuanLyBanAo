@@ -8,6 +8,8 @@ import MetaData from '../components/layout/MetaData';
 import Sidebar from './Sidebar';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import { Button } from '@material-ui/core';
+import {UPDATE_SUPPLIER_RESET} from "../constants/supplierConstant";
+import {getSupplierDetails, updateSupplier} from "../actions/supplierAction";
 
 const UpdateSupplier = () => {
   const dispatch = useDispatch();
@@ -15,56 +17,17 @@ const UpdateSupplier = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const { error, product } = useSelector((state) => state.productDetails);
+    const { error, supplier } = useSelector((state) => state.supplierDetails);
 
-    const { loading, error: updateError, isUpdated } = useSelector((state) => state.product);
-
-    const { categories } = useSelector((state) => state.categories);
-    const { suplliers } = useSelector((state) => state.suppliers);
+    const { loading, error: updateError, isUpdated } = useSelector((state) => state.supplier);
 
     const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('');
-    // const [Stock, setStock] = useState(0);
-    const [images, setImages] = useState('');
-    // const [oldImages, setOldImages] = useState('');
-    const [imagesPreview, setImagesPreview] = useState('');
-    const [supplier, setSupplier] = useState('');
-    const [color, setColor] = useState('');
-    const [size, setSize] = useState('');
 
-    const productId = id;
-
-    const sizeList = ['M', 'L', 'XL', '2XL', '3XL']
-
-    const colorList = ['GREEN', 'RED', 'YELLOW', 'BLUE']
-
-    console.log("Product: ", categories);
-
-    function createProductImagesChange(event) {
-        const selectedFile = event.target.files[0];
-
-        if (selectedFile) {
-            const imagePath = URL.createObjectURL(selectedFile);
-            setImages(selectedFile)
-            setImagesPreview(imagePath)
-        } else {
-            console.log("Không có tệp nào được chọn");
-        }
-    }
+    const supplierId = id;
 
     useEffect(() => {
-        // if (product && product.id !== productId) {
-        // dispatch(getProductDetails(productId));
-        // } else {
-        //     setName(product.name);
-        //     setDescription(product.description);
-        //     setPrice(product.price);
-        //     setCategory(product.category);
-        //     // setStock(product.Stock);
-        //     setOldImages(product.images);
-        // }
+        dispatch(getSupplierDetails(supplierId));
+
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -76,14 +39,13 @@ const UpdateSupplier = () => {
         }
 
         if (isUpdated) {
-            alert.success('Product Updated Successfully');
-            navigate('/admin/products');
-            // dispatch({ type: UPDATE_PRODUCT_RESET });
+            alert.success('Supplier Updated Successfully');
+            navigate('/admin/suppliers');
+            dispatch({ type: UPDATE_SUPPLIER_RESET });
         }
 
         // dispatch(getSuppliers());
-        // dispatch(getCategories());
-    }, [dispatch, alert, error, navigate, isUpdated, productId, updateError]);
+    }, [dispatch, alert, error, navigate, isUpdated, supplierId, updateError]);
 
     const updateProductSubmitHandler = (e) => {
         e.preventDefault();
@@ -91,15 +53,8 @@ const UpdateSupplier = () => {
         const myForm = new FormData();
 
         myForm.set('name', name);
-        myForm.set('price', price);
-        myForm.set('description', description);
-        myForm.set('category', category.toLowerCase());
-        // myForm.set('Stock', Stock);
 
-        images.forEach((image) => {
-            myForm.append('images', image);
-        });
-        // dispatch(updateProduct(productId, myForm));
+        dispatch(updateSupplier(supplierId, myForm));
     };
 
     return (
@@ -123,9 +78,9 @@ const UpdateSupplier = () => {
                                     <FormatColorTextIcon />
                                     <input
                                         type="text"
-                                        placeholder="Product Name"
+                                        placeholder="Supplier Name"
                                         required
-                                        value={product?.name}
+                                        value={supplier?.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>

@@ -38,7 +38,7 @@ public class SupplierController {
     public ResponseEntity<Map<String, Object>> getSupplierById(@PathVariable int id) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("suppliers", supplierService.getSupplierById(id));
+        response.put("supplier", supplierService.getSupplierById(id));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
