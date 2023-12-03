@@ -4,14 +4,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearErrors, getAdminProduct, deleteProduct, getProduct } from '../actions/productAction';
 import { Link } from 'react-router-dom';
 import { useAlert } from 'react-alert';
-import { Button } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SideBar from './Sidebar';
 import { DELETE_PRODUCT_RESET } from '../constants/productConstants';
 import { useNavigate } from 'react-router-dom';
 import MetaData from '../components/layout/MetaData';
+import ReplayIcon from '@material-ui/icons/Replay';
 import './productList.css';
+import { CheckCircleOutline } from '@material-ui/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 
 const ProductList = () => {
@@ -71,11 +76,33 @@ const ProductList = () => {
             field: 'color',
             headerName: 'Color',
             minWidth: 185,
+            renderCell: (params) => {
+                return (
+                    <span className={params.value === "GREEN" ? 'bg-green-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-500 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-500 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
+                )
+            },
         },
         {
             field: 'deleted',
             headerName: 'Deleted',
             minWidth: 185,
+            type: 'boolean',
+            renderCell: (params) => {
+                return !params.value ? (
+                    <CheckCircleOutline
+                        style={{
+                            color: "green",
+                        }}
+                    />
+                ) : (
+                    <CloseCircleOutlined
+                        style={{
+                            color: "red",
+                            fontSize: "22px"
+                        }}
+                    />
+                );
+            },
         },
         {
             field: 'actions',
@@ -89,9 +116,25 @@ const ProductList = () => {
                             <EditIcon />
                         </Link>
 
-                        <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
-                            <DeleteIcon />
-                        </Button>
+                        {
+                            params.getValue(params.id, 'deleted') ? (
+                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
+                                    <ReplayIcon />
+                                </Button>
+                            ) : (
+                                // <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
+                                //     <DeleteIcon />
+                                // </Button>
+                                <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this task?"
+                                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                    placement='bottomLeft'
+                                >
+                                    <Button danger><DeleteIcon /></Button>
+                                </Popconfirm>
+                            )
+                        }
                     </Fragment>
                 );
             },
@@ -99,8 +142,6 @@ const ProductList = () => {
     ];
 
     const rows = [];
-
-    console.log("products: ", products);
 
     products &&
         products.forEach((item) => {
@@ -132,6 +173,7 @@ const ProductList = () => {
                         autoHeight
                     />
                 </div>
+
             </div>
         </Fragment>
     );

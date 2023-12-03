@@ -161,7 +161,7 @@ export const productReducer = (state = {}, action) => {
     }
 };
 
-export const productDetailsReducer = (state = { product: {} }, action) => {
+export const productDetailsReducer = (state = { product: {}, related: [] }, action) => {
     switch (action.type) {
         case PRODUCT_DETAILS_REQUEST:
             return {
@@ -171,7 +171,8 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
         case PRODUCT_DETAILS_SUCCESS:
             return {
                 loading: false,
-                product: action.payload,
+                product: action.payload.product,
+                related: action.payload.related,
             };
         case PRODUCT_DETAILS_FAIL:
             return {

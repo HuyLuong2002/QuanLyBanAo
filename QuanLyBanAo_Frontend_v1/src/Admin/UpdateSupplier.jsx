@@ -15,91 +15,20 @@ const UpdateSupplier = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const { error, product } = useSelector((state) => state.productDetails);
 
-    const { loading, error: updateError, isUpdated } = useSelector((state) => state.product);
+    const { loading, suplliers } = useSelector((state) => state.suppliers);
 
-    const { categories } = useSelector((state) => state.categories);
-    const { suplliers } = useSelector((state) => state.suppliers);
+    const [name, setName] = useState(suplliers.name);
 
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('');
-    // const [Stock, setStock] = useState(0);
-    const [images, setImages] = useState('');
-    // const [oldImages, setOldImages] = useState('');
-    const [imagesPreview, setImagesPreview] = useState('');
-    const [supplier, setSupplier] = useState('');
-    const [color, setColor] = useState('');
-    const [size, setSize] = useState('');
 
-    const productId = id;
-
-    const sizeList = ['M', 'L', 'XL', '2XL', '3XL']
-
-    const colorList = ['GREEN', 'RED', 'YELLOW', 'BLUE']
-
-    console.log("Product: ", categories);
-
-    function createProductImagesChange(event) {
-        const selectedFile = event.target.files[0];
-
-        if (selectedFile) {
-            const imagePath = URL.createObjectURL(selectedFile);
-            setImages(selectedFile)
-            setImagesPreview(imagePath)
-        } else {
-            console.log("Không có tệp nào được chọn");
-        }
-    }
 
     useEffect(() => {
-        // if (product && product.id !== productId) {
-        // dispatch(getProductDetails(productId));
-        // } else {
-        //     setName(product.name);
-        //     setDescription(product.description);
-        //     setPrice(product.price);
-        //     setCategory(product.category);
-        //     // setStock(product.Stock);
-        //     setOldImages(product.images);
-        // }
-        if (error) {
-            alert.error(error);
-            dispatch(clearErrors());
-        }
-
-        if (updateError) {
-            alert.error(updateError);
-            dispatch(clearErrors());
-        }
-
-        if (isUpdated) {
-            alert.success('Product Updated Successfully');
-            navigate('/admin/products');
-            // dispatch({ type: UPDATE_PRODUCT_RESET });
-        }
-
-        // dispatch(getSuppliers());
-        // dispatch(getCategories());
-    }, [dispatch, alert, error, navigate, isUpdated, productId, updateError]);
+        
+        // dispatch(getSuppliersById());
+    }, []);
 
     const updateProductSubmitHandler = (e) => {
-        e.preventDefault();
-
-        const myForm = new FormData();
-
-        myForm.set('name', name);
-        myForm.set('price', price);
-        myForm.set('description', description);
-        myForm.set('category', category.toLowerCase());
-        // myForm.set('Stock', Stock);
-
-        images.forEach((image) => {
-            myForm.append('images', image);
-        });
-        // dispatch(updateProduct(productId, myForm));
+        
     };
 
     return (
@@ -125,7 +54,7 @@ const UpdateSupplier = () => {
                                         type="text"
                                         placeholder="Product Name"
                                         required
-                                        value={product?.name}
+                                        value=""
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>

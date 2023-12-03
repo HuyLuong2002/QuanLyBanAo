@@ -8,13 +8,14 @@ import ItemCard from "./ItemCard";
 import axios from "axios";
 import { checkout, getCurrentUserCart, removeItemsFromCart, resetCart, updateItemCart } from "../../actions/cartAction";
 import { useAlert } from "react-alert";
+import Loader from "../../components/Loader/Loader";
 
 const Cart = () => {
     const dispatch = useDispatch();
     // const [totalAmt, setTotalAmt] = useState("");
     const [shippingCharge, setShippingCharge] = useState("");
-    const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
-    const { error, loading, isAuthenticated, user } = useSelector((state) => state.user);
+    const { loading, totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
+    const { error, isAuthenticated, user } = useSelector((state) => state.user);
     const alert = useAlert();
     const ref = useRef();
     const paymentMethod = "CASH"
@@ -36,8 +37,9 @@ const Cart = () => {
     const handleCheckout = async () => {
         const notes = ref.current.value
         await dispatch(checkout(paymentMethod, notes))
+        console.log("loading: ", loading);
+        dispatch(getCurrentUserCart());
         alert.success("Checkout successfuly")
-        handleResetCart()
     }
 
     const handleResetCart = async () => {
@@ -60,6 +62,9 @@ const Cart = () => {
     }, [totalPrices]);
 
     return (
+        loading ? <>
+            <Loader/>
+        </> :
         <div className="max-w-container mx-auto px-4">
             <Breadcrumbs title="Cart" />
             {cartItems?.length > 0 ? (

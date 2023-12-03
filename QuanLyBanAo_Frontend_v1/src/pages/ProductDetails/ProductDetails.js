@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import ProductInfo from "../../components/pageProps/productDetails/ProductInfo";
 import ProductsOnSale from "../../components/pageProps/productDetails/ProductsOnSale";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductDetails } from "../../actions/productAction";
 
 const ProductDetails = () => {
   const location = useLocation();
+  const {_id} = useParams();
+  const dispatch = useDispatch();
   const [prevLocation, setPrevLocation] = useState("");
   const [productInfo, setProductInfo] = useState([]);
+  const { error, product, related } = useSelector((state) => state.productDetails);
+
+  console.log("Product1: ", related);
 
   useEffect(() => {
     setProductInfo(location.state.item);
     setPrevLocation(location.pathname);
-  }, [location, productInfo]);
+    dispatch(getProductDetails(_id))
+  }, [dispatch, location, productInfo, _id]);
 
   return (
     <div className="w-full mx-auto border-b-[1px] border-b-gray-300">
@@ -22,7 +30,7 @@ const ProductDetails = () => {
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 h-full -mt-5 xl:-mt-8 pb-10 bg-gray-100 p-4">
           <div className="h-full">
-            <ProductsOnSale />
+            <ProductsOnSale related={related ? related : []}/>
           </div>
           <div className="h-full xl:col-span-2">
             <img

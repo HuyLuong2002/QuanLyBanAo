@@ -27,9 +27,9 @@ const UpdateProduct = () => {
     const { categories } = useSelector((state) => state.categories);
     const { suplliers } = useSelector((state) => state.suppliers);
 
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [description, setDescription] = useState('');
+    const [name, setName] = useState(product?.name);
+    const [price, setPrice] = useState(product?.price);
+    const [description, setDescription] = useState(product?.description);
     const [category, setCategory] = useState('');
     // const [Stock, setStock] = useState(0);
     const [images, setImages] = useState('');
@@ -130,7 +130,7 @@ const UpdateProduct = () => {
                                         type="text"
                                         placeholder="Product Name"
                                         required
-                                        value={product?.name}
+                                        value={name ? name : product?.name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
@@ -141,7 +141,7 @@ const UpdateProduct = () => {
                                         placeholder="Price"
                                         required
                                         onChange={(e) => setPrice(e.target.value)}
-                                        value={product?.price}
+                                        value={price ? price : product?.price}
                                     />
                                 </div>
 
@@ -150,7 +150,7 @@ const UpdateProduct = () => {
 
                                     <textarea
                                         placeholder="Product Description"
-                                        value={product?.description}
+                                        value={description ? description : product?.description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         cols="40"
                                         rows="1"

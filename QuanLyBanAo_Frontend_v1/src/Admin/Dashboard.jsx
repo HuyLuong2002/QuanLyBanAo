@@ -15,6 +15,125 @@ import MetaData from '../components/layout/MetaData';
 import { getAllUsers } from '../actions/userAction';
 import axios from 'axios';
 import { getAllOrders } from '../actions/orderAction';
+import { Space, Table, Tag } from 'antd';
+
+const columns = [
+    {
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        render: (text) => <a href='/'>{text}</a>,
+    },
+    {
+        title: 'Image',
+        dataIndex: 'image',
+        width: 120,
+        maxWidth: 120,
+        render: (t, r) => <img src={`${r.image}`} alt='' className='text-center' />
+    },
+    {
+        title: 'Total sell',
+        dataIndex: 'totalSell',
+        key: 'totalSell',
+        align: 'center'
+    },
+    {
+        title: 'Category',
+        dataIndex: 'category',
+        key: 'category',
+        align: 'center'
+    },
+    {
+        title: 'Price',
+        dataIndex: 'price',
+        key: 'price',
+        align: 'center'
+    },
+    {
+        title: 'Size',
+        dataIndex: 'size',
+        key: 'size',
+    },
+    {
+        title: 'Color',
+        key: 'color',
+        dataIndex: 'color',
+        render: (_, { color }) => (
+            <>
+                {
+                    color === "GREEN" ? (
+                        <Tag color='green' key={color}>
+                            {color}
+                        </Tag>
+                    ) : color === "YELLOW" ?  (
+                        <Tag color={'yellow'} key={color}>
+                            {color}
+                        </Tag>
+                    ) : color === "BLUE" ? (
+                        <Tag color={'blue'} key={color}>
+                            {color}
+                        </Tag>
+                    ) : (
+                        <Tag color={'red'} key={color}>
+                            {color}
+                        </Tag>
+                    )
+                }
+            </>
+        ),
+    },
+];
+
+const columns2 = [
+    {
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+    },
+    {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+    },
+    {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+    },
+    {
+        title: 'Total Quantity',
+        dataIndex: 'totalQuantity',
+        key: 'totalQuantity',
+        align: 'center'
+    },
+    {
+        title: 'Sex',
+        dataIndex: 'sex',
+        key: 'sex',
+        align: 'center'
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        align: 'center'
+    },
+    {
+        title: 'Telephone',
+        dataIndex: 'tel',
+        key: 'tel',
+    },
+];
 
 const controllers = Object.values(ChartJS).filter((chart) => chart.id !== undefined);
 Chart.register(...controllers);
@@ -28,7 +147,14 @@ const Dashboard = () => {
 
     const { users } = useSelector((state) => state.allUsers);
 
+    const [top5Employee, settop5Employee] = useState([])
+    const [top5Customer, settop5Customer] = useState([])
+    const [top10Product, setTop10Product] = useState([])
+
     let outOfStock = 0;
+
+    let data2 = []
+    let data3 = []
 
     products &&
         products.forEach((item) => {
@@ -36,11 +162,17 @@ const Dashboard = () => {
                 outOfStock += 1;
             }
         });
-    useEffect(() => {
-        dispatch(getProduct());
-        dispatch(getAllUsers());
-        dispatch(getAllOrders());
-    }, [dispatch]);
+
+
+    const getTop10Products = async () => {
+        const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10ProductBestSell");
+        setTop10Product(data)
+    }
+
+    const getTop5Customers = async () => {
+        const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10CustomerBestSell");
+        settop5Customer(data)
+    }
 
     let totalAmount = 0;
     // orders &&
@@ -100,7 +232,41 @@ const Dashboard = () => {
         ],
     };
 
-    console.log("users: ", users);
+    console.log("top5cus: ", top5Customer);
+
+    data2 = top5Customer && top5Customer.map(item => {
+        return {
+            id: item.customer.id,
+            lastName: item.customer.lastName,
+            firstName: item.customer.firstName,
+            email: item.customer.email,
+            totalQuantity: item.totalQuantity,
+            sex: item.customer.sex,
+            address: item.customer.address,
+            tel: item.customer.tel,
+        }
+    }, [])
+
+    data3 = top10Product && top10Product.map((item) => {
+        return {
+            id: item.product.id,
+            name: item.product.name,
+            image: item.product.image,
+            totalSell: item.totalQuantity,
+            category: item.product.category.name,
+            price: item.product.price,
+            size: item.product.size,
+            color: item.product.color
+        }
+    }, [])
+
+    useEffect(() => {
+        dispatch(getProduct());
+        dispatch(getAllUsers());
+        dispatch(getAllOrders());
+        getTop10Products();
+        getTop5Customers();
+    }, [dispatch]);
 
     return (
         <div className="dashboard">
@@ -133,20 +299,36 @@ const Dashboard = () => {
                 </div>
 
                 <div className="lineChart">
-                    <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE</h1>
+                    <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE PER MONTH</h1>
                     <Line data={lineState} />
                 </div>
 
-                <div className='flex justify-around mt-12'>
+                <div className='flex justify-around mt-12 mb-24'>
                     <div className="w-[30%] h-full">
                         <h1 className='text-2xl font-semibold text-center mb-4'>PRODUCT</h1>
                         <Doughnut data={doughnutState} />
                     </div>
 
                     <div className="w-[60%] h-full">
-                        <h1 className='text-2xl font-semibold text-center mb-4'>USER</h1>
+                        <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE PER DAY IN WEEK</h1>
                         <Bar data={barState} />
                     </div>
+                </div>
+
+
+                <div>
+                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 CUSTOMER:  </h1>
+                    <Table columns={columns2} dataSource={data2} />
+                </div>
+                
+                <div>
+                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 EMPLOYEE: </h1>
+                    <Table columns={columns2} dataSource={data2} />
+                </div>
+
+                <div>
+                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 10 PRODUCT: </h1>
+                    <Table columns={columns} dataSource={data3} />
                 </div>
             </div>
         </div>

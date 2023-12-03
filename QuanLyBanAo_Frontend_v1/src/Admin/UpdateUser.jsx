@@ -86,6 +86,7 @@ const UpdateUser = () => {
                                 <input
                                     type="text"
                                     placeholder="First Name"
+                                    disabled
                                     required
                                     value={user.firstName}
                                     onChange={(e) => setName(e.target.value)}
@@ -98,6 +99,7 @@ const UpdateUser = () => {
                                     type="text"
                                     placeholder="Last Name"
                                     required
+                                    disabled
                                     value={user.lastName}
                                     onChange={(e) => setName(e.target.value)}
                                 />
@@ -119,6 +121,7 @@ const UpdateUser = () => {
                                 <input
                                     type="date"
                                     placeholder="Date"
+                                    disabled
                                     required
                                     value={user.dateOfBirth}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -127,7 +130,7 @@ const UpdateUser = () => {
 
                             <div>
                                 <WcIcon />
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <select disabled value={role} onChange={(e) => setRole(e.target.value)}>
                                     {
                                         user.sex === "MALE" ? (
                                             <>
@@ -150,6 +153,7 @@ const UpdateUser = () => {
                                     type="text"
                                     placeholder="Address"
                                     required
+                                    disabled
                                     value={user.address}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -161,6 +165,7 @@ const UpdateUser = () => {
                                     type="number"
                                     placeholder="Telephone"
                                     required
+                                    disabled
                                     value={user.tel}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />

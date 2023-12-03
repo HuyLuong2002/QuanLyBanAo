@@ -1,4 +1,4 @@
-import { ADD_TO_CART, GET_CURRENT_USER_CART, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
+import { ADD_TO_CART, GET_CURRENT_USER_CART, GET_CURRENT_USER_CART_FAIL, GET_CURRENT_USER_CART_REQUEST, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
 import axios from 'axios';
 
 // Add to Cart
@@ -47,18 +47,29 @@ export const saveShippingInfo = (data) => async (dispatch) => {
 
 // GET CURRRENT USER CART
 export const getCurrentUserCart = () => async (dispatch, getState) => {
-    const { data } = await axios.get(`http://localhost:8081/api/v1/cart/getUserCart`);
+    
 
-    dispatch({
-        type: GET_CURRENT_USER_CART,
-        payload: {
-            products: data?.cart?.cartItem,
-            totalItem: data?.cart?.totalItems,
-            totalPrices: data?.cart?.totalPrices
-        },
-    });
+    try {
+        dispatch({
+            type: GET_CURRENT_USER_CART_REQUEST
+        });
+        const { data } = await axios.get(`http://localhost:8081/api/v1/cart/getUserCart`);
 
-    localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
+        dispatch({
+            type: GET_CURRENT_USER_CART,
+            payload: {
+                products: data?.cart?.cartItem,
+                totalItem: data?.cart?.totalItems,
+                totalPrices: data?.cart?.totalPrices
+            },
+        });
+    
+        localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
+    } catch (error) {
+        dispatch({ type: GET_CURRENT_USER_CART_FAIL, payload: error.response?.data?.message });
+    }
+
+   
 }
 
 // UPDATE ITEM CART

@@ -251,11 +251,11 @@ const NewProduct = () => {
                             />
                         </div>
 
-                        <div id="createProductFormImage">
+                        <div id="">
                             {/* {imagesPreview.map((image, index) => (
                                 <img key={index} src={image} alt="Product Preview" />
                             ))} */}
-                            {imagesPreview && <img src={imagesPreview} alt="Product Preview" />} 
+                            {imagesPreview && <img src={imagesPreview} alt="Product Preview" className='w-[120px]' />} 
                         </div>
 
                         <Button id="createProductBtn" type="submit" disabled={loading ? true : false}>
