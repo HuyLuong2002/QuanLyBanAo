@@ -192,7 +192,7 @@ public class CartController {
                 String result = emailController.sendMail(emailDetails);
                 System.out.println(result);
             }
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
