@@ -49,6 +49,19 @@ import {
     UPDATE_SUPPLIER_RESET,
     UPDATE_SUPPLIER_SUCCESS
 } from "../constants/supplierConstant";
+import {
+    CATEGORY_DETAILS_FAIL,
+    CATEGORY_DETAILS_REQUEST,
+    CATEGORY_DETAILS_SUCCESS,
+    DELETE_CATEGORY_FAIL,
+    DELETE_CATEGORY_REQUEST,
+    DELETE_CATEGORY_RESET,
+    DELETE_CATEGORY_SUCCESS,
+    UPDATE_CATEGORY_FAIL,
+    UPDATE_CATEGORY_REQUEST,
+    UPDATE_CATEGORY_RESET,
+    UPDATE_CATEGORY_SUCCESS
+} from "../constants/categoryConstant";
 
 export const productsReducer = (state = { products: [] }, action) => {
     switch (action.type) {
@@ -225,6 +238,33 @@ export const supplierDetailsReducer = (state = { supplier: {} }, action) => {
             return state;
     }
 };
+
+export const categoryDetailsReducer = (state = { category: {} }, action) => {
+    switch (action.type) {
+        case CATEGORY_DETAILS_REQUEST:
+            return {
+                loading: true,
+                ...state,
+            };
+        case CATEGORY_DETAILS_SUCCESS:
+            return {
+                loading: false,
+                category: action.payload,
+            };
+        case CATEGORY_DETAILS_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            };
+        case CLEAR_ERRORS:
+            return {
+                ...state,
+                error: null,
+            };
+        default:
+            return state;
+    }
+};
 export const newReviewReducer = (state = {}, action) => {
     switch (action.type) {
         case NEW_REVIEW_REQUEST:
@@ -286,30 +326,6 @@ export const productReviewsReducer = (state = { reviews: [] }, action) => {
             return state;
     }
 };
-
-export const suppliersReducer = (state = { suplliers: []}, action) => {
-    switch (action.type) {
-        case SUPPLIER_REQUEST:
-            return {
-                ...state,
-                loading: true,
-            };
-        case SUPPLIER_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                suplliers: action.payload,
-            };
-        case SUPPLIER_FAIL:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload,
-            };
-        default:
-            return state;
-    }
-};
 export const supplierReducer = (state = {}, action) => {
     switch (action.type) {
         case DELETE_SUPPLIER_REQUEST:
@@ -358,6 +374,29 @@ export const supplierReducer = (state = {}, action) => {
             return state;
     }
 };
+export const suppliersReducer = (state = { suplliers: []}, action) => {
+    switch (action.type) {
+        case SUPPLIER_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case SUPPLIER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                suplliers: action.payload,
+            };
+        case SUPPLIER_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+            };
+        default:
+            return state;
+    }
+};
 
 export const categoriesReducer = (state = {categories: []}, action) => {
     switch (action.type) {
@@ -377,6 +416,55 @@ export const categoriesReducer = (state = {categories: []}, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
+            };
+        default:
+            return state;
+    }
+};
+
+export const categoryReducer = (state = {}, action) => {
+    switch (action.type) {
+        case DELETE_CATEGORY_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case DELETE_CATEGORY_SUCCESS:
+            return {
+                loading: false,
+                isDeleted: action.payload
+            };
+        case DELETE_CATEGORY_FAIL:
+            return {
+                ...state,
+                loading: false,
+                isDeleted: action.payload,
+            };
+        case DELETE_CATEGORY_RESET:
+            return {
+                ...state,
+                success: false,
+            };
+        case UPDATE_CATEGORY_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case UPDATE_CATEGORY_SUCCESS:
+            return {
+                loading: false,
+                isUpdated: action.payload
+            };
+        case UPDATE_CATEGORY_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+            };
+        case UPDATE_CATEGORY_RESET:
+            return {
+                ...state,
+                isUpdated: false,
             };
         default:
             return state;

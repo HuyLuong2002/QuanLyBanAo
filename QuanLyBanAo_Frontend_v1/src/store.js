@@ -11,7 +11,7 @@ import {
     productsReducer,
     // reviewReducer,
     suppliersReducer,
-    supplierReducer, supplierDetailsReducer
+    supplierReducer, supplierDetailsReducer, categoryReducer, categoryDetailsReducer
 } from './reducers/productReducer';
 
 import {
@@ -53,7 +53,9 @@ const reducer = combineReducers({
     suppliers: suppliersReducer,
     supplier: supplierReducer,
     supplierDetails: supplierDetailsReducer,
-    categories: categoriesReducer
+    categories: categoriesReducer,
+    category: categoryReducer,
+    categoryDetails: categoryDetailsReducer
 });
 
 let initialState = {

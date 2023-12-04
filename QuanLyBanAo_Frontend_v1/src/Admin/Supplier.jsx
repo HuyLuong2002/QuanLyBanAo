@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSuppliers } from '../actions/productAction';
 import { clearErrors } from '../actions/userAction';
-import { DELETE_PRODUCT_RESET } from '../constants/productConstants';
 import EditIcon from '@material-ui/icons/Edit';
 import { Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';

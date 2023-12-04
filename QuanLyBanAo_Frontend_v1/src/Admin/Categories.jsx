@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react'
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteProduct, getCategories } from '../actions/productAction';
+import { getCategories } from '../actions/productAction';
 import { clearErrors } from '../actions/userAction';
 import EditIcon from '@material-ui/icons/Edit';
 import { Button } from '@material-ui/core';
@@ -11,6 +11,8 @@ import MetaData from '../components/layout/MetaData';
 import Sidebar from './Sidebar';
 import { DataGrid } from '@material-ui/data-grid';
 import './productList.css';
+import {DELETE_CATEGORY_RESET} from "../constants/categoryConstant";
+import {deleteCategory} from "../actions/categoryAction";
 
 const Categories = () => {
     const dispatch = useDispatch();
@@ -20,9 +22,10 @@ const Categories = () => {
 
     const { error, categories } = useSelector((state) => state.categories);
 
+    const { error: deleteError, isDeleted } = useSelector((state) => state.category);
 
-    const deleteProductHandler = (id) => {
-        dispatch(deleteProduct(id));
+    const deleteCategoryHandler = (id) => {
+        dispatch(deleteCategory(id));
     };
 
     useEffect(() => {
@@ -31,8 +34,20 @@ const Categories = () => {
             dispatch(clearErrors());
         }
 
+        if (deleteError) {
+            alert.error(deleteError);
+            dispatch(clearErrors());
+        }
+
+        if (isDeleted) {
+            alert.success('Category Deleted Successfully');
+            navigate('/admin/categories');
+            dispatch({ type: DELETE_CATEGORY_RESET });
+        }
+
+
         dispatch(getCategories());
-    }, [dispatch, alert, error]);
+    }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
         { field: 'id', headerName: 'ID', minWidth: 50 },
@@ -59,7 +74,7 @@ const Categories = () => {
                             <EditIcon />
                         </Link>
 
-                        <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
+                        <Button onClick={() => deleteCategoryHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon />
                         </Button>
                     </Fragment>
