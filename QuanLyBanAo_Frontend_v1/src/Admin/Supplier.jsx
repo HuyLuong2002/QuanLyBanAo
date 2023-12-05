@@ -1,18 +1,21 @@
-import React, { Fragment, useEffect } from 'react'
-import { useAlert } from 'react-alert';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { getSuppliers } from '../actions/productAction';
-import { clearErrors } from '../actions/userAction';
+import React, {Fragment, useEffect} from 'react'
+import {useAlert} from 'react-alert';
+import {useDispatch, useSelector} from 'react-redux';
+import {Link, useNavigate} from 'react-router-dom';
+import {getSuppliers} from '../actions/productAction';
+import {clearErrors} from '../actions/userAction';
 import EditIcon from '@material-ui/icons/Edit';
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MetaData from '../components/layout/MetaData';
 import Sidebar from './Sidebar';
-import { DataGrid } from '@material-ui/data-grid';
+import {DataGrid} from '@material-ui/data-grid';
 import './productList.css';
 import {deleteSupplier} from "../actions/supplierAction";
 import {DELETE_SUPPLIER_RESET} from "../constants/supplierConstant";
+import ReplayIcon from "@material-ui/icons/Replay";
+import {Popconfirm} from "antd";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const Supplier = () => {
     const dispatch = useDispatch();
@@ -20,9 +23,9 @@ const Supplier = () => {
 
     const alert = useAlert();
 
-    const { error, suplliers } = useSelector((state) => state.suppliers);
+    const {error, suplliers} = useSelector((state) => state.suppliers);
 
-    const { error: deleteError, isDeleted } = useSelector((state) => state.supplier);
+    const {error: deleteError, isDeleted} = useSelector((state) => state.supplier);
 
     const deleteSupplierHandler = (id) => {
         dispatch(deleteSupplier(id));
@@ -42,14 +45,14 @@ const Supplier = () => {
         if (isDeleted) {
             alert.success('Supplier Deleted Successfully');
             navigate('/admin/suppliers');
-            dispatch({ type: DELETE_SUPPLIER_RESET });
+            dispatch({type: DELETE_SUPPLIER_RESET});
         }
 
         dispatch(getSuppliers());
     }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
-        { field: 'id', headerName: 'ID', minWidth: 50 },
+        {field: 'id', headerName: 'ID', minWidth: 50},
 
         {
             field: 'name',
@@ -70,12 +73,34 @@ const Supplier = () => {
                 return (
                     <Fragment>
                         <Link to={`/admin/supplier/${params.getValue(params.id, 'id')}`}>
-                            <EditIcon />
+                            <EditIcon/>
                         </Link>
 
                         <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>
-                            <DeleteIcon />
+                            <DeleteIcon/>
                         </Button>
+
+                        {/*{*/}
+                        {/*    params.getValue(params.id, 'deleted') ? (*/}
+                        {/*        <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>*/}
+                        {/*            <ReplayIcon />*/}
+                        {/*        </Button>*/}
+                        {/*    ) : (*/}
+                        {/*        // <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>*/}
+                        {/*        //     <DeleteIcon />*/}
+                        {/*        // </Button>*/}
+                        {/*        <Popconfirm*/}
+                        {/*            title="Delete the task"*/}
+                        {/*            description="Are you sure to delete this task?"*/}
+                        {/*            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}*/}
+                        {/*            placement='bottomLeft'*/}
+                        {/*        >*/}
+                        {/*            <Button danger><DeleteIcon /></Button>*/}
+                        {/*        </Popconfirm>*/}
+                        {/*    )*/}
+                        {/*}*/}
+
+
                     </Fragment>
                 );
             },
@@ -88,19 +113,19 @@ const Supplier = () => {
 
     suplliers &&
     suplliers.forEach((item) => {
-            rows.push({
-                id: item.id,
-                name: item.name,
-                deleted: item.deleted,
-            });
+        rows.push({
+            id: item.id,
+            name: item.name,
+            deleted: item.deleted,
         });
+    });
 
     return (
         <Fragment>
-            <MetaData title={`ALL SUPPLIERS - Admin`} />
+            <MetaData title={`ALL SUPPLIERS - Admin`}/>
 
             <div className="dashboard">
-                <Sidebar />
+                <Sidebar/>
                 <div className="productListContainer">
                     <h1 id="productListHeading">ALL SUPPLIERS</h1>
 
