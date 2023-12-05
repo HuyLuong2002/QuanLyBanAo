@@ -45,27 +45,6 @@ const UpdateUser = () => {
 
     console.log("user: ", user);
 
-    useEffect(() => {
-
-        dispatch(getUserDetails(userId));
-
-        if (error) {
-            alert.error(error);
-            dispatch(clearErrors());
-        }
-
-        if (updateError) {
-            alert.error(updateError);
-            dispatch(clearErrors());
-        }
-
-        if (isUpdated) {
-            alert.success('User Updated Successfully');
-            navigate('/admin/users');
-            dispatch({ type: UPDATE_USER_RESET });
-        }
-    }, [dispatch, alert, error, navigate, isUpdated, updateError, userId]);
-
     const updateUserSubmitHandler = (e) => {
         e.preventDefault();
 
@@ -82,6 +61,26 @@ const UpdateUser = () => {
 
         dispatch(updateUser(userId, data));
     };
+
+    useEffect(() => {
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors());
+        }
+
+        if (updateError) {
+            alert.error(updateError);
+            dispatch(clearErrors());
+        }
+
+        if (isUpdated) {
+            alert.success('User Updated Successfully');
+            navigate('/admin/users');
+            dispatch({ type: UPDATE_USER_RESET });
+        }
+
+        dispatch(getUserDetails(userId));
+    }, [dispatch, alert, error, navigate, isUpdated, updateError, userId]);
 
     return (
         <Fragment>
@@ -125,6 +124,7 @@ const UpdateUser = () => {
                                     type="email"
                                     placeholder="Email"
                                     required
+                                    disabled
                                     value={user.email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />

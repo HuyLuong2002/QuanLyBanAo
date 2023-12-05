@@ -102,7 +102,7 @@ const OrderList = () => {
                 id: item.id,
                 itemsQty: item.totalQuantity,
                 amount: item.totalPrice,
-                status: item.orderStatus,
+                status: item.shipStatus,
             });
         });
 

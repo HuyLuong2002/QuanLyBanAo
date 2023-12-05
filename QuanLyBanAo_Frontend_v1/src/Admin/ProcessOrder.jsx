@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import SideBar from './Sidebar';
-import { getOrderDetails, clearErrors, updateOrder } from '../actions/orderAction';
+import { getOrderDetails, clearErrors, updateOrder, processOrder } from '../actions/orderAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -14,27 +14,30 @@ import MetaData from '../components/layout/MetaData';
 import Loader from '../components/Loader/Loader';
 
 const ProcessOrder = () => {
+    const dispatch = useDispatch();
+    const alert = useAlert();
     const { order, error, loading } = useSelector((state) => state.orderDetails);
     const { error: updateError, isUpdated } = useSelector((state) => state.order);
     const { id } = useParams();
+    const [status, setStatus] = useState('');
+
+    const dataShipped = {
+        orderStatus: "ACTIVE",
+        shipStatus: "SHIPPED",
+        paymentStatus: "PAID"
+    }
 
     const updateOrderSubmitHandler = (e) => {
         e.preventDefault();
 
-        const myForm = new FormData();
-
-        myForm.set('status', status);
-
-        dispatch(updateOrder(id, myForm));
+        if(order && order?.shipStatus === "SHIPPING") {
+            dispatch(updateOrder(id, dataShipped))
+            return;
+        }
+        dispatch(processOrder(id));
     };
 
-    console.log("order: ", order)
-
-    const dispatch = useDispatch();
-    const alert = useAlert();
-
-    const [status, setStatus] = useState('');
-    
+    console.log("order: ", order?.shipStatus)
 
     useEffect(() => {
         if (error) {
@@ -153,7 +156,7 @@ const ProcessOrder = () => {
                             {/*  */}
                             <div
                                 style={{
-                                    display: order.shipStatus === 'SHIPPING' ? 'none' : 'block',
+                                    display: order.shipStatus === 'SHIPPED' ? 'none' : 'block',
                                 }}
                                 className='w-[380px] mt-[15%] p-8 mr-20'
                             >
@@ -165,13 +168,11 @@ const ProcessOrder = () => {
                                         <select onChange={(e) => setStatus(e.target.value)} className='w-full p-3 pl-12'>
                                             <option value="">Choose status</option>
                                             {order.shipStatus === 'APPROVAL' && (
-                                                <>
                                                     <option value="SHIPPING">SHIPPING</option>
-                                                </>
                                             )}
 
-                                            {order.shipStatus === 'SHIPPING' && (
-                                                <option value="SHIPPING">SHIPPED</option>
+                                            {order && order.shipStatus === 'SHIPPING' && (
+                                                <option value="SHIPPED">SHIPPED</option>
                                             )}
                                         </select>
                                     </div>
