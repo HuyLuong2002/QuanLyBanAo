@@ -352,11 +352,11 @@ public class ProductController {
     }
 
     @GetMapping("/getByCategory")
-    public ResponseEntity<Map<String, Object>> getProductsByCategory(@RequestBody Category category)
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(@RequestParam("cateID") int categoryId)
     {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("products", productService.getProductsByCategory(category));
+        response.put("products", productService.getProductsByCategory(categoryId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

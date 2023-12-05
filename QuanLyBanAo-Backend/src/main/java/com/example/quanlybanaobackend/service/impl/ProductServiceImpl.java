@@ -27,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategory(Category category) {
-        return productRepository.getProductsByCategory(category);
+    public List<Product> getProductsByCategory(int categoryId) {
+        return productRepository.getProductsByCategory_Id(categoryId);
     }
 
     @Override
