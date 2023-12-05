@@ -123,15 +123,15 @@ export const updateProfile = (userData) => async (dispatch, getState) => {
 };
 
 // Update Password
-export const updatePassword = (passwords) => async (dispatch) => {
+export const updatePassword = (password) => async (dispatch) => {
     try {
         dispatch({ type: UPDATE_PASSWORD_REQUEST });
 
         const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const { data } = await axios.put(`localhost:8081/api/v1/password/update`, passwords, config);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/auth/update_password`, {password}, config);
 
-        dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data.success });
+        dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data?.success });
     } catch (error) {
         dispatch({
             type: UPDATE_PASSWORD_FAIL,
@@ -206,7 +206,7 @@ export const updateUser = (id, userData) => async (dispatch) => {
 
         const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const { data } = await axios.put(`localhost:8081/api/v1/admin/user/${id}`, userData, config);
+        const { data } = await axios.put(`localhost:8081/api/v1/users/${id}`, userData, config);
 
         dispatch({ type: UPDATE_USER_SUCCESS, payload: data.success });
     } catch (error) {

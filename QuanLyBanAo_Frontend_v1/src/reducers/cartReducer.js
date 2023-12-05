@@ -1,5 +1,8 @@
 import {
   ADD_TO_CART,
+  CHECKOUT_FAIL,
+  CHECKOUT_REQUEST,
+  CHECKOUT_SUCCESS,
   GET_CURRENT_USER_CART,
   GET_CURRENT_USER_CART_FAIL,
   GET_CURRENT_USER_CART_REQUEST,
@@ -48,7 +51,6 @@ export const cartReducer = (
         loading: false,
         error: action.payload,
       };
-
     case UPDATE_ITEM_CART:
       return {
         ...state,
@@ -61,7 +63,22 @@ export const cartReducer = (
         ...state,
         shippingInfo: action.payload,
       };
-
+    case CHECKOUT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      }
+    case CHECKOUT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: action.payload,
+      };
+    case CHECKOUT_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
     default:
       return state;
   }

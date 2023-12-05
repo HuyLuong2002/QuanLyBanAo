@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 const OrderDetailItem = ({ itemChild }) => {
     console.log("itemChild: ", itemChild);
-    const {user} = useSelector((state) => state.user)
+    const { user } = useSelector((state) => state.user)
     return (
         <div className='bg-[#fff] border border-solid flex justify-between gap-8 p-8 rounded-md' key={itemChild.id}>
             <div className='flex gap-4'>
@@ -17,8 +17,10 @@ const OrderDetailItem = ({ itemChild }) => {
             </div>
 
             <div className='flex flex-col gap-2'>
-                <p className='font-medium'>Delivery address</p>
-                <p className='text-[#6B7280]'>{user.address}</p>
+                <p className='font-medium '>Delivery address</p>
+                <p className='text-[#6B7280] mb-4'>{user.address}</p>
+                <p className='font-medium'>Notes</p>
+                <p className='text-[#6B7280]'>cho em thêm ống hút</p>
             </div>
 
             <div className='flex flex-col gap-2'>

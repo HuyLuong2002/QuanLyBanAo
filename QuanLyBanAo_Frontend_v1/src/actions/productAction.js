@@ -167,7 +167,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
             headers: { 'Content-Type': 'application/json' },
         };
 
-        const { data } = await axios.put(`/api/v1/admin/product/${id}`, productData, config);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/products/${id}`, productData, config);
 
         dispatch({
             type: UPDATE_PRODUCT_SUCCESS,
@@ -186,7 +186,7 @@ export const deleteProduct = (id) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_PRODUCT_REQUEST });
 
-        const { data } = await axios.delete(`/api/v1/admin/product/${id}`);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/products/delete/${id}`);
 
         dispatch({
             type: DELETE_PRODUCT_SUCCESS,
@@ -195,7 +195,7 @@ export const deleteProduct = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: DELETE_PRODUCT_FAIL,
-            payload: error.response.data.message,
+            payload: error.response?.data?.message,
         });
     }
 };

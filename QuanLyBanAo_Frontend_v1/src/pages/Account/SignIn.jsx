@@ -55,6 +55,7 @@ const SignIn = () => {
             // setEmail("");
             // setPassword("");
             dispatch(login(email, password));
+            localStorage.setItem('pass', JSON.stringify(password));
         }
     };
 

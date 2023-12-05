@@ -38,7 +38,7 @@ const Home = () => {
                 <NewArrivals />
                 <BestSellers />
                 <YearProduct />
-                <SpecialOffers />
+                {/* <SpecialOffers /> */}
             </div>
         </div>
     );

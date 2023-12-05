@@ -95,11 +95,11 @@ const Cart = () => {
                             <input
                                 className="w-44 mdl:w-52 h-8 px-4 border text-primeColor text-sm outline-none border-gray-400"
                                 type="text"
-                                placeholder="message..."
+                                placeholder="notes..."
                                 ref={ref}
                             />
                             <p className="text-sm mdl:text-base font-semibold" >
-                                Write your message...
+                                Write your notes...
                             </p>
                         </div>
                         <p className="text-lg font-semibold">Update Cart</p>

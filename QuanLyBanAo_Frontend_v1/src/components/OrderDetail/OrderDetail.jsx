@@ -26,7 +26,7 @@ const OrderDetail = ({ item }) => {
                     <div className="flex justify-around mt-2">
                         <span className="text-base font-medium text-blue-700 dark:text-white">APPROVAL</span>
                         <span className="text-sm font-medium dark:text-white text-yellow-500">SHIPPING</span>
-                        <span className="text-base font-medium dark:text-white">SHIPPED</span>
+                        <span className="text-base font-medium dark:text-white text-green-500">SHIPPED</span>
                     </div>
                 </div>
             </div>

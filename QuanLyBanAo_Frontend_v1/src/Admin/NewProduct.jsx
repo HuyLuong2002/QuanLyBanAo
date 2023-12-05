@@ -61,19 +61,6 @@ const NewProduct = () => {
     const createProductSubmitHandler = async (e) => {
         e.preventDefault();
 
-        // myForm.set('name', name);
-        // myForm.set('price', price);
-        // myForm.set('description', description);
-        // myForm.set('category', category);
-        // myForm.set('category', category);
-        // myForm.set('color', color);
-        // myForm.set('size', size);
-
-        // images.forEach((image) => {
-        //     myForm.append('image', image);
-        // });
-        console.log("image: ", images);
-
         const formData = new FormData();
         formData.append('file', images); // images[0] là tệp ảnh đầu tiên
 
@@ -98,26 +85,6 @@ const NewProduct = () => {
         console.log("Data: ", data);
         dispatch(createProduct(data));
     };
-
-    // const createProductImagesChange = (e) => {
-    //     const files = Array.from(e.target.files);
-
-    //     setImages([]);
-    //     setImagesPreview([]);
-
-    //     files.forEach((file) => {
-    //         const reader = new FileReader();
-
-    //         reader.onload = () => {
-    //             if (reader.readyState === 2) {
-    //                 setImagesPreview((old) => [...old, reader.result]);
-    //                 setImages((old) => [...old, reader.result]);
-    //             }
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     });
-    // };
 
     function createProductImagesChange(event) {
         const selectedFile = event.target.files[0];

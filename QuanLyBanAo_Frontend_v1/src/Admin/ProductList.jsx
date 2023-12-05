@@ -29,9 +29,15 @@ const ProductList = () => {
 
     const { error: deleteError, isDeleted } = useSelector((state) => state.product);
 
-    const deleteProductHandler = (id) => {
+    const deleteProductHandler = (id, flag) => {
         dispatch(deleteProduct(id));
+        if(flag) {
+            alert.success('Product Restored Successfully');
+            return
+        }
+        alert.success('Product Deleted Successfully');
     };
+
 
     useEffect(() => {
         if (error) {
@@ -45,8 +51,8 @@ const ProductList = () => {
         }
 
         if (isDeleted) {
-            alert.success('Product Deleted Successfully');
-            navigate('/admin/dashboard');
+            // alert.success('Product Deleted Successfully');
+            navigate('/admin/products');
             dispatch({ type: DELETE_PRODUCT_RESET });
         }
 
@@ -78,7 +84,7 @@ const ProductList = () => {
             minWidth: 185,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "GREEN" ? 'bg-green-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-500 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-500 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
+                    <span className={params.value === "GREEN" ? 'bg-green-300 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-500 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
                 )
             },
         },
@@ -118,18 +124,16 @@ const ProductList = () => {
 
                         {
                             params.getValue(params.id, 'deleted') ? (
-                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
+                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'), 1)}>
                                     <ReplayIcon />
                                 </Button>
                             ) : (
-                                // <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>
-                                //     <DeleteIcon />
-                                // </Button>
                                 <Popconfirm
                                     title="Delete the task"
                                     description="Are you sure to delete this task?"
                                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                                     placement='bottomLeft'
+                                    onConfirm={() => deleteProductHandler(params.getValue(params.id, 'id'))}
                                 >
                                     <Button danger><DeleteIcon /></Button>
                                 </Popconfirm>

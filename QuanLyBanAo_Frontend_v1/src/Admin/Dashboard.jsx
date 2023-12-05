@@ -304,10 +304,10 @@ const Dashboard = () => {
                 </div>
 
                 <div className='flex justify-around mt-12 mb-24'>
-                    <div className="w-[30%] h-full">
+                    {/* <div className="w-[30%] h-full">
                         <h1 className='text-2xl font-semibold text-center mb-4'>PRODUCT</h1>
                         <Doughnut data={doughnutState} />
-                    </div>
+                    </div> */}
 
                     <div className="w-[60%] h-full">
                         <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE PER DAY IN WEEK</h1>

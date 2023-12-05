@@ -13,6 +13,7 @@ import { UPDATE_PRODUCT_RESET } from '../constants/productConstants';
 import { useNavigate, useParams } from 'react-router-dom';
 import MetaData from '../components/layout/MetaData';
 import Loader from '../components/Loader/Loader';
+import axios from 'axios';
 
 const UpdateProduct = () => {
     const dispatch = useDispatch();
@@ -27,25 +28,22 @@ const UpdateProduct = () => {
     const { categories } = useSelector((state) => state.categories);
     const { suplliers } = useSelector((state) => state.suppliers);
 
-    const [name, setName] = useState(product?.name);
+    const [name, setName] = useState(product && product?.name);
     const [price, setPrice] = useState(product?.price);
     const [description, setDescription] = useState(product?.description);
     const [category, setCategory] = useState('');
-    // const [Stock, setStock] = useState(0);
     const [images, setImages] = useState('');
-    // const [oldImages, setOldImages] = useState('');
     const [imagesPreview, setImagesPreview] = useState('');
     const [supplier, setSupplier] = useState('');
     const [color, setColor] = useState('');
     const [size, setSize] = useState('');
+    const [CheckChangeImage, setCheckChangeImage] = useState(false);
 
     const productId = id;
 
     const sizeList = ['M', 'L', 'XL', '2XL', '3XL']
 
     const colorList = ['GREEN', 'RED', 'YELLOW', 'BLUE']
-
-    console.log("Product: ", categories);
 
     function createProductImagesChange(event) {
         const selectedFile = event.target.files[0];
@@ -54,22 +52,54 @@ const UpdateProduct = () => {
             const imagePath = URL.createObjectURL(selectedFile);
             setImages(selectedFile)
             setImagesPreview(imagePath)
+            setCheckChangeImage(true)
         } else {
             console.log("Không có tệp nào được chọn");
         }
     }
 
+    
+
+    const updateProductSubmitHandler = async (e) => {
+        e.preventDefault();
+        let imageOrigin = product.image
+
+        if(CheckChangeImage) {
+            const formData = new FormData();
+            formData.append('file', images); // images[0] là tệp ảnh đầu tiên
+
+            const config = {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            };
+
+            const response = await axios.post('http://localhost:8081/api/v1/products/upload', formData, config);
+            const { image } = response.data;
+            imageOrigin = image
+        }
+
+        
+        console.log("dataImg: ", imageOrigin);
+
+        const data = {
+            name: name ? name : product.name,
+            price: price ? price : product.price,
+            description: description ? description : product.description,
+            category: product.category,
+            supplier: product.supplier,
+            color: color ? color : product.color,
+            size: size ? size : product.size,
+            image: imageOrigin
+        }
+
+        // console.log("data: ", data);
+        dispatch(updateProduct(productId, data));
+    };
+
     useEffect(() => {
-        // if (product && product.id !== productId) {
         dispatch(getProductDetails(productId));
-        // } else {
-        //     setName(product.name);
-        //     setDescription(product.description);
-        //     setPrice(product.price);
-        //     setCategory(product.category);
-        //     // setStock(product.Stock);
-        //     setOldImages(product.images);
-        // }
+        dispatch(getSuppliers());
+        dispatch(getCategories());
+        
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -85,27 +115,8 @@ const UpdateProduct = () => {
             navigate('/admin/products');
             dispatch({ type: UPDATE_PRODUCT_RESET });
         }
-
-        dispatch(getSuppliers());
-        dispatch(getCategories());
+        
     }, [dispatch, alert, error, navigate, isUpdated, productId, updateError]);
-
-    const updateProductSubmitHandler = (e) => {
-        e.preventDefault();
-
-        const myForm = new FormData();
-
-        myForm.set('name', name);
-        myForm.set('price', price);
-        myForm.set('description', description);
-        myForm.set('category', category.toLowerCase());
-        // myForm.set('Stock', Stock);
-
-        images.forEach((image) => {
-            myForm.append('images', image);
-        });
-        dispatch(updateProduct(productId, myForm));
-    };
 
     return (
         <Fragment>
@@ -204,17 +215,6 @@ const UpdateProduct = () => {
                                         ))}
                                     </select>
                                 </div>
-
-                                {/* <div>
-                                    <StorageIcon />
-                                    <input
-                                        type="number"
-                                        placeholder="Stock"
-                                        required
-                                        onChange={(e) => setStock(e.target.value)}
-                                        value={Stock}
-                                    />
-                                </div> */}
 
                                 <div id="createProductFormFile">
                                     <input

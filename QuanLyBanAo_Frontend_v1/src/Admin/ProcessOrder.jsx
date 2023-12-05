@@ -34,6 +34,7 @@ const ProcessOrder = () => {
     const alert = useAlert();
 
     const [status, setStatus] = useState('');
+    
 
     useEffect(() => {
         if (error) {
@@ -133,7 +134,7 @@ const ProcessOrder = () => {
                                     </div>
                                 </div>
                                 <div className="">
-                                    <p className='text-2xl font-semibold mb-4'>Your Cart Items:</p>
+                                    <p className='text-2xl font-semibold mb-4'>Cart Items:</p>
                                     <div className="flex flex-col gap-4">
                                         {order.orderDetails &&
                                             order.orderDetails.map((item) => (

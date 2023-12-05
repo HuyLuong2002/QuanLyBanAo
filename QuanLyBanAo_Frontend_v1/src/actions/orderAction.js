@@ -1,3 +1,4 @@
+import { CHECKOUT_FAIL, CHECKOUT_REQUEST, CHECKOUT_SUCCESS } from '../constants/cartConstants';
 import {
     CREATE_ORDER_REQUEST,
     CREATE_ORDER_SUCCESS,
@@ -132,3 +133,18 @@ export const getOrderDetails = (id) => async (dispatch) => {
 export const clearErrors = () => async (dispatch) => {
     dispatch({ type: CLEAR_ERRORS });
 };
+
+// Process order
+export const processOrder = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: CHECKOUT_REQUEST });
+        const {data} = await axios.put(`http://localhost:8081/api/v1/orders/approve/${id}`);
+        dispatch({ type: CHECKOUT_SUCCESS, payload: data?.order });
+        
+    } catch (error) {
+        dispatch({
+            type: CHECKOUT_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+}
