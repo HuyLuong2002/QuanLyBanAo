@@ -32,6 +32,15 @@ const UpdateUser = () => {
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
 
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [sex, setSex] = useState('');
+    const [dateOfBirth, setdateOfBirth] = useState('');
+    const [address, setAddress] = useState('');
+    const [tel, setTel] = useState('');
+    const [status, setStatus] = useState('');
+
+
     const userId = id;
 
     console.log("user: ", user);
@@ -60,13 +69,18 @@ const UpdateUser = () => {
     const updateUserSubmitHandler = (e) => {
         e.preventDefault();
 
-        const myForm = new FormData();
+        const data = {
+            lastName: lastName ? lastName : user.lastName,
+            firstName: firstName ? firstName : user.firstName,
+            sex: sex ? sex : user.sex,
+            dateOfBirth: dateOfBirth ? dateOfBirth : user.dateOfBirth,
+            address: address ? address : user.address,
+            tel: tel ? tel : user.tel,
+            status: status ? status : user.status,
+            roles: user.roles
+        }
 
-        myForm.set('username', name);
-        myForm.set('email', email);
-        myForm.set('role', role);
-
-        dispatch(updateUser(userId, myForm));
+        dispatch(updateUser(userId, data));
     };
 
     return (

@@ -1,4 +1,4 @@
-import { ADD_TO_CART, GET_CURRENT_USER_CART, GET_CURRENT_USER_CART_FAIL, GET_CURRENT_USER_CART_REQUEST, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
+import { ADD_TO_CART, CHECKOUT_FAIL, CHECKOUT_REQUEST, CHECKOUT_SUCCESS, GET_CURRENT_USER_CART, GET_CURRENT_USER_CART_FAIL, GET_CURRENT_USER_CART_REQUEST, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
 import axios from 'axios';
 
 // Add to Cart
@@ -89,18 +89,30 @@ export const updateItemCart = (id, quantity) => async (dispatch, getState) => {
 
 
 // CHECKOUT
-export const checkout = (paymentMethod = "CASH", notes = "") => async () => {
-    const config = { headers: { 'Content-Type': 'application/json' } };
-    await axios.post(`/api/v1/cart/check-out`, { paymentMethod, notes }, config);
-    resetCart()
-    
+export const checkout = (paymentMethod = "CASH", notes = "") => async (dispatch) => {
+
+    try {
+        dispatch({ type: CHECKOUT_REQUEST });
+
+
+        const config = { headers: { 'Content-Type': 'application/json' } };
+        const {data} = await axios.post(`/api/v1/cart/check-out`, { paymentMethod, notes }, config);
+        resetCart()
+
+        dispatch({ type: CHECKOUT_SUCCESS, payload: data?.success });
+        
+    } catch (error) {
+        dispatch({
+            type: CHECKOUT_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+
     localStorage.setItem('cartItems', JSON.stringify([]));
 }
-
 
 // Reset cart 
 export const resetCart = () => async () => {
     await axios.get(`/api/v1/cart/reset`);
     localStorage.setItem('cartItems', JSON.stringify([]));
 }
-

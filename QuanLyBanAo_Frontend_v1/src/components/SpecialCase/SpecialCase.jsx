@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { RiShoppingCart2Fill } from "react-icons/ri";
 import { MdSwitchAccount } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message } from 'antd';
 import { useState } from "react";
-import { logout, updateProfile } from "../../actions/userAction";
+import { logout, updatePassword, updateProfile } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { getCurrentUserCart } from "../../actions/cartAction";
 import axios from "axios";
+import "./SpecialCase.css"
 
 const { Option } = Select;
 
@@ -18,8 +19,13 @@ const SpecialCase = () => {
   const alert = useAlert();
   // const { products } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
-  const { totalItem, totalPrices, cartItems } = useSelector((state) => state.cart);
+  const { cartItems } = useSelector((state) => state.cart);
   const [openPw, setOpenPw] = useState(false)
+  const [oldPass, setOldPass] = useState('')
+  const [newPass, setNewPass] = useState('')
+  const [newConfirmPass, setNewConfirmPass] = useState('')
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [formData, setFormData] = useState({
     id: user?.id || '',
     firstName: user?.firstName || '',
@@ -41,6 +47,13 @@ const SpecialCase = () => {
     if (!user)
       navigate('/signin')
     setOpen(true);
+  };
+
+  const warning = (message) => {
+    messageApi.open({
+      type: 'warning',
+      content: message,
+    });
   };
 
   const onClose = () => {
@@ -92,6 +105,36 @@ const SpecialCase = () => {
     alert.success("Profile updated")
     setEdit(false)
     setOpen(false)
+  }
+
+  const handleUpdatePass = () => {
+    const oldPassUser = JSON.parse(localStorage.getItem('pass'))
+    console.log("oldPassUser: ", oldPassUser);
+    if(!oldPass) {
+      alert.error('Please enter old password')
+      return
+    }
+    if(!newPass) {
+      alert.error("Please enter new password")
+      return
+    }
+    if(!newConfirmPass) {
+      alert.error("Please enter confirm password")
+      return
+    }
+
+    if(oldPassUser !== oldPass) {
+      alert.error("Old password is incorrect")
+      return
+    }
+    if(newPass !== newConfirmPass) {
+      alert.error("Confirm password is incorrect")
+      return
+    }
+    dispatch(updatePassword(newPass));
+    localStorage.setItem('pass', JSON.stringify(newPass));
+    alert.success("Password updated successfully")
+    setOpenPw(false)
   }
 
   useEffect(() => {
@@ -268,7 +311,7 @@ const SpecialCase = () => {
           {
             openPw ? (
               <div className="flex gap-4">
-              <Button className="w-auto" onClick={() => setOpenPw(false)}>Update</Button>
+              <Button className="w-auto" onClick={() => handleUpdatePass()}>Update</Button>
               <Button className="w-auto" onClick={() => setOpenPw(false)}>Cancel</Button>
               </div>
             ) : 
@@ -296,7 +339,7 @@ const SpecialCase = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Old Password" onChange={(e) => handleInputChange('address', e.target.value)} />
+                  <Input placeholder="Old Password" onChange={(e) => setOldPass(e.target.value)} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -310,7 +353,7 @@ const SpecialCase = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="New Password" onChange={(e) => handleInputChange('address', e.target.value)} />
+                  <Input placeholder="New Password" onChange={(e) => setNewPass(e.target.value)} />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -324,7 +367,7 @@ const SpecialCase = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Confirm New Password" onChange={(e) => handleInputChange('address', e.target.value)} />
+                  <Input placeholder="Confirm New Password" onChange={(e) => setNewConfirmPass(e.target.value)} />
                 </Form.Item>
               </Col>
             </div>
