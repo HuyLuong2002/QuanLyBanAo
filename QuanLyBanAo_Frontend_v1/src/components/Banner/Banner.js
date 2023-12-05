@@ -104,7 +104,7 @@ const Banner = () => {
       <Slider {...settings}>
         <Link to="/offer">
           <div>
-            <Image imgSrc={bannerImgOne} />
+            <Image imgSrc={bannerImgOne} className='w-full h-[524px] object-cover'/>
           </div>
         </Link>
         <Link to="/offer">

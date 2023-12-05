@@ -1,6 +1,7 @@
 import logo from "./orebiLogo.png";
 import logoLight from "./logoLight.png";
-import bannerImgOne from "./banner/bannerImgOne.webp";
+// import bannerImgOne from "./banner/bannerImgOne.webp";
+import bannerImgOne from "./banner/deepali-shriwal-fashion-banner-design.jpg";
 import bannerImgTwo from "./banner/bannerImgTwo.webp";
 import bannerImgThree from "./banner/bannerImgThree.webp";
 import saleImgOne from "./sale/saleImgOne.webp";
