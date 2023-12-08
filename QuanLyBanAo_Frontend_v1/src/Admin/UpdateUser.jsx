@@ -43,10 +43,27 @@ const UpdateUser = () => {
 
     const userId = id;
 
-    console.log("user: ", user);
-
     const updateUserSubmitHandler = (e) => {
         e.preventDefault();
+
+        let roles = [
+            {
+                id: 2,
+                name: "CUSTOMER"
+            }
+        ]
+
+
+        if(role.toUpperCase() === "EMPLOYEE") {
+            roles[0].id = 3
+            roles[0].name = role
+        }
+
+        if(role.toUpperCase() === "ADMIN") {
+            roles[0].id = 1
+            roles[0].name = role
+        }
+
 
         const data = {
             lastName: lastName ? lastName : user.lastName,
@@ -56,7 +73,7 @@ const UpdateUser = () => {
             address: address ? address : user.address,
             tel: tel ? tel : user.tel,
             status: status ? status : user.status,
-            roles: user.roles
+            roles: roles
         }
 
         dispatch(updateUser(userId, data));
@@ -187,7 +204,7 @@ const UpdateUser = () => {
 
                             <div>
                                 <CancelIcon />
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <select value={status} onChange={(e) => setStatus(e.target.value)}>
                                     {
                                         user.status === "ACTIVE" ? (
                                             <>

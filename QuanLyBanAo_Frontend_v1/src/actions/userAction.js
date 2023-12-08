@@ -206,7 +206,7 @@ export const updateUser = (id, userData) => async (dispatch) => {
 
         const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const { data } = await axios.put(`localhost:8081/api/v1/users/${id}`, userData, config);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/users/${id}`, userData, config);
 
         dispatch({ type: UPDATE_USER_SUCCESS, payload: data.success });
     } catch (error) {

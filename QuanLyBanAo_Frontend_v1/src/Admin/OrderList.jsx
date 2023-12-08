@@ -47,13 +47,12 @@ const OrderList = () => {
     }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
-        { field: 'id', headerName: 'Order ID', minWidth: 300, flex: 0.7 },
+        { field: 'id', headerName: 'Order ID', minWidth: 150 },
 
         {
             field: 'status',
             headerName: 'Status',
             minWidth: 150,
-            flex: 0.4,
             cellClassName: (params) => {
                 return params.getValue(params.id, 'status') === 'Delivered' ? 'greenColor' : 'redColor';
             },
@@ -62,21 +61,21 @@ const OrderList = () => {
             field: 'itemsQty',
             headerName: 'Quantity',
             minWidth: 150,
-            flex: 0.4,
         },
-
         {
             field: 'amount',
             headerName: 'Price',
             minWidth: 270,
-            flex: 0.5,
         },
-
+        {
+            field: 'orderDate',
+            headerName: 'Place at',
+            minWidth: 270,
+        },
         {
             field: 'actions',
-            flex: 0.3,
             headerName: 'Actions',
-            minWidth: 150,
+            minWidth: 270,
             sortable: false,
             renderCell: (params) => {
                 return (
@@ -103,6 +102,7 @@ const OrderList = () => {
                 itemsQty: item.totalQuantity,
                 amount: item.totalPrice,
                 status: item.shipStatus,
+                orderDate: item.orderDate
             });
         });
 

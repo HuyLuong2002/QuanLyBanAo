@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // import { getAllOrders } from '../../actions/orderAction';
 // import { getAllUsers } from '../../actions/userAction';
 import * as Utils from '../utils/Utils';
-import { Chart } from 'chart.js';
+import { Chart, TimeScale } from 'chart.js';
 import * as ChartJS from 'chart.js';
 import { getAdminProduct, getProduct } from '../actions/productAction';
 import MetaData from '../components/layout/MetaData';
@@ -16,6 +16,20 @@ import { getAllUsers } from '../actions/userAction';
 import axios from 'axios';
 import { getAllOrders } from '../actions/orderAction';
 import { Space, Table, Tag } from 'antd';
+import WeeklyRevenueBarChart from './WeeklyRevenueBarChart';
+
+const revenueData = [
+    {
+        "year": 2023,
+        "month": 11,
+        "totalPrice": 500.0
+    },
+    {
+        "year": 2023,
+        "month": 12,
+        "totalPrice": 4323.0
+    }
+];
 
 const columns = [
     {
@@ -70,7 +84,7 @@ const columns = [
                         <Tag color='green' key={color}>
                             {color}
                         </Tag>
-                    ) : color === "YELLOW" ?  (
+                    ) : color === "YELLOW" ? (
                         <Tag color={'yellow'} key={color}>
                             {color}
                         </Tag>
@@ -150,19 +164,22 @@ const Dashboard = () => {
     const [top5Employee, settop5Employee] = useState([])
     const [top5Customer, settop5Customer] = useState([])
     const [top10Product, setTop10Product] = useState([])
+    const [selectedYear, setSelectedYear] = useState(2023);
 
-    let outOfStock = 0;
+    const filteredData = revenueData.filter(item => item.year === selectedYear);
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const yearData = filteredData.reduce((acc, item) => {
+        acc[item.month] = item.totalPrice;
+        return acc;
+    }, {});
 
     let data2 = []
     let data3 = []
 
-    products &&
-        products.forEach((item) => {
-            if (item.Stock === 0) {
-                outOfStock += 1;
-            }
-        });
-
+    const handleYearChange = (event) => {
+        const selectedYear = parseInt(event.target.value);
+        setSelectedYear(selectedYear);
+    };
 
     const getTop10Products = async () => {
         const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10ProductBestSell");
@@ -173,66 +190,6 @@ const Dashboard = () => {
         const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10CustomerBestSell");
         settop5Customer(data)
     }
-
-    let totalAmount = 0;
-    // orders &&
-    //     orders.forEach((item) => {
-    //         totalAmount += item.totalPrice;
-    //     });
-
-    const lineState = {
-        labels: ['Initial Amount', 'Amount Earned'],
-        datasets: [
-            {
-                label: 'TOTAL AMOUNT',
-                backgroundColor: ['tomato'],
-                hoverBackgroundColor: ['rgb(197, 72, 49)'],
-                data: [0, totalAmount],
-            },
-        ],
-    };
-
-    const doughnutState = {
-        labels: ['Out of Stock', 'InStock'],
-        datasets: [
-            {
-                backgroundColor: ['#00A6B4', '#6800B4'],
-                hoverBackgroundColor: ['#4B5000', '#35014F'],
-                data: [outOfStock, products?.length - outOfStock],
-            },
-        ],
-    };
-
-    const barState = {
-        labels: Utils.months({ count: 7 }),
-        datasets: [
-            {
-                label: 'Total User each month',
-                data: [65, users?.length, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)',
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)',
-                ],
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    console.log("top5cus: ", top5Customer);
 
     data2 = top5Customer && top5Customer.map(item => {
         return {
@@ -260,6 +217,29 @@ const Dashboard = () => {
         }
     }, [])
 
+    const chartData = {
+        labels: months.map((month) => month.toString()),
+        datasets: [
+            {
+                label: 'Doanh thu',
+                backgroundColor: 'rgba(75,192,192,0.2)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(75,192,192,0.4)',
+                hoverBorderColor: 'rgba(75,192,192,1)',
+                data: months.map((month) => yearData[month] || 0),
+            },
+        ],
+    };
+
+    const chartOptions = {
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
+
     useEffect(() => {
         dispatch(getProduct());
         dispatch(getAllUsers());
@@ -279,7 +259,7 @@ const Dashboard = () => {
                 <div className="dashboardSummary">
                     <div>
                         <p>
-                            Total Amount <br /> ${totalAmount}
+                            Total Amount <br /> $ Chưa có ní
                         </p>
                     </div>
                     <div className="dashboardSummaryBox2">
@@ -298,29 +278,31 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="lineChart">
-                    <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE PER MONTH</h1>
-                    <Line data={lineState} />
-                </div>
+                <div className='w-[80%] mx-auto my-16'>
+                    <div className='flex justify-between items-center'>
+                        <div className='w-[40px]'></div>
+                        <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE BY MONTH</h1>
+                        <div>
+                            <select className='cursor-pointer' value={selectedYear} onChange={handleYearChange}>
+                                <option value={2022}>2022</option>
+                                <option value={2023}>2023</option>
+                                <option value={2024}>2024</option>
 
-                <div className='flex justify-around mt-12 mb-24'>
-                    {/* <div className="w-[30%] h-full">
-                        <h1 className='text-2xl font-semibold text-center mb-4'>PRODUCT</h1>
-                        <Doughnut data={doughnutState} />
-                    </div> */}
-
-                    <div className="w-[60%] h-full">
-                        <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE PER DAY IN WEEK</h1>
-                        <Bar data={barState} />
+                            </select>
+                        </div>
                     </div>
+                    <Bar data={chartData} options={chartOptions} />
                 </div>
 
+                <div className='w-[80%] mx-auto my-16'>
+                    <WeeklyRevenueBarChart />
+                </div>
 
                 <div>
                     <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 CUSTOMER:  </h1>
                     <Table columns={columns2} dataSource={data2} />
                 </div>
-                
+
                 <div>
                     <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 EMPLOYEE: </h1>
                     <Table columns={columns2} dataSource={data2} />
