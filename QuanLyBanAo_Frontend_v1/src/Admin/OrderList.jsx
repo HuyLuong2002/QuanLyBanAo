@@ -15,6 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import MetaData from '../components/layout/MetaData';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import ExplicitIcon from '@material-ui/icons/Explicit';
+import { Popconfirm } from 'antd';
+import ReplayIcon from '@material-ui/icons/Replay';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const OrderList = () => {
     const dispatch = useDispatch();
@@ -25,8 +28,16 @@ const OrderList = () => {
 
     const { error: deleteError, isDeleted } = useSelector((state) => state.order);
 
-    const deleteOrderHandler = (id) => {
+    const deleteOrderHandler = (id, flag, status) => {
         dispatch(deleteOrder(id));
+        if(flag) {
+            alert.success('Product Restored Successfully');
+            return
+        }
+        if(status === 'SHIPPED') {
+            return;
+        }
+        alert.success('Product Deleted Successfully');
     };
 
     useEffect(() => {
@@ -41,7 +52,7 @@ const OrderList = () => {
         }
 
         if (isDeleted) {
-            alert.success('Order Deleted Successfully');
+            // alert.success('Order Deleted Successfully');
             navigate('/admin/orders');
             dispatch({ type: DELETE_ORDER_RESET });
         }
@@ -56,19 +67,27 @@ const OrderList = () => {
             field: 'status',
             headerName: 'Status',
             minWidth: 150,
-            cellClassName: (params) => {
-                return params.getValue(params.id, 'status') === 'Delivered' ? 'greenColor' : 'redColor';
+            renderCell: (params) => {
+                return (
+                    <span className={params.value === "SHIPPED" ? 'bg-green-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "APPROVAL" ? 'bg-blue-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "CANCELED" ? 'bg-red-400 rounded-xl text-sm w-24 p-2 text-center font-semibold' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                )
             },
         },
         {
             field: 'itemsQty',
             headerName: 'Quantity',
             minWidth: 150,
+            align: 'center',
         },
         {
             field: 'paymentMethod',
             headerName: 'Payment Method',
             minWidth: 190,
+            renderCell: (params) => {
+                return (
+                    <span className={params.value === "CASH" ? ' rounded-xl text-sm w-24 p-2 text-center font-semibold text-orange-500' : 'bg-blue-300 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                )
+            },
         },
         {
             field: 'amount',
@@ -83,7 +102,7 @@ const OrderList = () => {
         {
             field: 'actions',
             headerName: 'Actions',
-            minWidth: 250,
+            minWidth: 230,
             sortable: false,
             renderCell: (params) => {
                 return (
@@ -92,9 +111,26 @@ const OrderList = () => {
                             <EditIcon />
                         </Link>
 
-                        <Button className='' onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                        {/* <Button className='' onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon />
-                        </Button>
+                        </Button> */}
+                        {
+                            params.getValue(params.id, 'orderStatus') === "INACTIVE" ? (
+                                <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'), 1)}>
+                                    <ReplayIcon />
+                                </Button>
+                            ) : (
+                                <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this order?"
+                                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                    placement='bottomLeft'
+                                    onConfirm={() => deleteOrderHandler(params.getValue(params.id, 'id'), 0, params.getValue(params.id, 'status'))}
+                                >
+                                    <Button danger><DeleteIcon /></Button>
+                                </Popconfirm>
+                            )
+                        }
 
                         <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
                             <PictureAsPdfIcon />
@@ -120,6 +156,7 @@ const OrderList = () => {
                 status: item.shipStatus,
                 orderDate: item.orderDate,
                 paymentMethod: item.paymentMethod,
+                orderStatus: item.orderStatus,
             });
         });
 
@@ -129,7 +166,7 @@ const OrderList = () => {
 
             <div className="dashboard">
                 <SideBar />
-                <div className="productListContainer">
+                <div className="w-full bg-white border-l border-[#00000028] flex flex-col h-screen">
                     <h1 id="productListHeading">ALL ORDERS</h1>
 
                     <DataGrid

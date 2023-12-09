@@ -17,6 +17,7 @@ import { CheckCircleOutline } from '@material-ui/icons';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { loadUser } from '../actions/userAction';
 
 
 const ProductList = () => {
@@ -29,16 +30,16 @@ const ProductList = () => {
 
     const { error: deleteError, isDeleted } = useSelector((state) => state.product);
 
+    const { user } = useSelector((state) => state.user);
+
     const deleteProductHandler = (id, flag) => {
         dispatch(deleteProduct(id));
         if(flag) {
-            alert.success('Product Restored Successfully');
+            alert.success('User Restored Successfully');
             return
         }
         alert.success('Product Deleted Successfully');
     };
-
-    console.log("Log: ", products);
 
     useEffect(() => {
         if (error) {
@@ -139,18 +140,18 @@ const ProductList = () => {
 
                         {
                             params.getValue(params.id, 'deleted') ? (
-                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'), 1)}>
+                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'), 1)} disabled={user && user?.roles && user?.roles[0].name === 'EMPLOYEE'}>
                                     <ReplayIcon />
                                 </Button>
                             ) : (
                                 <Popconfirm
                                     title="Delete the task"
-                                    description="Are you sure to delete this task?"
+                                    description="Are you sure to delete this product?"
                                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                                     placement='bottomLeft'
                                     onConfirm={() => deleteProductHandler(params.getValue(params.id, 'id'))}
                                 >
-                                    <Button danger><DeleteIcon /></Button>
+                                    <Button danger disabled={user && user?.roles && user?.roles[0].name === 'EMPLOYEE'}><DeleteIcon /></Button>
                                 </Popconfirm>
                             )
                         }
@@ -182,7 +183,7 @@ const ProductList = () => {
 
             <div className="dashboard">
                 <SideBar />
-                <div className="productListContainer">
+                <div className="w-full bg-white border-l border-[#00000028] flex flex-col h-screen">
                     <h1 id="productListHeading">ALL PRODUCTS</h1>
 
                     <DataGrid

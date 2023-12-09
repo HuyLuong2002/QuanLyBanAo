@@ -78,7 +78,7 @@ export const register = (userData) => async (dispatch) => {
 // Load User
 export const loadUser = () => async (dispatch) => {
     try {
-        // dispatch({ type: LOAD_USER_REQUEST });
+        dispatch({ type: LOAD_USER_REQUEST });
 
         const { data } = await axios.get(`http://localhost:8081/api/v1/auth/me`);
 
@@ -222,7 +222,7 @@ export const deleteUser = (id) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_USER_REQUEST });
 
-        const { data } = await axios.delete(`localhost:8081/api/v1/admin/user/${id}`);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/users/delete/${id}`);
 
         dispatch({ type: DELETE_USER_SUCCESS, payload: data });
     } catch (error) {

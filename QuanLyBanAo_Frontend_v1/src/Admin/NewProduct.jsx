@@ -109,13 +109,14 @@ const NewProduct = () => {
                         encType="multipart/form-data"
                         onSubmit={createProductSubmitHandler}
                     >
-                        <h1>Create Product</h1>
+                        <h1 className='test'>Create Product</h1>
 
                         <div>
                             <SpellcheckIcon />
                             <input
                                 type="text"
                                 placeholder="Product Name"
+                                className='rounded-3xl'
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -131,7 +132,7 @@ const NewProduct = () => {
                             />
                         </div>
 
-                        <div>
+                        <div className='test4'>
                             <DescriptionIcon />
 
                             <textarea
@@ -225,7 +226,7 @@ const NewProduct = () => {
                             {imagesPreview && <img src={imagesPreview} alt="Product Preview" className='w-[120px]' />} 
                         </div>
 
-                        <Button id="createProductBtn" type="submit" disabled={loading ? true : false}>
+                        <Button id="createProductBtn" className='test2' type="submit" disabled={loading ? true : false}>
                             Create
                         </Button>
                     </form>

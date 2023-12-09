@@ -59,11 +59,10 @@ const SignIn = () => {
         }
     };
 
-    console.log("user1: ", user);
-
     const redirect = location.search ? location.search.split('=')[1] : '/';
 
     const redirectAdmin = '/admin/dashboard'
+    const redirectEployee = '/admin/products'
 
     useEffect(() => {
         if (error) {
@@ -75,9 +74,13 @@ const SignIn = () => {
             navigate(redirect);
         }
 
-        console.log("first user: ", user)
         if (user?.user && user.user.roles[0].name === 'ADMIN') {
             navigate(redirectAdmin);
+            return;
+        }
+        if (user?.user && user.user.roles[0].name === 'EMPLOYEE') {
+            navigate(redirectEployee);
+            return;
         }
     }, [dispatch, error, alert, navigate, isAuthenticated, redirect, user]);
     return (

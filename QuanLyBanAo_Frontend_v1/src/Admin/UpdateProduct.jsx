@@ -5,8 +5,9 @@ import { useAlert } from 'react-alert';
 import { Button } from '@material-ui/core';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import DescriptionIcon from '@material-ui/icons/Description';
-import StorageIcon from '@material-ui/icons/Storage';
+import CategoryIcon from '@material-ui/icons/Category';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import SideBar from './Sidebar';
 import { UPDATE_PRODUCT_RESET } from '../constants/productConstants';
@@ -133,7 +134,7 @@ const UpdateProduct = () => {
                                 encType="multipart/form-data"
                                 onSubmit={updateProductSubmitHandler}
                             >
-                                <h1>Edit Product</h1>
+                                <h1 className='test'>Edit Product</h1>
 
                                 <div>
                                     <SpellcheckIcon />
@@ -156,7 +157,7 @@ const UpdateProduct = () => {
                                     />
                                 </div>
 
-                                <div>
+                                <div >
                                     <DescriptionIcon />
 
                                     <textarea
@@ -169,7 +170,7 @@ const UpdateProduct = () => {
                                 </div>
 
                                 <div>
-                                    <AccountTreeIcon />
+                                    <CategoryIcon />
                                     <select onChange={(e) => setCategory(e.target.value)}>
                                         <option value="">{product && product.category?.name}</option>
                                         {categories && categories.filter(item=>item.name !== product.category?.name).map((cate) => (
@@ -181,7 +182,7 @@ const UpdateProduct = () => {
                                 </div>
 
                                 <div>
-                                    <AccountTreeIcon />
+                                <RateReviewIcon />
                                     <select onChange={(e) => setSupplier(e.target.value)}>
                                         <option value="">{product && product.supplier?.name}</option>
                                         {suplliers && suplliers.filter(item=>item.name !== product.supplier?.name).map((sup) => (
@@ -238,7 +239,7 @@ const UpdateProduct = () => {
                                     }
                                 </div>
 
-                                <Button id="createProductBtn" type="submit" disabled={loading ? true : false}>
+                                <Button id="createProductBtn" className='test2' type="submit" disabled={loading ? true : false}>
                                     Update
                                 </Button>
                             </form>

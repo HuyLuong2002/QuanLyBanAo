@@ -19,13 +19,13 @@
 }
 .sidebar a {
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.493);
+  /* color: rgba(0, 0, 0, 0.493); */
   font: 200 1rem "Roboto";
   padding: 2rem;
   transition: all 0.5s;
 }
 .sidebar a:hover {
-  color: tomato;
+  color: #ff6347;
   transform: scale(1.1);
 }
 

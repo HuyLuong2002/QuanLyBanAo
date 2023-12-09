@@ -109,7 +109,7 @@ const UpdateUser = () => {
                         <Loader />
                     ) : (
                         <form className="createProductForm" onSubmit={updateUserSubmitHandler}>
-                            <h1>Update User</h1>
+                            <h1 className='test'>Update User</h1>
 
                             <div>
                                 <FormatColorTextIcon />
@@ -250,6 +250,7 @@ const UpdateUser = () => {
 
                             <Button
                                 id="createProductBtn"
+                                className='test2'
                                 type="submit"
                                 disabled={updateLoading ? true : false || role === '' ? true : false}
                             >
