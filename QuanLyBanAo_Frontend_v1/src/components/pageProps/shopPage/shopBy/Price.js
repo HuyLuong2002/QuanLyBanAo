@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import NavTitle from './NavTitle';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import queryString from 'query-string';
 
 const Price = () => {
@@ -9,7 +9,6 @@ const Price = () => {
   let { search } = useLocation()
   const values = queryString.parse(search)
   const navigate = useNavigate();
-
 
   const priceList = [
     { _id: 950, priceOne: 0, priceTwo: 99 },
@@ -20,7 +19,7 @@ const Price = () => {
 
   const handleClick = (index, item) => {
     setActivePriceIndex(index);
-    if (!item.priceOne) {
+    if (!item.priceOne && item.priceTwo) {
       if (!search) {
         navigate(`/shop?priceLte=${item.priceTwo}`);
       } else if (values.priceGte || values.priceLte) {
@@ -29,9 +28,10 @@ const Price = () => {
         search = "?" + queryString.stringify(values);
         navigate(`/shop${search}&priceLte=${item.priceTwo}`);
       }
+      navigate(`/shop${search}&priceLte=${item.priceTwo}`);
       return
     }
-    if (!item.priceTwo) {
+    if (!item.priceTwo && item.priceOne) {
       if (!search) {
         navigate(`/shop?priceGte=${item.priceOne}`);
       } else if (values.priceGte || values.priceLte) {
@@ -39,13 +39,17 @@ const Price = () => {
         delete values.priceLte;
         search = "?" + queryString.stringify(values);
         navigate(`/shop${search}&priceGte=${item.priceOne}`);
+
       }
+      navigate(`/shop${search}&priceGte=${item.priceOne}`);
       return;
     }
 
     if (!search) {
       navigate(`/shop?priceGte=${item.priceOne}&priceLte=${item.priceTwo}`);
-    } else if (values.priceGte || values.priceLte) {
+      return;
+    }
+    if (values.priceGte || values.priceLte) {
       delete values.priceGte;
       delete values.priceLte;
       search = "?" + queryString.stringify(values);

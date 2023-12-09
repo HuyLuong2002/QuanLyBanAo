@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import SideBar from './Sidebar';
-import { getOrderDetails, clearErrors, updateOrder, processOrder } from '../actions/orderAction';
+import { getOrderDetails, clearErrors, updateOrder, processOrder, rejectOrder } from '../actions/orderAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAlert } from 'react-alert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -30,10 +30,17 @@ const ProcessOrder = () => {
     const updateOrderSubmitHandler = (e) => {
         e.preventDefault();
 
+        if(status === "REJECT") {
+            dispatch(rejectOrder(id));
+            alert.show("Cancel order successfully")
+            return;
+        }
+
         if(order && order?.shipStatus === "SHIPPING") {
             dispatch(updateOrder(id, dataShipped))
             return;
         }
+
         dispatch(processOrder(id));
     };
 
@@ -167,6 +174,7 @@ const ProcessOrder = () => {
                                         <AccountTreeIcon className='absolute top-[25%] left-[5%]'/>
                                         <select onChange={(e) => setStatus(e.target.value)} className='w-full p-3 pl-12'>
                                             <option value="">Choose status</option>
+                                            <option value="REJECT">REJECT</option>
                                             {order.shipStatus === 'APPROVAL' && (
                                                     <option value="SHIPPING">SHIPPING</option>
                                             )}

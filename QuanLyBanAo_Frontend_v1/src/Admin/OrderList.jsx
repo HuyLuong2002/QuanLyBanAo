@@ -7,11 +7,14 @@ import { useAlert } from 'react-alert';
 import { Button } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+// import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdfIcon';
 import SideBar from './Sidebar';
 import { deleteOrder, getAllOrders, clearErrors } from '../actions/orderAction';
 import { DELETE_ORDER_RESET } from '../constants/orderConstants';
 import { useNavigate } from 'react-router-dom';
 import MetaData from '../components/layout/MetaData';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import ExplicitIcon from '@material-ui/icons/Explicit';
 
 const OrderList = () => {
     const dispatch = useDispatch();
@@ -63,31 +66,44 @@ const OrderList = () => {
             minWidth: 150,
         },
         {
+            field: 'paymentMethod',
+            headerName: 'Payment Method',
+            minWidth: 190,
+        },
+        {
             field: 'amount',
-            headerName: 'Price',
-            minWidth: 270,
+            headerName: 'Total Price',
+            minWidth: 150,
         },
         {
             field: 'orderDate',
             headerName: 'Place at',
-            minWidth: 270,
+            minWidth: 230,
         },
         {
             field: 'actions',
             headerName: 'Actions',
-            minWidth: 270,
+            minWidth: 250,
             sortable: false,
             renderCell: (params) => {
                 return (
-                    <Fragment>
+                    <div className='flex'>
                         <Link to={`/admin/order/${params.getValue(params.id, 'id')}`}>
                             <EditIcon />
                         </Link>
 
-                        <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                        <Button className='' onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon />
                         </Button>
-                    </Fragment>
+
+                        <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                            <PictureAsPdfIcon />
+                        </Button>
+
+                        <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                            <ExplicitIcon />
+                        </Button>
+                    </div>
                 );
             },
         },
@@ -102,7 +118,8 @@ const OrderList = () => {
                 itemsQty: item.totalQuantity,
                 amount: item.totalPrice,
                 status: item.shipStatus,
-                orderDate: item.orderDate
+                orderDate: item.orderDate,
+                paymentMethod: item.paymentMethod,
             });
         });
 

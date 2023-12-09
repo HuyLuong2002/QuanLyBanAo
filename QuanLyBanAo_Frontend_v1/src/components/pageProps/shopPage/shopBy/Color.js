@@ -23,12 +23,14 @@ const Color = () => {
     setActiveColorIndex(index);
     if (!search) {
       navigate(`/shop?color=${title}`);
+      return
     } else
       if (values.color) {
         delete values.color;
         search = "?" + queryString.stringify(values);
         navigate(`/shop${search}&color=${title}`);
       }
+    navigate(`/shop${search}&color=${title}`);
   };
 
   return (

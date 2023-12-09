@@ -148,3 +148,18 @@ export const processOrder = (id) => async (dispatch) => {
         });
     }
 }
+
+// Reject 
+export const rejectOrder = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: CHECKOUT_REQUEST });
+        const { data } = await axios.put(`http://localhost:8081/api/v1/orders/reject/${id}`);
+        dispatch({ type: CHECKOUT_SUCCESS, payload: data?.order });
+        
+    } catch (error) {
+        dispatch({
+            type: CHECKOUT_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+}

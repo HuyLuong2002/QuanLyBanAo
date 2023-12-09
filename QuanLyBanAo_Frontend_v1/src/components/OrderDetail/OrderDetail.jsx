@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux';
 
 const OrderDetail = ({ item, note }) => {
     let orderStatus = "33.33%"
-    const {user} = useSelector((state) => state.user)
+    const { user } = useSelector((state) => state.user)
 
     return (
         <>
             <div className=''>
                 {
                     item.orderDetails.map((itemChild) => {
-                        return <OrderDetailItem itemChild={itemChild} note={note}/>
+                        return <OrderDetailItem itemChild={itemChild} note={note} />
                     })
                 }
 
@@ -20,14 +20,24 @@ const OrderDetail = ({ item, note }) => {
                 <div className='bg-[#fff] border border-solid p-8 rounded-md'>
                     <p className='py-4 font-semibold'>Preparing to ship on {item.orderDate}</p>
 
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: item.shipStatus === "SHIPPING" ? "66.67%" : item.shipStatus === "SHIPPED" ? "100%" : "33.33%" }}></div>
-                    </div>
-                    <div className="flex justify-around mt-2">
-                        <span className="text-base font-medium text-blue-700 dark:text-white">APPROVAL</span>
-                        <span className="text-sm font-medium dark:text-white text-yellow-500">SHIPPING</span>
-                        <span className="text-base font-medium dark:text-white text-green-500">SHIPPED</span>
-                    </div>
+                    {
+                        item.shipStatus === 'CANCELED' ? <>
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-red-500 h-2.5 rounded-full w-full"></div>
+                            </div>
+                            <p className='text-red-500 text-xl font-bold text-center'>CANCELED</p>
+                        </> : <>
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: item.shipStatus === "SHIPPING" ? "66.67%" : item.shipStatus === "SHIPPED" ? "100%" : "33.33%" }}></div>
+                            </div>
+                            <div className="flex justify-around mt-2">
+                                <span className="text-xl font-bold text-blue-700 dark:text-white">APPROVAL</span>
+                                <span className="text-xl font-bold dark:text-white text-yellow-500">SHIPPING</span>
+                                <span className="text-xl font-bold dark:text-white text-green-500">SHIPPED</span>
+                            </div>
+                        </>
+                    }
+
                 </div>
             </div>
 

@@ -5,7 +5,7 @@ import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProduct } from "../../../actions/productAction";
+import { getAllProductAdmin, getProduct } from "../../../actions/productAction";
 // import { paginationItems } from "../../../constants";
 
 const HeaderBottom = () => {
@@ -44,8 +44,7 @@ const HeaderBottom = () => {
   }, [searchQuery, products]);
 
   useEffect(() => {
-    dispatch(getProduct())
-
+    dispatch(getAllProductAdmin())
   }, [dispatch])
 
   return (

@@ -110,4 +110,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Page<Product> findByPriceLessThan(int maxPrice, Pageable pageable);
     Page<Product> findByPriceLessThanEqual(int maxPrice, Pageable pageable);
     Page<Product> findByPriceBetween(int minPrice, int maxPrice, Pageable pageable);
+
 }

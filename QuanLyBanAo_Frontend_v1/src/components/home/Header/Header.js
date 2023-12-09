@@ -17,7 +17,7 @@ const Header = () => {
   useEffect(() => {
     let ResponsiveMenu = () => {
       if (window.innerWidth < 667) {
-        setShowMenu(false);
+      setShowMenu(false);
       } else {
         setShowMenu(true);
       }
@@ -27,7 +27,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="w-full h-20 bg-white sticky top-0 border-b-[1px] border-b-gray-200">
+    <div className="w-full h-20 bg-white sticky top-0 border-b-[1px] border-b-gray-200 z-10">
       <nav className="h-full px-4 max-w-container mx-auto relative">
         <Flex className="flex items-center justify-between h-full">
           <Link to="/">
@@ -41,7 +41,7 @@ const Header = () => {
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="flex items-center w-auto z-50 p-0 gap-2"
+                className="flex items-center w-auto z-10 p-0 gap-2"
               >
                 <>
                   {navBarList.map(({ _id, title, link }) => (
