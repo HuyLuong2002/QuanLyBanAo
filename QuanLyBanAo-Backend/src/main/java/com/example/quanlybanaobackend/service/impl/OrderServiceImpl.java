@@ -10,23 +10,25 @@ import com.example.quanlybanaobackend.model.OrderDetail;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.repository.OrderRepository;
 import com.example.quanlybanaobackend.service.OrderService;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -58,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order deleteOrder(int id) {
         Order removeOrder = findById(id);
-        if(removeOrder.getOrderStatus() == Constant.OrderStatus.ACTIVE)
+        if (removeOrder.getOrderStatus() == Constant.OrderStatus.ACTIVE)
             removeOrder.setOrderStatus(Constant.OrderStatus.INACTIVE);
         else removeOrder.setOrderStatus(Constant.OrderStatus.ACTIVE);
         return orderRepository.save(removeOrder);
@@ -134,8 +136,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException {
         Order order = findById(id);
-        if(order == null)
-        {
+        if (order == null) {
             return false;
         }
         // Tạo đối tượng Date để lấy thời gian hiện tại
@@ -201,6 +202,136 @@ public class OrderServiceImpl implements OrderService {
         return true;
     }
 
+    @Override
+    public boolean exportDataPDF(int id, String outputPath) throws IOException, DocumentException {
+        Order order = findById(id);
+        if (order == null) {
+            return false;
+        }
+        // Tạo đối tượng Date để lấy thời gian hiện tại
+        Date now = new Date();
+        // Sử dụng định dạng thời gian để tạo tên tệp duy nhất
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
+        String timeStamp = dateFormat.format(now);
+        // Tạo tên tệp đích dựa trên thời gian
+        String fileName = "Invoice_" + timeStamp + ".pdf";
+        String filePath = outputPath + File.separator + fileName;
+
+        // Bắt đầu tạo và ghi nội dung vào file PDF
+        Document document = new Document();
+        PdfWriter.getInstance(document, new FileOutputStream(filePath));
+
+        document.open();
+        // Thêm nội dung vào tài liệu PDF dựa trên dữ liệu hóa đơn
+        addContentToPdf(document, order);
+        document.close();
+        return true;
+
+    }
+
+    private void addContentToPdf(Document document, Order order) throws DocumentException, IOException {
+        // Sử dụng font Unicode tiếng Việt (VnTime)
+        BaseFont unicodeFont = BaseFont.createFont("font/ARIALUNI.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        com.itextpdf.text.Font font = new com.itextpdf.text.Font(unicodeFont, 12);
+        com.itextpdf.text.Font fontTable = new com.itextpdf.text.Font(unicodeFont, 12, com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font fontTitle = new com.itextpdf.text.Font(unicodeFont, 12, com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font fontHeader = new com.itextpdf.text.Font(unicodeFont, 16, com.itextpdf.text.Font.BOLD);
+        // Định dạng lại ngày tháng năm
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        // Thêm nội dung vào tài liệu PDF dựa trên dữ liệu hóa đơn
+        String line1 = "Căn tin văn phòng";
+        String line2 = "Địa chỉ: 32 Ngô Quyền P2 Q10";
+        String line3 = "Số điện thoại: 0953656315";
+        String line4 = "HÓA ĐƠN BÁN HÀNG";
+        String line5 = "Mã hóa đơn: ";
+        String line6 = "Ngày xuất hóa đơn: ";
+        String line7 = "Ngày đặt ";
+        String line8 = "Thông tin khách hàng";
+        String line9 = "Khách hàng: ";
+        String line10 = "Địa chỉ: ";
+        String line11 = "Số điện thoại: ";
+        String line12 = "Phí vận chuyển: ";
+        String line13 = "Tổng tiền thanh toán: ";
+        document.add(new Paragraph(line1, font));
+        document.add(new Paragraph(line2, font));
+        document.add(new Paragraph(line3, font));
+        Paragraph title = new Paragraph(line4, fontHeader);
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingBefore(12f);
+        title.setSpacingAfter(12f);
+        document.add(title);
+        document.add(new Paragraph(line5 + order.getId(), font));
+        document.add(new Paragraph(line6 + dateFormat.format(new Date()), font));
+        document.add(new Paragraph(line7 + dateFormat.format(order.getOrderDate()), font));
+        Paragraph customerTitle = new Paragraph(line8, fontTitle);
+        customerTitle.setSpacingBefore(12f);
+        document.add(customerTitle);
+        document.add(new Paragraph(line9 + order.getUser().getFirstName() + " " + order.getUser().getLastName(), font));
+        document.add(new Paragraph(line10 + order.getUser().getAddress(), font));
+        document.add(new Paragraph(line11 + order.getUser().getTel(), font));
+
+        //------------Xử lý tạo bảng ds sản phẩm---------------
+        // Thêm bảng sản phẩm vào tài liệu
+        PdfPTable table = new PdfPTable(5); // 5 cột
+        table.setWidthPercentage(100); // Chiều rộng của bảng là 100% của trang
+        table.setSpacingBefore(12f); // Khoảng cách giữa bảng và nội dung trước đó
+
+        // Thêm header cho bảng
+        addTableHeader(table, fontTable);
+        // Thêm dữ liệu sản phẩm từ đơn hàng vào bảng
+        addRows(table, order, font);
+        // Thêm bảng vào tài liệu
+        document.add(table);
+
+        document.add(new Paragraph(line12 + order.getShippingFee(), font));
+        document.add(new Paragraph(line13 + order.getTotalPrice() + " " + "(Đã bao gồm thuế VAT + phí vận chuyển)", font));
+    }
+    private void addTableHeader(PdfPTable table, com.itextpdf.text.Font font) {
+        String[] headers = {"Tên sản phẩm", "ĐVT", "SL", "Đơn giá", "Thành tiền"};
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setPadding(5); // Điều chỉnh khoảng cách giữa nội dung và viền của ô
+            table.addCell(cell);
+        }
+    }
+
+    private void addRows(PdfPTable table, Order order, com.itextpdf.text.Font font) {
+        String dvt = "Cái";
+        // Thêm dữ liệu sản phẩm từ đơn hàng vào bảng
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            PdfPCell cellProductName = new PdfPCell(new Phrase(orderDetail.getProduct().getName(), font));
+            cellProductName.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellProductName.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellProductName.setPadding(5); // Điều chỉnh khoảng cách giữa nội dung và viền của ô
+            table.addCell(cellProductName);
+
+            PdfPCell cellDvt = new PdfPCell(new Phrase(dvt, font));
+            cellDvt.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellDvt.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellDvt.setPadding(5);
+            table.addCell(cellDvt);
+
+            PdfPCell cellQuantity = new PdfPCell(new Phrase(String.valueOf(orderDetail.getQuantity()), font));
+            cellQuantity.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellQuantity.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellQuantity.setPadding(5);
+            table.addCell(cellQuantity);
+
+            PdfPCell cellUnitPrice = new PdfPCell(new Phrase(String.valueOf(orderDetail.getUnitPrice()), font));
+            cellUnitPrice.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellUnitPrice.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellUnitPrice.setPadding(5);
+            table.addCell(cellUnitPrice);
+
+            PdfPCell cellTotal = new PdfPCell(new Phrase(String.valueOf(orderDetail.getQuantity() * orderDetail.getUnitPrice()), font));
+            cellTotal.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTotal.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellTotal.setPadding(5);
+            table.addCell(cellTotal);
+        }
+    }
 
     public Map<String, String> getDataEntryMap(Order order) throws ParseException {
         Map<String, String> valueMap = new HashMap<>();

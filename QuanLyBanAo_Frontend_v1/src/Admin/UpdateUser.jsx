@@ -43,12 +43,43 @@ const UpdateUser = () => {
 
     const userId = id;
 
-    console.log("user: ", user);
+    const updateUserSubmitHandler = (e) => {
+        e.preventDefault();
+
+        let roles = [
+            {
+                id: 2,
+                name: "CUSTOMER"
+            }
+        ]
+
+
+        if(role.toUpperCase() === "EMPLOYEE") {
+            roles[0].id = 3
+            roles[0].name = role
+        }
+
+        if(role.toUpperCase() === "ADMIN") {
+            roles[0].id = 1
+            roles[0].name = role
+        }
+
+
+        const data = {
+            lastName: lastName ? lastName : user.lastName,
+            firstName: firstName ? firstName : user.firstName,
+            sex: sex ? sex : user.sex,
+            dateOfBirth: dateOfBirth ? dateOfBirth : user.dateOfBirth,
+            address: address ? address : user.address,
+            tel: tel ? tel : user.tel,
+            status: status ? status : user.status,
+            roles: roles
+        }
+
+        dispatch(updateUser(userId, data));
+    };
 
     useEffect(() => {
-
-        dispatch(getUserDetails(userId));
-
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -64,24 +95,9 @@ const UpdateUser = () => {
             navigate('/admin/users');
             dispatch({ type: UPDATE_USER_RESET });
         }
+
+        dispatch(getUserDetails(userId));
     }, [dispatch, alert, error, navigate, isUpdated, updateError, userId]);
-
-    const updateUserSubmitHandler = (e) => {
-        e.preventDefault();
-
-        const data = {
-            lastName: lastName ? lastName : user.lastName,
-            firstName: firstName ? firstName : user.firstName,
-            sex: sex ? sex : user.sex,
-            dateOfBirth: dateOfBirth ? dateOfBirth : user.dateOfBirth,
-            address: address ? address : user.address,
-            tel: tel ? tel : user.tel,
-            status: status ? status : user.status,
-            roles: user.roles
-        }
-
-        dispatch(updateUser(userId, data));
-    };
 
     return (
         <Fragment>
@@ -125,6 +141,7 @@ const UpdateUser = () => {
                                     type="email"
                                     placeholder="Email"
                                     required
+                                    disabled
                                     value={user.email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
@@ -187,7 +204,7 @@ const UpdateUser = () => {
 
                             <div>
                                 <CancelIcon />
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <select value={status} onChange={(e) => setStatus(e.target.value)}>
                                     {
                                         user.status === "ACTIVE" ? (
                                             <>

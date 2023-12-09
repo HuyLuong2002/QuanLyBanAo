@@ -6,8 +6,10 @@ import com.example.quanlybanaobackend.dto.StatisticalBestSellCustomerDTO;
 import com.example.quanlybanaobackend.dto.StatisticalBestSellEmployeeDTO;
 import com.example.quanlybanaobackend.model.Order;
 import com.example.quanlybanaobackend.model.User;
+import com.itextpdf.text.DocumentException;
 import org.aspectj.weaver.ast.Or;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -43,4 +45,6 @@ public interface OrderService {
 
     Order rejectOrder(int id, User user);
     boolean exportDataExcel(int id, String templatePath, String outputPath) throws IOException, ParseException, InterruptedException;
+
+    boolean exportDataPDF(int id, String outputPath) throws IOException, DocumentException;
 }

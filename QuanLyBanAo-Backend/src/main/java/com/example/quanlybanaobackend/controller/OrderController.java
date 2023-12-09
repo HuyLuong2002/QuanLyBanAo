@@ -7,6 +7,7 @@ import com.example.quanlybanaobackend.model.Order;
 import com.example.quanlybanaobackend.model.User;
 import com.example.quanlybanaobackend.service.OrderService;
 import com.example.quanlybanaobackend.service.UserService;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -241,6 +242,21 @@ public class OrderController {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(orderService.exportDataExcel(id, inputPath, outputPath))
+        {
+            response.put("success", true);
+            response.put("message", "Xuất file thành công");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.put("message", "Xuất file thất bại");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(path = {"/exportPDF/{id}"})
+    public ResponseEntity<Map<String, Object>> exportDataPDF(@PathVariable int id) throws IOException, ParseException, InterruptedException, DocumentException {
+        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\pdf\\";
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if(orderService.exportDataPDF(id, outputPath))
         {
             response.put("success", true);
             response.put("message", "Xuất file thành công");
