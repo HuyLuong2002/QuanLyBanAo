@@ -40,6 +40,8 @@ public class AuthController {
     @Autowired
     private EmailController emailController;
 
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserService userService,
                           RoleRepository roleRepository, JWTGenerator jwtGenerator) {
@@ -202,8 +204,8 @@ public class AuthController {
         userDTO.setAddress(user.getAddress());
         userDTO.setTel(user.getTel());
         userDTO.setStatus(user.getStatus());
-        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
-        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+        userDTO.setCreatedAt(dateFormat.format(user.getCreatedAt()));
+        userDTO.setUpdatedAt(dateFormat.format(user.getUpdatedAt()));
         userDTO.setRoles(user.getRoles());
         userDTO.setDeleted(user.isDeleted());
         return userDTO;

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -23,6 +24,8 @@ public class UserController {
     private final UserService userService;
     @Autowired
     private AuthController authController;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -96,7 +99,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable int id, @RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable int id, @RequestBody User user) throws ParseException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if (authController.getUserLogin() != null) {
@@ -106,7 +109,7 @@ public class UserController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             response.put("success", true);
-            response.put("user", userService.updateUser(id, user));
+            response.put("user", mapToDTO(userService.updateUser(id, user)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");
@@ -150,8 +153,8 @@ public class UserController {
         userDTO.setAddress(user.getAddress());
         userDTO.setTel(user.getTel());
         userDTO.setStatus(user.getStatus());
-        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
-        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+        userDTO.setCreatedAt(dateFormat.format(user.getCreatedAt()));
+        userDTO.setUpdatedAt(dateFormat.format(user.getUpdatedAt()));
         userDTO.setRoles(user.getRoles());
         userDTO.setDeleted(user.isDeleted());
         return userDTO;

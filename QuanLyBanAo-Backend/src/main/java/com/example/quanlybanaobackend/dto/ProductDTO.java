@@ -1,27 +1,45 @@
 package com.example.quanlybanaobackend.dto;
 
+import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.model.Category;
+import com.example.quanlybanaobackend.model.Supplier;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.util.Date;
+
 @Getter
 @Setter
 @Data
 public class ProductDTO {
 
     private int id;
+
     private String name;
-    private double price;
-    private String categoryName;
-    private String supplierName;
 
-    // Constructors, getters, and setters
+    private int price;
 
-    public ProductDTO(int id, String name, double price, String categoryName, String supplierName) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.categoryName = categoryName;
-        this.supplierName = supplierName;
-    }
+    private String description;
+
+    private String image;
+
+    private String size;
+
+    private Category category;
+
+    private Supplier supplier;
+
+    private Constant.Color color;
+
+    private boolean isDeleted;
+
+    private String createdAt;
+
+    private String updatedAt;
+
 
 }

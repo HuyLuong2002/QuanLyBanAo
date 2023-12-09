@@ -239,7 +239,7 @@ public class OrderServiceImpl implements OrderService {
         // Định dạng lại ngày tháng năm
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         // Thêm nội dung vào tài liệu PDF dựa trên dữ liệu hóa đơn
-        String line1 = "Căn tin văn phòng";
+        String line1 = "Cửa hàng 3L1K";
         String line2 = "Địa chỉ: 32 Ngô Quyền P2 Q10";
         String line3 = "Số điện thoại: 0953656315";
         String line4 = "HÓA ĐƠN BÁN HÀNG";

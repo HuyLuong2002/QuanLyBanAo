@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query("SELECT p FROM Product p order by p.name desc ")
+    @Query("SELECT p FROM Product p order by p.createdAt desc ")
     Page<Product> getAll(Pageable pageable);
 
     List<Product> getProductsByCategory_Id(int categoryId);

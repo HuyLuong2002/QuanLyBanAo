@@ -1,6 +1,8 @@
 package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.constant.Constant;
+import com.example.quanlybanaobackend.dto.ProductDTO;
+import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.model.User;
@@ -19,10 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/products")
@@ -42,6 +43,8 @@ public class ProductController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getProducts(@RequestParam(defaultValue = "0") int page) {
@@ -276,7 +279,9 @@ public class ProductController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
+            product.setCreatedAt(new Date());
             Product savedProduct = productService.save(product);
+
             if (savedProduct != null) {
                 response.put("success", true);
                 response.put("product", savedProduct);
@@ -359,4 +364,23 @@ public class ProductController {
         response.put("products", productService.getProductsByCategory(categoryId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+//    public ProductDTO mapToDTO(Product product) throws ParseException {
+//
+//        ProductDTO productDTO = new ProductDTO();
+//        productDTO.setId(product.getId());
+//        productDTO.setName(product.getName());
+//        productDTO.setPrice(product.getPrice());
+//        productDTO.setDescription(product.getDescription());
+//        productDTO.setImage(product.getImage());
+//        productDTO.setSize(product.getSize());
+//        productDTO.setCategory(product.getCategory());
+//        productDTO.setSupplier(product.getSupplier());
+//        productDTO.setColor(product.getColor());
+//        productDTO.setCreatedAt(dateFormat.format(product.getCreatedAt()));
+//        productDTO.setUpdatedAt(dateFormat.format(product.getUpdatedAt()));
+//        productDTO.setDeleted(product.isDeleted());
+//        return productDTO;
+//    }
+
 }

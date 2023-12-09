@@ -4,9 +4,12 @@ import com.example.quanlybanaobackend.constant.Constant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 @AllArgsConstructor
@@ -39,4 +42,12 @@ public class Product {
     private Constant.Color color;
 
     private boolean isDeleted;
+
+    @Column(name = "created_at")
+    @CreatedDate
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private Date updatedAt;
 }

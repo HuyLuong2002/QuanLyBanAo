@@ -14,8 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +40,8 @@ public class OrderController {
 
     @Autowired
     private AuthController authController;
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getOrders() throws ParseException {
@@ -236,12 +245,18 @@ public class OrderController {
     }
 
     @GetMapping(path = {"/exportExcel/{id}"})
-    public ResponseEntity<Map<String, Object>> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException {
-        String inputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
-        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData\\";
+    public ResponseEntity<Map<String, Object>> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException, URISyntaxException {
+
+        String inputPath = "/excel/OrderTemplate.xlsx";
+        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData";
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
-        if(orderService.exportDataExcel(id, inputPath, outputPath))
+        // Get the absolute path of the resource
+        URL resourceUrl = this.getClass().getResource(inputPath);
+        File resourceFile = new File(resourceUrl.toURI());
+        String absolutePath = resourceFile.getAbsolutePath();
+
+        if(orderService.exportDataExcel(id, absolutePath, outputPath))
         {
             response.put("success", true);
             response.put("message", "Xuất file thành công");
@@ -269,7 +284,7 @@ public class OrderController {
     public OrderDTO mapToDTO(Order order) throws ParseException {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.getId());
-        orderDTO.setOrderDate(String.valueOf(order.getOrderDate()));
+        orderDTO.setOrderDate(dateFormat.format(order.getOrderDate()));
         orderDTO.setTotalQuantity(order.getTotalQuantity());
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setShippingFee(order.getShippingFee());
@@ -287,7 +302,9 @@ public class OrderController {
         orderDTO.setOrderDetails(order.getOrderDetails());
         return orderDTO;
     }
+
     public UserDTO mapToDTO(User user) throws ParseException {
+
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
@@ -299,8 +316,8 @@ public class OrderController {
         userDTO.setAddress(user.getAddress());
         userDTO.setTel(user.getTel());
         userDTO.setStatus(user.getStatus());
-        userDTO.setCreatedAt(String.valueOf(user.getCreatedAt()));
-        userDTO.setUpdatedAt(String.valueOf(user.getUpdatedAt()));
+        userDTO.setCreatedAt(dateFormat.format(user.getCreatedAt()));
+        userDTO.setUpdatedAt(dateFormat.format(user.getUpdatedAt()));
         userDTO.setRoles(user.getRoles());
         userDTO.setDeleted(user.isDeleted());
         return userDTO;
