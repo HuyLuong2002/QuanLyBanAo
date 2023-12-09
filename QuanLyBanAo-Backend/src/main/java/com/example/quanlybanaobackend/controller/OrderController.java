@@ -109,7 +109,7 @@ public class OrderController {
                 response.put("message", "Bạn không có quyền thực hiện chức năng này");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            if((order.getShipStatus() == Constant.ShipStatus.SHIPPING || order.getShipStatus() == Constant.ShipStatus.SHIPPED) && order.getOrderStatus() == Constant.OrderStatus.UNACTIVE)
+            if((order.getShipStatus() == Constant.ShipStatus.SHIPPING || order.getShipStatus() == Constant.ShipStatus.SHIPPED) && order.getOrderStatus() == Constant.OrderStatus.INACTIVE)
             {
                 response.put("message", "Trạng thái hóa đơn đang là đã hủy không thể cập nhật tình trạng giao hàng là đang giao hoặc đã giao");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -142,7 +142,7 @@ public class OrderController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             Order order1 =  orderService.deleteOrder(id);
-            if(order1.getOrderStatus() == Constant.OrderStatus.UNACTIVE)
+            if(order1.getOrderStatus() == Constant.OrderStatus.INACTIVE)
             {
                 response.put("success", true);
                 response.put("message", "Xóa hóa đơn thành công");
@@ -209,6 +209,25 @@ public class OrderController {
             }
             response.put("success", true);
             response.put("order", mapToDTO(orderService.approveOrder(id, user)));
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.put("message", "Bạn chưa đăng nhập");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping(path = {"/reject/{id}"})
+    public ResponseEntity<Map<String, Object>> rejectOrder(@PathVariable int id) throws ParseException {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        if(authController.getUserLogin() != null)
+        {
+            User user = userService.findByUsername(authController.getUserLogin());
+            if (user.getRoles().stream().findFirst().get().getName().equals("CUSTOMER")) {
+                response.put("message", "Bạn không có quyền thực hiện chức năng này");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            response.put("success", true);
+            response.put("order", mapToDTO(orderService.rejectOrder(id, user)));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("message", "Bạn chưa đăng nhập");

@@ -14,11 +14,11 @@ public class Constant {
     }
 
     public enum OrderStatus {
-        ACTIVE, UNACTIVE
+        ACTIVE, INACTIVE
     }
 
     public enum ShipStatus {
-        APPROVAL, SHIPPING, SHIPPED
+        APPROVAL, SHIPPING, SHIPPED, CANCELED
     }
 
     public enum PaymentMethod {

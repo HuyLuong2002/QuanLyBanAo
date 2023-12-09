@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +26,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -63,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     public Order deleteOrder(int id) {
         Order removeOrder = findById(id);
         if(removeOrder.getOrderStatus() == Constant.OrderStatus.ACTIVE)
-            removeOrder.setOrderStatus(Constant.OrderStatus.UNACTIVE);
+            removeOrder.setOrderStatus(Constant.OrderStatus.INACTIVE);
         else removeOrder.setOrderStatus(Constant.OrderStatus.ACTIVE);
         return orderRepository.save(removeOrder);
     }
@@ -125,6 +121,14 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
+    @Override
+    public Order rejectOrder(int id, User user) {
+        Order order = findById(id);
+        order.setShipStatus(Constant.ShipStatus.CANCELED);
+        order.setOrderStatus(Constant.OrderStatus.INACTIVE);
+        order.setEmployee(user);
+        return orderRepository.save(order);
+    }
 
 
     @Override

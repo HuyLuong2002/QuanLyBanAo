@@ -33,13 +33,13 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     List<RevenueByMonthDTO> getRevenueByMonth(@Param("year") int year);
 
     @Query("select new com.example.quanlybanaobackend.dto.RevenueByWeekDaysDTO(" +
-            "DAYOFWEEK(o.orderDate), sum(o.totalPrice)) " +
+            "DAYOFWEEK(o.orderDate), MONTH(o.orderDate), YEAR(o.orderDate), sum(o.totalPrice)) " +
             "from Order o where o.orderStatus != 'UNACTIVE' and o.orderDate >= :firstDate " +
             "and o.orderDate <= :secondDate " +
             "group by dayofweek(o.orderDate) " +
             "order by dayofweek(o.orderDate) ")
     List<RevenueByWeekDaysDTO> getRevenueByWeekDays(Date firstDate, Date secondDate);
-    @Query("select new com.example.quanlybanaobackend.dto.StatisticalBestSellCustomerDTO(sum(o.totalQuantity), o.employee) " +
+    @Query("select new com.example.quanlybanaobackend.dto.StatisticalBestSellEmployeeDTO(sum(o.totalQuantity), o.employee) " +
             "from Order o where o.orderStatus != 'UNACTIVE' and o.shipStatus != 'APPROVAL'" +
             "group by o.employee.id order by o.totalQuantity desc limit 5")
     List<StatisticalBestSellEmployeeDTO> getTop10EmployeeBestSell();

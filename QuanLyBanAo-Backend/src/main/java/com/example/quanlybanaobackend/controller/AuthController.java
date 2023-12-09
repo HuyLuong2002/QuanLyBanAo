@@ -180,10 +180,7 @@ public class AuthController {
     }
 
     public boolean checkUserLogin() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return false;
-        }
-        return true;
+        return SecurityContextHolder.getContext().getAuthentication() != null;
     }
 
     public String getUserLogin() {
