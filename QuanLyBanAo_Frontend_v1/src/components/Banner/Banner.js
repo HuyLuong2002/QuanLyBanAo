@@ -5,6 +5,7 @@ import {
   bannerImgOne,
   bannerImgTwo,
   bannerImgThree,
+  banner
 } from "../../assets/images";
 import Image from "../designLayouts/Image";
 
@@ -102,33 +103,15 @@ const Banner = () => {
   return (
     <div className="w-full bg-white">
       <Slider {...settings}>
-<<<<<<< HEAD
-        <Link to="/offer">
-          <div>
-            <Image imgSrc={bannerImgOne} className='w-full h-[524px] object-cover'/>
-          </div>
-        </Link>
-        <Link to="/offer">
-          <div>
-            <Image imgSrc={bannerImgTwo} />
-          </div>
-        </Link>
-        <Link to="/offer">
-          <div>
-            <Image imgSrc={bannerImgThree} />
-          </div>
-        </Link>
-=======
         <div>
-          <Image imgSrc={bannerImgOne} />
+          <Image imgSrc={bannerImgOne} className="h-[480px] w-full object-cover"/>
         </div>
         <div>
-          <Image imgSrc={bannerImgTwo} />
+          <Image imgSrc={bannerImgTwo} className="h-[480px]"/>
         </div>
         <div>
-          <Image imgSrc={bannerImgThree} />
+          <Image imgSrc={bannerImgThree} className="h-[480px]"/>
         </div>
->>>>>>> 3796a1ddb353101fe86455ed7dac7a21f1ad87f9
       </Slider>
     </div>
   );

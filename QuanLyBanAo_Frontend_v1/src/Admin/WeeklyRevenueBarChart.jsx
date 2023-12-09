@@ -1,96 +1,61 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Bar } from 'react-chartjs-2';
+import 'animate.css/animate.min.css';
 
 const rawData = [
     {
         "dayOfWeek": 1,
+        "month": 11,
+        "year": 2023,
         "totalPrice": 934.0
     },
     {
         "dayOfWeek": 3,
+        "month": 12,
+        "year": 2023,
         "totalPrice": 419.0
     },
     {
         "dayOfWeek": 4,
+        "month": 11,
+        "year": 2023,
         "totalPrice": 155.0
     },
     {
         "dayOfWeek": 5,
+        "month": 11,
+        "year": 2023,
         "totalPrice": 130.0
     },
     {
         "dayOfWeek": 7,
+        "month": 12,
+        "year": 2023,
         "totalPrice": 3185.0
     }
 ];
 
-const processData = (data) => {
-    const dailyData = Array.from({ length: 7 }, () => 0);
-
-    data.forEach((item) => {
-        dailyData[item.dayOfWeek - 1] += item.totalPrice;
-    });
-
-    return dailyData;
-};
-
-const getWeeksInMonth = (month, year) => {
-    const firstDay = new Date(year, month - 1, 1);
-    const lastDay = new Date(year, month, 0);
-    const daysInMonth = lastDay.getDate();
-    const firstDayOfWeek = firstDay.getDay();
-
-    let weeks = [];
-    let currentWeek = [];
-
-    for (let i = 0; i < daysInMonth + firstDayOfWeek; i++) {
-        const day = i - firstDayOfWeek + 1;
-        if (i >= firstDayOfWeek) {
-            const date = new Date(year, month - 1, day);
-            currentWeek.push(date);
-
-            if (date.getDay() === 6 || i === daysInMonth + firstDayOfWeek - 1) {
-                weeks.push(currentWeek);
-                currentWeek = [];
-            }
-        } else {
-            currentWeek.push(null);
-        }
-    }
-
-    return weeks;
-};
-
 const WeeklyRevenueBarChart = () => {
-    const [selectedWeek, setSelectedWeek] = useState(1);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        const processedData = processData(rawData);
-        setData(processedData);
-    }, [selectedWeek, selectedMonth, selectedYear]);
+        if (startDate && endDate) {
+            const filteredData = rawData.filter((item) => {
+                const itemDate = new Date(item.year, item.month - 1, item.dayOfWeek);
+                return itemDate >= startDate && itemDate <= endDate;
+            });
 
-    const handleWeekChange = (event) => {
-        setSelectedWeek(parseInt(event.target.value));
-    };
+            const processedData = processData(filteredData);
+            setData(processedData);
+        }
+    }, [startDate, endDate]);
 
-    const handleMonthChange = (event) => {
-        setSelectedMonth(parseInt(event.target.value));
-    };
-
-    const handleYearChange = (event) => {
-        setSelectedYear(parseInt(event.target.value));
-    };
-
-    const generateWeekOptions = () => {
-        const weeksInMonth = getWeeksInMonth(selectedMonth, selectedYear);
-        return weeksInMonth.map((week, index) => (
-            <option key={index + 1} value={index + 1}>
-                Tuần {index + 1}
-            </option>
-        ));
+    const handleSearch = () => {
+        // You can perform additional actions here if needed
     };
 
     const options = {
@@ -105,38 +70,57 @@ const WeeklyRevenueBarChart = () => {
         },
     };
 
+    const processData = (data) => {
+        const processedData = Array.from({ length: 7 }, () => 0);
+
+        data.forEach((item) => {
+            const weekIndex = item.dayOfWeek - 1;
+            processedData[weekIndex] += item.totalPrice;
+        });
+
+        return processedData;
+    };
+
     return (
-        <div>
-            <div className='flex justify-between items-center'>
-                <h2>Weekly Revenue Bar Chart</h2>
+        <div className="p-4 border border-gray-300 rounded-md shadow-md bg-white animate__animated animate__fadeInUp z-auto">
+            <h2 className="text-3xl font-bold mb-4 text-blue-500 text-center">Weekly Revenue Bar Chart</h2>
 
-                <div>
-                    <label>Chọn tuần:</label>
-                    <select value={selectedWeek} onChange={handleWeekChange}>
-                        {generateWeekOptions()}
-                    </select>
-
-                    <label>Chọn tháng:</label>
-                    <select value={selectedMonth} onChange={handleMonthChange}>
-                        {Array.from({ length: 12 }, (_, index) => (
-                            <option key={index + 1} value={index + 1}>
-                                {index + 1}
-                            </option>
-                        ))}
-                    </select>
-
-                    <label>Chọn năm:</label>
-                    <select value={selectedYear} onChange={handleYearChange}>
-                        {Array.from({ length: 5 }, (_, index) => (
-                            <option key={index} value={new Date().getFullYear() - index}>
-                                {new Date().getFullYear() - index}
-                            </option>
-                        ))}
-                    </select>
+            <div className='flex gap-4'>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Choose start date:</label>
+                    <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        popperPlacement='right'
+                        dateFormat="dd-MM-yyyy"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                    />
                 </div>
+
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">CHoose end date:</label>
+                    <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        popperPlacement='right'
+                        dateFormat="dd-MM-yyyy"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                    />
+                </div>
+
+                {/* <button
+                    onClick={handleSearch}
+                    className="bg-blue-500 h-12 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                >
+                    <span className="animate__animated animate__heartBeat animate__infinite">Tìm kiếm</span>
+                </button> */}
             </div>
 
-            <Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data }] }} options={options} />
+            {data.length > 0 ? (
+                <Bar data={{ labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ data, label: 'Doanh thu theo thứ trong tuần', }] }} options={options} />
+            ) : (
+                <p className="mt-4 text-gray-500">Not found data to show</p>
+            )}
         </div>
     );
 };

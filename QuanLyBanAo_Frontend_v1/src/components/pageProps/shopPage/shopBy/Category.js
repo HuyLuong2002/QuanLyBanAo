@@ -2,21 +2,23 @@ import React, { useEffect, useState } from "react";
 // import { FaPlus } from "react-icons/fa";
 import { ImPlus } from "react-icons/im";
 import NavTitle from "./NavTitle";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import queryString from "query-string";
 
 const Category = () => {
   const [showSubCatOne, setShowSubCatOne] = useState(false);
-  const [active, setActive] = useState(null); 
+  const [active, setActive] = useState(null);
   const [cateList, setCateList] = useState([])
-  const { categoryId, color, minprice, maxprice } = useParams();
+  let { search } = useLocation()
+  const values = queryString.parse(search)
   const navigate = useNavigate()
 
   const items = cateList
 
   useEffect(() => {
     const getListCategory = async () => {
-      const { data } = await axios.get("http://localhost:8081/api/v1/categories"); 
+      const { data } = await axios.get("http://localhost:8081/api/v1/categories");
       setCateList(data.categories)
     }
 
@@ -26,7 +28,15 @@ const Category = () => {
   const handleClick = (index, id) => {
     setActive(index);
     setShowSubCatOne(!showSubCatOne);
-    navigate(`/shop/${id}/${color}/${minprice}/${maxprice}`);
+    if (!search) {
+      navigate(`/shop?cate=${id}`);
+    } else {
+      if (values.cate) {
+        delete values.cate;
+        search = "?" + queryString.stringify(values);
+      }
+      navigate(`/shop${search}&cate=${id}`);
+    }
   };
 
   return (
@@ -37,7 +47,7 @@ const Category = () => {
           {items.map(({ id, name, icons = false }, index) => (
             <li
               key={id}
-              className={`border-b-[1px] border-b-[#F0F0F0] py-2 pl-2 flex items-center rounded-lg justify-between cursor-pointer ${active === index ? 'font-bold bg-slate-300' : ''}`}
+              className={`border-b-[1px] border-b-[#F0F0F0] py-2 pl-2 flex items-center rounded-lg justify-between cursor-pointer ${active === index && values.cate ? 'font-bold bg-slate-300' : ''}`}
               onClick={() => handleClick(index, id)}
             >
               {name}

@@ -61,7 +61,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Layout />}>
         {/* ==================== Header Navlink Start here =================== */}
         <Route index element={<Home />}></Route>
-        <Route path="/shop/:categoryId/:color/:minprice/:maxprice" element={<Shop />}></Route>
+        <Route path="/shop" element={<Shop />}></Route>
         <Route path="/about" element={
           <ProtectedRoute>
             <About />

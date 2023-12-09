@@ -30,7 +30,7 @@ const Order = () => {
           return (
             <div key={index}>
               <p className='text-xl font-medium'>Order {item.id}</p>
-              <OrderDetail item={item} />
+              <OrderDetail item={item} note={item.notes}/>
             </div>
           )
         })

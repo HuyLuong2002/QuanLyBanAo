@@ -1,25 +1,34 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import NavTitle from "./NavTitle";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import queryString from "query-string";
 
 const Color = () => {
   const [showColors, setShowColors] = useState(true);
   const [activeColorIndex, setActiveColorIndex] = useState(null);
-  const { categoryId, color, minprice, maxprice } = useParams();
+  let { search } = useLocation()
+  const values = queryString.parse(search)
   const navigate = useNavigate()
 
   const colors = [
-    { id: 9001, title: "GREEN", base: "#22c55e" },
-    { id: 9003, title: "RED", base: "#dc2626" },
-    { id: 9004, title: "YELLOW", base: "#f59e0b" },
-    { id: 9005, title: "BLUE", base: "#3b82f6" },
+    { id: 1, title: "GREEN", base: "#22c55e" },
+    { id: 2, title: "RED", base: "#dc2626" },
+    { id: 3, title: "YELLOW", base: "#f59e0b" },
+    { id: 4, title: "BLUE", base: "#3b82f6" },
   ];
 
   const handleClick = (e, index, title) => {
     e.preventDefault();
     setActiveColorIndex(index);
-    navigate(`/shop/${categoryId}/${title}/${minprice}/${maxprice}`);
+    if (!search) {
+      navigate(`/shop?color=${title}`);
+    } else
+      if (values.color) {
+        delete values.color;
+        search = "?" + queryString.stringify(values);
+        navigate(`/shop${search}&color=${title}`);
+      }
   };
 
   return (
@@ -37,7 +46,7 @@ const Color = () => {
             {colors.map((item, index) => (
               <li
                 key={item.id}
-                className={`border-b-[1px] border-b-[#F0F0F0] cursor-pointer py-2 pl-2 flex items-center gap-2 rounded-lg ${activeColorIndex === index ? 'font-bold bg-slate-300' : ''}`}
+                className={`border-b-[1px] border-b-[#F0F0F0] cursor-pointer py-2 pl-2 flex items-center gap-2 rounded-lg ${activeColorIndex === index && values.color ? 'font-bold bg-slate-300' : ''}`}
                 onClick={(e) => handleClick(e, index, item.title)}
               >
                 <span

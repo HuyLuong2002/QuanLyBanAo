@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 
-const OrderDetailItem = ({ itemChild }) => {
+const OrderDetailItem = ({ itemChild, note }) => {
     console.log("itemChild: ", itemChild);
     const { user } = useSelector((state) => state.user)
     return (
@@ -20,7 +20,7 @@ const OrderDetailItem = ({ itemChild }) => {
                 <p className='font-medium '>Delivery address</p>
                 <p className='text-[#6B7280] mb-4'>{user.address}</p>
                 <p className='font-medium'>Notes</p>
-                <p className='text-[#6B7280]'>cho em thêm ống hút</p>
+                <p className='text-[#6B7280]'>{note}</p>
             </div>
 
             <div className='flex flex-col gap-2'>

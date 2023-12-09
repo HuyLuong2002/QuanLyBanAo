@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import NavTitle from './NavTitle';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import queryString from 'query-string';
 
 const Price = () => {
   const [activePriceIndex, setActivePriceIndex] = useState(null);
-  const { categoryId, color, minprice, pricelte } = useParams();
+  let { search } = useLocation()
+  const values = queryString.parse(search)
   const navigate = useNavigate();
+
 
   const priceList = [
     { _id: 950, priceOne: 0, priceTwo: 99 },
@@ -17,7 +20,39 @@ const Price = () => {
 
   const handleClick = (index, item) => {
     setActivePriceIndex(index);
-    navigate(`/shop/${categoryId}/${color}/${item.priceOne}/${item.priceTwo}`);
+    if (!item.priceOne) {
+      if (!search) {
+        navigate(`/shop?priceLte=${item.priceTwo}`);
+      } else if (values.priceGte || values.priceLte) {
+        delete values.priceGte;
+        delete values.priceLte;
+        search = "?" + queryString.stringify(values);
+        navigate(`/shop${search}&priceLte=${item.priceTwo}`);
+      }
+      return
+    }
+    if (!item.priceTwo) {
+      if (!search) {
+        navigate(`/shop?priceGte=${item.priceOne}`);
+      } else if (values.priceGte || values.priceLte) {
+        delete values.priceGte;
+        delete values.priceLte;
+        search = "?" + queryString.stringify(values);
+        navigate(`/shop${search}&priceGte=${item.priceOne}`);
+      }
+      return;
+    }
+
+    if (!search) {
+      navigate(`/shop?priceGte=${item.priceOne}&priceLte=${item.priceTwo}`);
+    } else if (values.priceGte || values.priceLte) {
+      delete values.priceGte;
+      delete values.priceLte;
+      search = "?" + queryString.stringify(values);
+      navigate(`/shop${search}&priceGte=${item.priceOne}&priceLte=${item.priceTwo}`)
+      return;
+    }
+    navigate(`/shop${search}&priceGte=${item.priceOne}&priceLte=${item.priceTwo}`)
   };
 
   return (
@@ -28,7 +63,7 @@ const Price = () => {
           {priceList.map((item, index) => (
             <li
               key={item._id}
-              className={`border-b-[1px] border-b-[#F0F0F0] py-2 pl-2 rounded-lg flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300 ${activePriceIndex === index ? 'font-bold bg-slate-300' : ''}`}
+              className={`border-b-[1px] border-b-[#F0F0F0] py-2 pl-2 rounded-lg flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300 ${activePriceIndex === index && (values.priceGte || values.priceLte) ? 'font-bold bg-slate-300' : ''}`}
               onClick={() => handleClick(index, item)}
             >
               {item._id === 950 && (

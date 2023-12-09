@@ -18,19 +18,6 @@ import { getAllOrders } from '../actions/orderAction';
 import { Space, Table, Tag } from 'antd';
 import WeeklyRevenueBarChart from './WeeklyRevenueBarChart';
 
-const revenueData = [
-    {
-        "year": 2023,
-        "month": 11,
-        "totalPrice": 500.0
-    },
-    {
-        "year": 2023,
-        "month": 12,
-        "totalPrice": 4323.0
-    }
-];
-
 const columns = [
     {
         title: 'Id',
@@ -72,28 +59,30 @@ const columns = [
         title: 'Size',
         dataIndex: 'size',
         key: 'size',
+        align: 'center'
     },
     {
         title: 'Color',
         key: 'color',
         dataIndex: 'color',
+        align: 'center',
         render: (_, { color }) => (
             <>
                 {
                     color === "GREEN" ? (
-                        <Tag color='green' key={color}>
+                        <Tag color='green' key={color} className='w-[60px] text-center'>
                             {color}
                         </Tag>
                     ) : color === "YELLOW" ? (
-                        <Tag color={'yellow'} key={color}>
+                        <Tag color={'yellow'} key={color} className='w-[60px] text-center'>
                             {color}
                         </Tag>
                     ) : color === "BLUE" ? (
-                        <Tag color={'blue'} key={color}>
+                        <Tag color={'blue'} key={color} className='w-[60px] text-center'>
                             {color}
                         </Tag>
                     ) : (
-                        <Tag color={'red'} key={color}>
+                        <Tag color={'red'} key={color} className='w-[60px] text-center'>
                             {color}
                         </Tag>
                     )
@@ -149,6 +138,53 @@ const columns2 = [
     },
 ];
 
+const columns3 = [
+    {
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
+        title: 'First Name',
+        dataIndex: 'firstName',
+        key: 'firstName',
+    },
+    {
+        title: 'Last Name',
+        dataIndex: 'lastName',
+        key: 'lastName',
+    },
+    {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+    },
+    {
+        title: 'Total Sell',
+        dataIndex: 'totalQuantity',
+        key: 'totalQuantity',
+        align: 'center'
+    },
+    {
+        title: 'Sex',
+        dataIndex: 'sex',
+        key: 'sex',
+        align: 'center'
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        align: 'center'
+    },
+    {
+        title: 'Telephone',
+        dataIndex: 'tel',
+        key: 'tel',
+    },
+];
+
+
 const controllers = Object.values(ChartJS).filter((chart) => chart.id !== undefined);
 Chart.register(...controllers);
 
@@ -165,8 +201,9 @@ const Dashboard = () => {
     const [top5Customer, settop5Customer] = useState([])
     const [top10Product, setTop10Product] = useState([])
     const [selectedYear, setSelectedYear] = useState(2023);
+    const [revenueByMonth, setRevenueByMonth] = useState([]);
 
-    const filteredData = revenueData.filter(item => item.year === selectedYear);
+    const filteredData = revenueByMonth.filter(item => item.year === selectedYear);
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
     const yearData = filteredData.reduce((acc, item) => {
         acc[item.month] = item.totalPrice;
@@ -175,6 +212,7 @@ const Dashboard = () => {
 
     let data2 = []
     let data3 = []
+    let data4 = []
 
     const handleYearChange = (event) => {
         const selectedYear = parseInt(event.target.value);
@@ -189,6 +227,16 @@ const Dashboard = () => {
     const getTop5Customers = async () => {
         const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10CustomerBestSell");
         settop5Customer(data)
+    }
+
+    const getTop10Employee = async () => {
+        const { data } = await axios.get("http://localhost:8081/api/v1/statistical/top10EmployeeBestSell");
+        settop5Employee(data)
+    }
+
+    const getRevenueByMonth = async () => {
+        const { data } = await axios.get("http://localhost:8081/api/v1/statistical/revenueByMonth/2023");
+        setRevenueByMonth(data)
     }
 
     data2 = top5Customer && top5Customer.map(item => {
@@ -217,11 +265,24 @@ const Dashboard = () => {
         }
     }, [])
 
+    data4 = top5Employee && top5Employee.map((item) => {
+        return {
+            id: item.seller.id,
+            lastName: item.seller.lastName,
+            firstName: item.seller.firstName,
+            email: item.seller.email,
+            totalQuantity: item.totalQuantity,
+            sex: item.seller.sex,
+            address: item.seller.address,
+            tel: item.seller.tel,
+        }
+    }, [])
+
     const chartData = {
         labels: months.map((month) => month.toString()),
         datasets: [
             {
-                label: 'Doanh thu',
+                label: 'Doanh thu theo tháng',
                 backgroundColor: 'rgba(75,192,192,0.2)',
                 borderColor: 'rgba(75,192,192,1)',
                 borderWidth: 1,
@@ -246,6 +307,8 @@ const Dashboard = () => {
         dispatch(getAllOrders());
         getTop10Products();
         getTop5Customers();
+        getTop10Employee();
+        getRevenueByMonth();
     }, [dispatch]);
 
     return (
@@ -254,7 +317,7 @@ const Dashboard = () => {
             <Sidebar />
 
             <div className="dashboardContainer">
-                <Typography component="h1">Dashboard</Typography>
+                <p className='text-4xl font-bold mb-4 text-blue-500 text-center'>DashBoard</p>
 
                 <div className="dashboardSummary">
                     <div>
@@ -278,10 +341,10 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className='w-[80%] mx-auto my-16'>
+                <div className='w-[80%] mx-auto my-16 border border-gray-300 rounded-md shadow-md bg-white animate__animated animate__fadeInUp z-auto p-4'>
                     <div className='flex justify-between items-center'>
                         <div className='w-[40px]'></div>
-                        <h1 className='text-2xl font-semibold text-center mb-4'>REVENUE BY MONTH</h1>
+                        <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>MONTHLY REVENUE</h1>
                         <div>
                             <select className='cursor-pointer' value={selectedYear} onChange={handleYearChange}>
                                 <option value={2022}>2022</option>
@@ -299,18 +362,18 @@ const Dashboard = () => {
                 </div>
 
                 <div>
-                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 CUSTOMER:  </h1>
-                    <Table columns={columns2} dataSource={data2} />
+                    <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 5 CUSTOMER:  </h1>
+                    <Table columns={columns2} dataSource={data2} bordered/>
                 </div>
 
                 <div>
-                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 5 EMPLOYEE: </h1>
-                    <Table columns={columns2} dataSource={data2} />
+                    <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 5 EMPLOYEE: </h1>
+                    <Table columns={columns3} dataSource={data4} bordered />
                 </div>
 
                 <div>
-                    <h1 className='text-2xl font-semibold text-center mb-4'>TOP 10 PRODUCT: </h1>
-                    <Table columns={columns} dataSource={data3} />
+                    <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 10 PRODUCT: </h1>
+                    <Table columns={columns} dataSource={data3} bordered />
                 </div>
             </div>
         </div>

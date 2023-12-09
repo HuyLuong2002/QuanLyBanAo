@@ -3,7 +3,7 @@ import { newArrOne } from "../../assets/images/index";
 import OrderDetailItem from './OrderDetailItem';
 import { useSelector } from 'react-redux';
 
-const OrderDetail = ({ item }) => {
+const OrderDetail = ({ item, note }) => {
     let orderStatus = "33.33%"
     const {user} = useSelector((state) => state.user)
 
@@ -12,7 +12,7 @@ const OrderDetail = ({ item }) => {
             <div className=''>
                 {
                     item.orderDetails.map((itemChild) => {
-                        return <OrderDetailItem itemChild={itemChild} />
+                        return <OrderDetailItem itemChild={itemChild} note={note}/>
                     })
                 }
 

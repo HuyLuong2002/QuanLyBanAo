@@ -4,10 +4,11 @@ import Product from "../../home/Products/Product";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct } from "../../../actions/productAction";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import queryString from 'query-string'
 
 function Items({ currentItems }) {
-    
+
     return (
         <>
             {currentItems &&
@@ -31,102 +32,92 @@ function Items({ currentItems }) {
 
 const Pagination = ({ itemsPerPage }) => {
 
+    const { search } = useLocation()
+    const values = queryString.parse(search)
+
     const alert = useAlert();
     const dispatch = useDispatch();
     const { loading, error, products } = useSelector((state) => state.products);
-    const { categoryId, color, minprice, maxprice } = useParams();
 
-    // useEffect to get products
-    useEffect(() => {
-        if (error) return alert.error(error);
-        dispatch(getProduct());
-    }, [dispatch, error, alert]);
+    const { cate, color, priceGte, priceLte} = values;
 
     const items = products.filter((item) => {
         // 0 condition
-        if(color === "0" && categoryId === "0" && minprice === "0" && maxprice === "0") {
+        if(!color && !cate && !priceGte && !priceLte) {
             return item
         }
 
         // 1 condition
-        if(color !== "0" && categoryId === "0" && minprice === "0" && maxprice === "0") {
+        if(color && !cate && !priceGte && !priceLte) {
             return item.color === color 
         }
-        if(color === "0" && categoryId !== "0" && minprice === "0" && maxprice === "0") {
-            return item.category.id === Number(categoryId)
+        if(!color && cate && !priceGte && !priceLte) {
+            return item.category.id == cate
         }
-        if(color === "0" && categoryId === "0") {
-            if(minprice === "0")
-                return item.price < Number(maxprice)
+        if(!color && !cate) {
+            if(!priceGte && priceLte)
+                return item.price <= priceLte
+            if(priceGte && !priceLte)
+                return item.price >= priceGte
 
-            if(maxprice === "0")
-                return item.price > Number(minprice)
-
-            return item.price > Number(minprice) && item.price < Number(maxprice)
+            return item.price >= priceGte && item.price <= priceLte
         }
 
         // 2 conditions
-        if(color !== "0" && categoryId !== "0" && minprice === "0" && maxprice === "0") {
-            return item.color === color && item.category.id === Number(categoryId)
+        if(color && cate && !priceGte && !priceLte) {
+            return item.color === color && item.category.id == cate
         }
 
-        if(color !== "0" && categoryId === "0") {
-            if(minprice === "0")
-                return item.price < Number(maxprice) && item.color === color
-            if(maxprice === "0")
-                return item.price > Number(minprice) && item.color === color
+        if(color && !cate) {
+            if(!priceGte && priceLte)
+                return item.price <= priceLte && item.color === color
+            if(priceGte && !priceLte)
+                return item.price >= priceGte && item.color === color
 
-            return item.color === color && item.price > Number(minprice) && item.price < Number(maxprice)
+            return item.color === color && item.price >= priceGte && item.price <= priceLte
         }
 
-        if(color === "0" && categoryId !== "0") {
-            
-            if(minprice === "0") {
-                return item.price < Number(maxprice) && item.category.id === Number(categoryId)
-            }
-            if(maxprice === "0")
-                return item.price > Number(minprice) && item.category.id === Number(categoryId)
+        if(!color && cate) {
+            if(!priceGte && priceLte)
+                return item.price <= priceLte && item.category.id == cate
+            if(priceGte && !priceLte)
+                return item.price >= priceGte && item.category.id == cate
 
-            return item.category.id === Number(categoryId) && item.price > Number(minprice) && item.price < Number(maxprice)
+            return item.category.id == cate && item.price >= priceGte && item.price <= priceLte
         }
 
         // 3 conditions
-        if(color !== "0" && categoryId !== "0") {
-            if(minprice === "0")
-                return item.price < Number(maxprice) && item.category.id === Number(categoryId) && item.color === color
-            if(maxprice === "0")
-                return item.price > Number(minprice) && item.category.id === Number(categoryId) && item.color === color
+        if(color && cate) {
+            if(!priceGte && priceLte)
+                return item.price <= priceLte && item.category.id == cate && item.color === color
+            if(priceGte && !priceLte)
+                return item.price >= priceGte && item.category.id == cate && item.color === color
 
-            return item.category.id === Number(categoryId) && item.price > Number(minprice) && item.price < Number(maxprice)  && item.color === color
+            return item.category.id == cate && item.price >= priceGte && item.price <= priceLte  && item.color === color
         }
 
         return item
     });
 
-    // Here we use item offsets; we could also use page offsets
-    // following the API or data you're working with.
+    console.log("items: ", items);
+
     const [itemOffset, setItemOffset] = useState(0);
     const [itemStart, setItemStart] = useState(1);
 
-    // Simulate fetching items from another resources.
-    // (This could be items from props; or items loaded in a local state
-    // from an API endpoint with useEffect and useState)
     const endOffset = itemOffset + itemsPerPage;
-    //   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
     const currentItems = items.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(items.length / itemsPerPage);
 
-    // Invoke when user click to request another page.
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % items.length;
         setItemOffset(newOffset);
-        // console.log(
-        //   `User requested page number ${event.selected}, which is offset ${newOffset},`
-        // );
         setItemStart(newOffset);
     };
 
-
+    useEffect(() => {
+        if (error) return alert.error(error);
+        dispatch(getProduct());
+    }, [dispatch, error, alert]);
 
     return (
         <div>
