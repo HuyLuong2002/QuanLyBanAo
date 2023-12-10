@@ -90,6 +90,26 @@ export const getProduct = () => async (dispatch) => {
     }
 };
 
+export const getAllProductAdmin = () => async (dispatch) => {
+    try {
+        dispatch({ type: ALL_PRODUCT_REQUEST });
+
+        let link = `http://localhost:8081/api/v1/products/getAllProductsAdmin`;
+
+        const { data } = await axios.get(link);
+
+        dispatch({
+            type: ALL_PRODUCT_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: ALL_PRODUCT_FAIL,
+            payload: error.response.data.message,
+        });
+    }
+};
+
 // Filter products
 export const filterProducts = (categoryId, color, minPrice, maxPrice, priceCondition,keyword = '', orderId = 1, page = 0 ) => async (dispatch) => {
     try {

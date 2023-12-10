@@ -10,6 +10,7 @@ import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import {Button} from '@material-ui/core';
 import {UPDATE_SUPPLIER_RESET} from "../constants/supplierConstant";
 import {getSupplierDetails, updateSupplier} from "../actions/supplierAction";
+// import "./UpdateSupplier.css"
 
 const UpdateSupplier = () => {
     const dispatch = useDispatch();
@@ -72,9 +73,9 @@ const UpdateSupplier = () => {
                                 encType="multipart/form-data"
                                 onSubmit={updateSupplierSubmitHandler}
                             >
-                                <h1>Edit Supplier</h1>
+                                <h1 className='test'>Edit Supplier</h1>
 
-                                <div>
+                                <div className='test3'>
                                     <FormatColorTextIcon/>
                                     <input
                                         type="text"
@@ -86,7 +87,7 @@ const UpdateSupplier = () => {
                                 </div>
 
 
-                                <Button id="createProductBtn" type="submit" disabled={loading ? true : false}>
+                                <Button className='test2' id="createProductBtn" type="submit" disabled={loading ? true : false}>
                                     Update
                                 </Button>
                             </form>

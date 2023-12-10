@@ -69,9 +69,9 @@ const UpdateCategories = () => {
                                 encType="multipart/form-data"
                                 onSubmit={updateCategorySubmitHandler}
                             >
-                                <h1>Edit Category</h1>
+                                <h1 className='test'>Edit Category</h1>
 
-                                <div>
+                                <div className='test3'>
                                     <FormatColorTextIcon/>
                                     <input
                                         type="text"
@@ -83,7 +83,7 @@ const UpdateCategories = () => {
                                 </div>
 
 
-                                <Button id="createProductBtn" type="submit" disabled={loading ? true : false}>
+                                <Button className='test2' id="createProductBtn" type="submit" disabled={loading ? true : false}>
                                     Update
                                 </Button>
                             </form>

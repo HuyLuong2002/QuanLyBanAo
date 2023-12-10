@@ -317,11 +317,11 @@ const Dashboard = () => {
             <Sidebar />
 
             <div className="dashboardContainer">
-                <p className='text-4xl font-bold mb-4 text-blue-500 text-center'>DashBoard</p>
+                <p className='text-4xl font-bold mb-4 text-blue-500 text-center'>Dashboard</p>
 
                 <div className="dashboardSummary">
-                    <div>
-                        <p>
+                    <div > 
+                        <p className='rounded-full'>
                             Total Amount <br /> $ Chưa có ní
                         </p>
                     </div>
@@ -361,19 +361,19 @@ const Dashboard = () => {
                     <WeeklyRevenueBarChart />
                 </div>
 
-                <div>
+                <div className='p-8'> 
                     <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 5 CUSTOMER:  </h1>
-                    <Table columns={columns2} dataSource={data2} bordered/>
+                    <Table className='border-gray-300 rounded-md shadow-md' columns={columns2} dataSource={data2} bordered/>
                 </div>
 
-                <div>
+                <div  className='my-8 p-8  '>
                     <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 5 EMPLOYEE: </h1>
-                    <Table columns={columns3} dataSource={data4} bordered />
+                    <Table className='border-gray-300 rounded-md shadow-md' columns={columns3} dataSource={data4} bordered />
                 </div>
 
-                <div>
+                <div  className='p-8'>
                     <h1 className='text-3xl font-bold mb-4 text-blue-500 text-center'>TOP 10 PRODUCT: </h1>
-                    <Table columns={columns} dataSource={data3} bordered />
+                    <Table className='border-gray-300 rounded-md shadow-md' columns={columns} dataSource={data3} bordered />
                 </div>
             </div>
         </div>

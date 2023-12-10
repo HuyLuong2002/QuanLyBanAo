@@ -1,9 +1,18 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/orebiSlice";
+import { addItemsToCart } from "../../../actions/cartAction";
+import { useAlert } from "react-alert";
 
-const ProductInfo = ({ productInfo }) => {
+const ProductInfo = ({ productInfo, id }) => {
+  const alert = useAlert()
   const dispatch = useDispatch();
+  const handleAddToCart = () => {
+    dispatch(
+      addItemsToCart(id,1)
+    )
+    alert.success("Item added successfully")
+  }
   return (
     <div className="flex flex-col gap-5">
       <h2 className="text-4xl font-semibold">{productInfo.name}</h2>
@@ -15,17 +24,7 @@ const ProductInfo = ({ productInfo }) => {
       </p>
       <button
         onClick={() =>
-          dispatch(
-            addToCart({
-              id: productInfo.id,
-              name: productInfo.name,
-              quantity: 1,
-              image: productInfo.image,
-              badge: productInfo.badge,
-              price: productInfo.price,
-              colors: productInfo.color,
-            })
-          )
+          handleAddToCart()
         }
         className="w-full py-4 bg-primeColor hover:bg-black duration-300 text-white text-lg font-titleFont"
       >

@@ -15,37 +15,24 @@ import { CheckCircleOutline } from '@material-ui/icons';
 import ReplayIcon from '@material-ui/icons/Replay';
 import { CloseCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { makeStyles } from '@material-ui/styles';
-
-const useStyles = makeStyles({
-    deletedRow: {
-        backgroundColor: '#FFD2D2', // Màu nền cho hàng có isDeleted = true
-    },
-});
 
 const UsersList = () => {
     const dispatch = useDispatch();
     const alert = useAlert();
     const navigate = useNavigate();
 
-    const classes = useStyles();
-
-    const getRowId = (row) => row.id;
-
-    const getRowClassName = (params) => {
-        // Đặt hàm lấy class cho hàng dựa trên giá trị của cột isDeleted
-        return params.row.isDeleted ? classes.deletedRow : '';
-    };
-
     const { error, users } = useSelector((state) => state.allUsers);
 
     const { error: deleteError, isDeleted, message } = useSelector((state) => state.profile);
 
-    const deleteUserHandler = (id) => {
+    const deleteUserHandler = (id, flag) => {
         dispatch(deleteUser(id));
+        if(flag) {
+            alert.success('User Restored Successfully');
+            return
+        }
+        alert.success('User Deleted Successfully');
     };
-
-    console.log("user list: ", users);
 
     useEffect(() => {
         if (error) {
@@ -59,13 +46,13 @@ const UsersList = () => {
         }
 
         if (isDeleted) {
-            alert.success(message);
+            // alert.success(message);
             navigate('/admin/users');
             dispatch({ type: DELETE_USER_RESET });
         }
 
         dispatch(getAllUsers());
-    }, [dispatch, alert, error, deleteError, navigate, isDeleted, message]);
+    }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
         { field: 'id', headerName: 'ID', minWidth: 50 },
@@ -95,10 +82,6 @@ const UsersList = () => {
             field: 'role',
             headerName: 'Role',
             minWidth: 150,
-
-            // renderCell: (params) => {
-            //     return <span className={params.getValue(params.id, 'role') === 'ADMIN' ? 'font-semibold text-green-400' : ''}></span>
-            // },
             renderCell: (params) => {
                 return (
                     <span className={params.value === "ADMIN" ? 'bg-green-200 rounded-xl text-sm w-24 p-2 text-center' : params.value === "EMPLOYEE" ? 'bg-blue-200 rounded-xl text-sm w-24 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center'}>{params.value}</span>
@@ -142,18 +125,18 @@ const UsersList = () => {
 
                         {
                             params.getValue(params.id, 'deleted') ? (
-                                <Button onClick={() => deleteUserHandler(params.getValue(params.id, 'id'))}>
+                                <Button onClick={() => deleteUserHandler(params.getValue(params.id, 'id'), 1)}>
                                     <ReplayIcon />
                                 </Button>
                             ) : (
                                 <Popconfirm
                                     title="Delete the task"
-                                    description="Are you sure to delete this task?"
+                                    description="Are you sure to delete this user?"
                                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                                     placement='bottomLeft'
                                     onConfirm={() => deleteUserHandler(params.getValue(params.id, 'id'))}
                                 >
-                                    <Button danger><DeleteIcon /></Button>
+                                    <Button danger disabled={params.getValue(params.id, 'role') === "ADMIN"}><DeleteIcon /></Button>
                                 </Popconfirm>
                             )
                         }
@@ -173,7 +156,8 @@ const UsersList = () => {
                 email: item.email,
                 firstName: item.firstName,
                 name: item.lastName,
-                sex: item.sex
+                sex: item.sex,
+                deleted: item.deleted,
             });
         });
 
@@ -193,8 +177,6 @@ const UsersList = () => {
                         disableSelectionOnClick
                         className="productListTable"
                         autoHeight
-                        getRowId={getRowId}
-                        getRowClassName={getRowClassName}
                     />
                 </div>
             </div>

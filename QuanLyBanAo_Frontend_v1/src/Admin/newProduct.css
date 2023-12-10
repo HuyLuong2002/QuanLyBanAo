@@ -14,17 +14,35 @@
 }
 
 .createProductForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  grid-template-rows: 1fr 1fr 1fr; 
+  grid-template-areas: 
+    "test test test"
+    ". test3 ."
+    ". test3 ."
+    ". test3 ."
+    ". test2 .";
+  gap: 1rem 1rem;
   margin: auto;
   padding: 3vmax;
   justify-content: space-evenly;
   height: auto;
-  width: 70vh;
+  width: 80vw;
+  border-radius: 20px;
   background-color: white;
-  gap: .5rem;
+  /* gap: .5rem; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.267);
+}
+
+.test { grid-area: test; }
+
+.test2 {
+  grid-area: test2;
+}
+
+.test3 {
+  grid-area: test3;
 }
 
 .createProductForm > div {
@@ -40,7 +58,7 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px solid rgba(0, 0, 0, 0.267);
-  border-radius: 4px;
+  border-radius: 10px;
   font: 300 0.9vmax cursive;
   outline: none;
 }
@@ -63,7 +81,7 @@
   cursor: pointer;
   width: 100%;
   z-index: 2;
-  height: 5vh;
+  height: 7.5vh;
   border: none;
   margin: 0%;
   font: 400 0.8vmax cursive;
@@ -92,10 +110,10 @@
   color: white;
   font: 300 0.9vmax "Roboto";
   width: 100%;
-  padding: 0.8vmax;
+  padding: 1vmax;
   cursor: pointer;
   transition: all 0.5s;
-  border-radius: 4px;
+  border-radius: 10px;
   outline: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.219);
 }

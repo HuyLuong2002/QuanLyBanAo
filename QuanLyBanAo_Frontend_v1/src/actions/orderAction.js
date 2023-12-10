@@ -102,7 +102,7 @@ export const deleteOrder = (id) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_ORDER_REQUEST });
 
-        const { data } = await axios.delete(`/api/v1/admin/order/${id}`);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/orders/delete/${id}`);
 
         dispatch({ type: DELETE_ORDER_SUCCESS, payload: data.success });
     } catch (error) {
@@ -139,6 +139,21 @@ export const processOrder = (id) => async (dispatch) => {
     try {
         dispatch({ type: CHECKOUT_REQUEST });
         const {data} = await axios.put(`http://localhost:8081/api/v1/orders/approve/${id}`);
+        dispatch({ type: CHECKOUT_SUCCESS, payload: data?.order });
+        
+    } catch (error) {
+        dispatch({
+            type: CHECKOUT_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+}
+
+// Reject 
+export const rejectOrder = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: CHECKOUT_REQUEST });
+        const { data } = await axios.put(`http://localhost:8081/api/v1/orders/reject/${id}`);
         dispatch({ type: CHECKOUT_SUCCESS, payload: data?.order });
         
     } catch (error) {

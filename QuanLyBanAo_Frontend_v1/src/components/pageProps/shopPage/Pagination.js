@@ -3,7 +3,7 @@ import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
-import { getProduct } from "../../../actions/productAction";
+import { getAllProductAdmin, getProduct } from "../../../actions/productAction";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import queryString from 'query-string'
 
@@ -116,7 +116,7 @@ const Pagination = ({ itemsPerPage }) => {
 
     useEffect(() => {
         if (error) return alert.error(error);
-        dispatch(getProduct());
+        dispatch(getAllProductAdmin());
     }, [dispatch, error, alert]);
 
     return (

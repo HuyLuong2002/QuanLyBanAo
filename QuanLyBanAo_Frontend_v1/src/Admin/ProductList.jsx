@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearErrors, getAdminProduct, deleteProduct, getProduct } from '../actions/productAction';
+import { clearErrors, getAdminProduct, deleteProduct, getProduct, getAllProductAdmin } from '../actions/productAction';
 import { Link } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import { Box, Button } from '@material-ui/core';
@@ -17,6 +17,7 @@ import { CheckCircleOutline } from '@material-ui/icons';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { loadUser } from '../actions/userAction';
 
 
 const ProductList = () => {
@@ -29,15 +30,16 @@ const ProductList = () => {
 
     const { error: deleteError, isDeleted } = useSelector((state) => state.product);
 
+    const { user } = useSelector((state) => state.user);
+
     const deleteProductHandler = (id, flag) => {
         dispatch(deleteProduct(id));
         if(flag) {
-            alert.success('Product Restored Successfully');
+            alert.success('User Restored Successfully');
             return
         }
         alert.success('Product Deleted Successfully');
     };
-
 
     useEffect(() => {
         if (error) {
@@ -56,7 +58,7 @@ const ProductList = () => {
             dispatch({ type: DELETE_PRODUCT_RESET });
         }
 
-        dispatch(getProduct());
+        dispatch(getAllProductAdmin());
     }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
 
     const columns = [
@@ -65,23 +67,37 @@ const ProductList = () => {
         {
             field: 'name',
             headerName: 'Name',
-            minWidth: 250,
+            minWidth: 150,
+        },
+        {
+            field: 'image',
+            headerName: 'Image',
+            minWidth: 150,
+            renderCell: (params) => {
+                return (
+                    <img src={params.getValue(params.id, 'image')} alt="alt" className='w-[40px]' />
+                );
+            },
         },
         {
             field: 'price',
             headerName: 'Price',
-            // type: 'number',
-            minWidth: 185,
+            minWidth: 120,
         },
         {
             field: 'size',
             headerName: 'Size',
-            minWidth: 185,
+            minWidth: 120,
+        },
+        {
+            field: 'category',
+            headerName: 'Category',
+            minWidth: 150,
         },
         {
             field: 'color',
             headerName: 'Color',
-            minWidth: 185,
+            minWidth: 120,
             renderCell: (params) => {
                 return (
                     <span className={params.value === "GREEN" ? 'bg-green-300 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-500 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
@@ -91,7 +107,7 @@ const ProductList = () => {
         {
             field: 'deleted',
             headerName: 'Deleted',
-            minWidth: 185,
+            minWidth: 150,
             type: 'boolean',
             renderCell: (params) => {
                 return !params.value ? (
@@ -124,18 +140,18 @@ const ProductList = () => {
 
                         {
                             params.getValue(params.id, 'deleted') ? (
-                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'), 1)}>
+                                <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'), 1)} disabled={user && user?.roles && user?.roles[0].name === 'EMPLOYEE'}>
                                     <ReplayIcon />
                                 </Button>
                             ) : (
                                 <Popconfirm
                                     title="Delete the task"
-                                    description="Are you sure to delete this task?"
+                                    description="Are you sure to delete this product?"
                                     icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                                     placement='bottomLeft'
                                     onConfirm={() => deleteProductHandler(params.getValue(params.id, 'id'))}
                                 >
-                                    <Button danger><DeleteIcon /></Button>
+                                    <Button danger disabled={user && user?.roles && user?.roles[0].name === 'EMPLOYEE'}><DeleteIcon /></Button>
                                 </Popconfirm>
                             )
                         }
@@ -156,6 +172,8 @@ const ProductList = () => {
                 size: item.size,
                 color: item.color,
                 deleted: item.deleted,
+                image: item.image,
+                category: item.category.name
             });
         });
 
@@ -165,7 +183,7 @@ const ProductList = () => {
 
             <div className="dashboard">
                 <SideBar />
-                <div className="productListContainer">
+                <div className="w-full bg-white border-l border-[#00000028] flex flex-col h-screen">
                     <h1 id="productListHeading">ALL PRODUCTS</h1>
 
                     <DataGrid
@@ -177,7 +195,6 @@ const ProductList = () => {
                         autoHeight
                     />
                 </div>
-
             </div>
         </Fragment>
     );

@@ -30,7 +30,9 @@
 
 .productListTable div {
   font: 300 1vmax "Roboto";
-  color: rgba(0, 0, 0, 0.678);
+  /* color: rgba(0, 0, 0, 0.678); */
+  font-size: medium;
+  font-weight: 500;
   border: none !important;
 }
 
