@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -54,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
         oldProduct.setSupplier(product.getSupplier());
         oldProduct.setColor(product.getColor());
         oldProduct.setDeleted(product.isDeleted());
+        oldProduct.setUpdatedAt(new Date());
         return productRepository.save(oldProduct);
 
     }
