@@ -155,6 +155,17 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/reset_password")
+    public ResponseEntity<Map<String, Object>>resetPassword(@RequestBody User userUpdate) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        User currentUser = userService.findByUsername(userUpdate.getEmail());
+        User user = userService.updateUserPassword(currentUser, userUpdate);
+        response.put("success", true);
+        response.put("user", user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout() {
         Map<String, Object> response = new HashMap<>();
