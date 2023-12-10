@@ -18,10 +18,8 @@ const Order = () => {
       <div className='flex justify-between items-center mb-4'>
         <div className='flex items-center gap-4'>
           <p className='text-2xl font-semibold'>Order List</p>
-          <a className='text-blue-500' href="/">View invoice →</a>
+          {/* <a className='text-blue-500' href="/">View invoice →</a> */}
         </div>
-
-        <p>Order placed <span className='font-medium'>March 22, 2021</span></p>
       </div>
 
       {/* order detail */}

@@ -248,7 +248,10 @@ public class OrderController {
     public ResponseEntity<Map<String, Object>> exportDataExcel(@PathVariable int id) throws IOException, ParseException, InterruptedException, URISyntaxException {
 
         String inputPath = "/excel/OrderTemplate.xlsx";
-        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData";
+        //String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData";
+        // String inputPath = "D:\\LUC_NT\\University\\HK1_NAM4\\J2EE\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\OrderTemplate.xlsx";
+        String outputPath = "D:\\LUC_NT\\University\\HK1_NAM4\\J2EE\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData";
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         // Get the absolute path of the resource
@@ -268,7 +271,9 @@ public class OrderController {
 
     @GetMapping(path = {"/exportPDF/{id}"})
     public ResponseEntity<Map<String, Object>> exportDataPDF(@PathVariable int id) throws IOException, ParseException, InterruptedException, DocumentException {
-        String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\pdf\\";
+        //String outputPath = "E:\\java-workspace\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\pdf\\";
+        String outputPath = "D:\\LUC_NT\\University\\HK1_NAM4\\J2EE\\QuanLyBanAo\\QuanLyBanAo-Backend\\src\\main\\resources\\excel\\exportData";
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         if(orderService.exportDataPDF(id, outputPath))

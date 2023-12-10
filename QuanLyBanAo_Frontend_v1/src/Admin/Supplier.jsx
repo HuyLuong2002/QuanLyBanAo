@@ -27,9 +27,16 @@ const Supplier = () => {
 
     const {error: deleteError, isDeleted} = useSelector((state) => state.supplier);
 
-    const deleteSupplierHandler = (id) => {
+    const deleteSupplierHandler = (id, flag) => {
         dispatch(deleteSupplier(id));
+        if(flag) {
+            alert.success('Supplier Restored Successfully');
+            return
+        }
+        alert.success('Supplier Deleted Successfully');
     };
+
+    console.log("isDeleted: ", isDeleted);
 
     useEffect(() => {
         if (error) {
@@ -43,7 +50,7 @@ const Supplier = () => {
         }
 
         if (isDeleted) {
-            alert.success('Supplier Deleted Successfully');
+            // alert.success('Supplier Deleted Successfully');
             navigate('/admin/suppliers');
             dispatch({type: DELETE_SUPPLIER_RESET});
         }
@@ -76,31 +83,27 @@ const Supplier = () => {
                             <EditIcon/>
                         </Link>
 
-                        <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>
+                        {/* <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon/>
-                        </Button>
+                        </Button> */}
 
-                        {/*{*/}
-                        {/*    params.getValue(params.id, 'deleted') ? (*/}
-                        {/*        <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}>*/}
-                        {/*            <ReplayIcon />*/}
-                        {/*        </Button>*/}
-                        {/*    ) : (*/}
-                        {/*        // <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>*/}
-                        {/*        //     <DeleteIcon />*/}
-                        {/*        // </Button>*/}
-                        {/*        <Popconfirm*/}
-                        {/*            title="Delete the task"*/}
-                        {/*            description="Are you sure to delete this task?"*/}
-                        {/*            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}*/}
-                        {/*            placement='bottomLeft'*/}
-                        {/*        >*/}
-                        {/*            <Button danger><DeleteIcon /></Button>*/}
-                        {/*        </Popconfirm>*/}
-                        {/*    )*/}
-                        {/*}*/}
-
-
+                        {
+                            params.getValue(params.id, 'deleted') ? (
+                                <Button onClick={() => deleteSupplierHandler(params.getValue(params.id, 'id'), 1)}>
+                                    <ReplayIcon />
+                                </Button>
+                            ) : (
+                                <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this supplier?"
+                                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                    placement='bottomLeft'
+                                    onConfirm={() => deleteSupplierHandler(params.getValue(params.id, 'id'))}
+                                >
+                                    <Button danger><DeleteIcon /></Button>
+                                </Popconfirm>
+                            )
+                        }
                     </Fragment>
                 );
             },

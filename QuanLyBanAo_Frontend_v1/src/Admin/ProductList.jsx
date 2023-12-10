@@ -100,7 +100,7 @@ const ProductList = () => {
             minWidth: 120,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "GREEN" ? 'bg-green-300 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-500 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-500 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
+                    <span className={params.value === "GREEN" ? 'bg-green-200 rounded-xl text-sm w-20 p-2 text-center' : params.value === "BLUE" ? 'bg-blue-200 rounded-xl text-sm w-20 p-2 text-center' : params.value === "RED" ? 'bg-red-200 rounded-xl text-sm w-20 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-20 p-2 text-center'}>{params.value}</span>
                 )
             },
         },

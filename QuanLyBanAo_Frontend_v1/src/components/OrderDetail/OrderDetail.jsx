@@ -43,9 +43,17 @@ const OrderDetail = ({ item, note }) => {
 
             {/* billing info */}
             <div className='bg-[#f3f4f6] flex justify-between p-4 mb-12 rounded-md'>
-                <div>
-                    <p className='font-medium mb-4'>Billing address</p>
-                    <p className='text-[#6B7280]'>{user.address}</p>
+                <div className='flex flex-col gap-2'>
+                    <p className='font-medium '>Delivery address</p>
+                    <p className='text-[#6B7280] mb-4'>{user.address}</p>
+                    <p className='font-medium'>Notes</p>
+                    <p className='text-[#6B7280]'>{note}</p>
+                </div>
+
+                <div className='flex flex-col gap-2'>
+                    <p className='font-medium'>Shipping updates</p>
+                    <p className='text-[#6B7280]'>{user.email}</p>
+                    <p className='text-[#6B7280]'>{user.tel}</p>
                 </div>
 
                 <div>

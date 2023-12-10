@@ -82,7 +82,7 @@ export const deleteSupplier = (id) => async (dispatch) => {
     try {
         dispatch({ type: DELETE_SUPPLIER_REQUEST });
 
-        const { data } = await axios.put(`/api/v1/suppliers/delete/${id}`);
+        const { data } = await axios.put(`http://localhost:8081/api/v1/suppliers/delete/${id}`);
 
         dispatch({
             type: DELETE_SUPPLIER_SUCCESS,

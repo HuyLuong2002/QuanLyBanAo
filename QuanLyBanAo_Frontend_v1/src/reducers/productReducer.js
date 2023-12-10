@@ -335,14 +335,16 @@ export const supplierReducer = (state = {}, action) => {
             };
         case DELETE_SUPPLIER_SUCCESS:
             return {
+                ...state,
                 loading: false,
-                isDeleted: action.payload
+                isDeleted: action.payload,
+                message: action.payload.message,
             };
         case DELETE_SUPPLIER_FAIL:
             return {
                 ...state,
                 loading: false,
-                isDeleted: action.payload,
+                error: action.payload,
             };
         case DELETE_SUPPLIER_RESET:
             return {
@@ -356,6 +358,7 @@ export const supplierReducer = (state = {}, action) => {
             };
         case UPDATE_SUPPLIER_SUCCESS:
             return {
+                ...state,
                 loading: false,
                 isUpdated: action.payload
             };
@@ -374,7 +377,7 @@ export const supplierReducer = (state = {}, action) => {
             return state;
     }
 };
-export const suppliersReducer = (state = { suplliers: []}, action) => {
+export const suppliersReducer = (state = { suplliers: [] }, action) => {
     switch (action.type) {
         case SUPPLIER_REQUEST:
             return {
@@ -398,7 +401,7 @@ export const suppliersReducer = (state = { suplliers: []}, action) => {
     }
 };
 
-export const categoriesReducer = (state = {categories: []}, action) => {
+export const categoriesReducer = (state = { categories: [] }, action) => {
     switch (action.type) {
         case GET_CATE_REQUEST:
             return {

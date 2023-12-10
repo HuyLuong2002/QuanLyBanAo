@@ -21,11 +21,9 @@ const UpdateCategories = () => {
 
     const {loading, error: updateError, isUpdated} = useSelector((state) => state.category);
 
-    const [name, setName] = useState(category.name);
+    const [name, setName] = useState("");
     const categoryId = id;
     useEffect(() => {
-        dispatch(getCategoryDetails(categoryId));
-
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -42,7 +40,7 @@ const UpdateCategories = () => {
             dispatch({type: UPDATE_CATEGORY_RESET});
         }
 
-        // dispatch(getCategories());
+        dispatch(getCategoryDetails(categoryId));
     }, [dispatch, alert, error, navigate, isUpdated, categoryId, updateError]);
 
     const updateCategorySubmitHandler = (e) => {

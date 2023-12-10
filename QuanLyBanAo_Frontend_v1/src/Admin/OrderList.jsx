@@ -37,6 +37,10 @@ const OrderList = () => {
         if(status === 'SHIPPED') {
             return;
         }
+
+        if(status === 'SHIPPING') {
+            return;
+        }
         alert.success('Product Deleted Successfully');
     };
 
@@ -69,7 +73,7 @@ const OrderList = () => {
             minWidth: 150,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "SHIPPED" ? 'bg-green-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "APPROVAL" ? 'bg-blue-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "CANCELED" ? 'bg-red-400 rounded-xl text-sm w-24 p-2 text-center font-semibold' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                    <span className={params.value === "SHIPPED" ? 'bg-green-200 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "APPROVAL" ? 'bg-blue-200 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "CANCELED" ? 'bg-red-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
                 )
             },
         },

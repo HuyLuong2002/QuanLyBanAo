@@ -6,6 +6,7 @@ import com.example.quanlybanaobackend.dto.UserDTO;
 import com.example.quanlybanaobackend.model.Category;
 import com.example.quanlybanaobackend.model.Product;
 import com.example.quanlybanaobackend.model.User;
+import com.example.quanlybanaobackend.repository.ProductRepository;
 import com.example.quanlybanaobackend.service.CategoryService;
 import com.example.quanlybanaobackend.service.CloudinaryService;
 import com.example.quanlybanaobackend.service.ProductService;
@@ -43,6 +44,9 @@ public class ProductController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -382,5 +386,11 @@ public class ProductController {
 //        productDTO.setDeleted(product.isDeleted());
 //        return productDTO;
 //    }
-
+    @GetMapping("/getAllProductsAdmin")
+    public ResponseEntity<Map<String, Object>> getAllsProductsAdmin() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("products", productRepository.findAll());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+}
 }

@@ -10,7 +10,6 @@ import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import {Button} from '@material-ui/core';
 import {UPDATE_SUPPLIER_RESET} from "../constants/supplierConstant";
 import {getSupplierDetails, updateSupplier} from "../actions/supplierAction";
-// import "./UpdateSupplier.css"
 
 const UpdateSupplier = () => {
     const dispatch = useDispatch();
@@ -22,13 +21,13 @@ const UpdateSupplier = () => {
 
     const {loading, error: updateError, isUpdated} = useSelector((state) => state.supplier);
 
-    const [name, setName] = useState(supplier.name);
+    const [name, setName] = useState("");
 
     const supplierId = id;
 
-    useEffect(() => {
-        dispatch(getSupplierDetails(supplierId));
+    console.log("Supplier: ", supplier);
 
+    useEffect(() => {
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -45,7 +44,7 @@ const UpdateSupplier = () => {
             dispatch({type: UPDATE_SUPPLIER_RESET});
         }
 
-        // dispatch(getSuppliers());
+        dispatch(getSupplierDetails(supplierId));
     }, [dispatch, alert, error, navigate, isUpdated, supplierId, updateError]);
 
     const updateSupplierSubmitHandler = (e) => {
