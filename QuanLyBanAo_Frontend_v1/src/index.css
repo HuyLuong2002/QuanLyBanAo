@@ -86,3 +86,8 @@ nav .active li {
     font: 300 4vw "Roboto";
   }
 }
+
+
+#__react-alert__ {
+  width: auto!important;
+}

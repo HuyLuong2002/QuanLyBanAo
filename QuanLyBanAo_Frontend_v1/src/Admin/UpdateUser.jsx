@@ -43,6 +43,8 @@ const UpdateUser = () => {
 
     const userId = id;
 
+    console.log("User: ", user);
+
     const updateUserSubmitHandler = (e) => {
         e.preventDefault();
 
@@ -116,10 +118,10 @@ const UpdateUser = () => {
                                 <input
                                     type="text"
                                     placeholder="First Name"
-                                    disabled
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
                                     required
-                                    value={user.firstName}
-                                    onChange={(e) => setName(e.target.value)}
+                                    value={firstName ? firstName : user.firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                 />
                             </div>
 
@@ -129,9 +131,9 @@ const UpdateUser = () => {
                                     type="text"
                                     placeholder="Last Name"
                                     required
-                                    disabled
-                                    value={user.lastName}
-                                    onChange={(e) => setName(e.target.value)}
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
+                                    value={lastName ? lastName : user.lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                 />
                             </div>
 
@@ -141,8 +143,8 @@ const UpdateUser = () => {
                                     type="email"
                                     placeholder="Email"
                                     required
-                                    disabled
-                                    value={user.email}
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
+                                    value={email ? email : user.email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
@@ -152,28 +154,32 @@ const UpdateUser = () => {
                                 <input
                                     type="date"
                                     placeholder="Date"
-                                    disabled
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
                                     required
-                                    value={user.dateOfBirth}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={dateOfBirth ? dateOfBirth : user.dateOfBirth}
+                                    onChange={(e) => setdateOfBirth(e.target.value)}
                                 />
                             </div>
 
                             <div>
                                 <WcIcon />
-                                <select disabled value={role} onChange={(e) => setRole(e.target.value)}>
+                                <select disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"} value={sex ? sex : user.sex} onChange={(e) => setSex(e.target.value)}>
                                     {
-                                        user.sex === "MALE" ? (
-                                            <>
-                                                <option value="MALE">MALE</option>
-                                                <option value="FEMALE">FEMALE</option>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <option value="FEMALE">FEMALE</option>
-                                                <option value="MALE">MALE</option>
-                                            </>
-                                        )
+                                        // user.sex === "MALE" ? (
+                                        //     <>
+                                        //         <option value="MALE">MALE</option>
+                                        //         <option value="FEMALE">FEMALE</option>
+                                        //     </>
+                                        // ) : (
+                                        //     <>
+                                        //         <option value="FEMALE">FEMALE</option>
+                                        //         <option value="MALE">MALE</option>
+                                        //     </>
+                                        // )
+                                        <>
+                                        <option value="MALE">MALE</option>
+                                        <option value="FEMALE">FEMALE</option>
+                                    </>
                                     }
                                 </select>
                             </div>
@@ -184,9 +190,9 @@ const UpdateUser = () => {
                                     type="text"
                                     placeholder="Address"
                                     required
-                                    disabled
-                                    value={user.address}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
+                                    value={address ? address : user.address}
+                                    onChange={(e) => setAddress(e.target.value)}
                                 />
                             </div>
 
@@ -196,15 +202,15 @@ const UpdateUser = () => {
                                     type="number"
                                     placeholder="Telephone"
                                     required
-                                    disabled
-                                    value={user.tel}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"}
+                                    value={tel ? tel : user.tel}
+                                    onChange={(e) => setTel(e.target.value)}
                                 />
                             </div>
 
                             <div>
                                 <CancelIcon />
-                                <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                                <select disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"} value={status} onChange={(e) => setStatus(e.target.value)}>
                                     {
                                         user.status === "ACTIVE" ? (
                                             <>
@@ -223,15 +229,15 @@ const UpdateUser = () => {
 
                             <div>
                                 <VerifiedUserIcon />
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <select disabled={user && user?.roles && user?.roles[0]?.name === "ADMIN"} value={role} onChange={(e) => setRole(e.target.value)}>
                                     {
-                                        user && user?.roles?.name === "EMPLOYEE" ? (
+                                        user && user?.roles && user?.roles[0]?.name === "EMPLOYEE" ? (
                                             <>
                                                 <option value="EMPLOYEE">EMPLOYEE</option>
                                                 <option value="CUSTOMER">CUSTOMER</option>
                                                 <option value="ADMIN">ADMIN</option>
                                             </>
-                                        ) : user?.roles?.name === "ADMIN" ? (
+                                        ) : user && user?.roles && user?.roles[0]?.name === "ADMIN" ? (
                                             <>
                                                 <option value="ADMIN">ADMIN</option>
                                                 <option value="EMPLOYEE">EMPLOYEE</option>
@@ -252,7 +258,7 @@ const UpdateUser = () => {
                                 id="createProductBtn"
                                 className='test2'
                                 type="submit"
-                                disabled={updateLoading ? true : false || role === '' ? true : false}
+                                disabled={loading ? true : false}
                             >
                                 Update
                             </Button>

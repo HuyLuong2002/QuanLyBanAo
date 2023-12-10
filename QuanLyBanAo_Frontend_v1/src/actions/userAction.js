@@ -82,7 +82,7 @@ export const loadUser = () => async (dispatch) => {
 
         const { data } = await axios.get(`http://localhost:8081/api/v1/auth/me`);
 
-        dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
+        dispatch({ type: LOAD_USER_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: LOAD_USER_FAIL, payload: error.response?.data?.message });
     }
@@ -91,7 +91,7 @@ export const loadUser = () => async (dispatch) => {
 // Logout User
 export const logout = () => async (dispatch) => {
     try {
-        await axios.get(`api/v1/auth/logout`);
+        await axios.get(`http://localhost:8081/api/v1/auth/logout`);
 
         dispatch({ type: LOGOUT_SUCCESS });
         localStorage.removeItem('cartItems');

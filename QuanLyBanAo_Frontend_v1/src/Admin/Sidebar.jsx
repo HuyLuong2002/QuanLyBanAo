@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './sidebar.css';
 import logo from '../assets/images/orebiLogo.png';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PostAddIcon from '@material-ui/icons/PostAdd';
@@ -13,25 +13,33 @@ import PeopleIcon from '@material-ui/icons/People';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import CategoryIcon from '@material-ui/icons/Category';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'antd';
+import { logout } from '../actions/userAction';
+import { useAlert } from 'react-alert';
 
 const Sidebar = () => {
-    const [datuserDausertauser] = useState({})
+    const [datauser, setDatausertauser] = useState({})
     const location = useLocation();
+    const alert = useAlert()
     const pathSegments = location.pathname.split('/');
     const lastSegment = pathSegments[pathSegments.length - 1];
-    const { user } = useSelector((state) => state.user);
+    const { error, loading, isAuthenticated, user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    // const getRevenueByMonth = async () => {
-    //     const { data } = await axios.get("http://localhost:8081/api/v1/auth/me");
-    //     setDatauser(data.user)
-    // }
-    
-    console.log("Check: ", lastSegment);
+    const Logout = () => {
+        dispatch(logout())
+        alert.success(`Logged out successfully`);
+    }
 
-    // useEffect(() => {
-    //     getRevenueByMonth()
-    // }, [])
+    useEffect(() => {
+        if (!user) {
+            navigate('/signin');
+            return;
+        }
+    }, [user, navigate])
+
     return (
         <div className="sidebar">
             <Link to="/">
@@ -89,7 +97,7 @@ const Sidebar = () => {
                     </>
                 )
             }
-
+            <Button onClick={Logout}>Logout</Button>
         </div>
     );
 };

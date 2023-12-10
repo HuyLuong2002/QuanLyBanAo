@@ -18,6 +18,7 @@ import ExplicitIcon from '@material-ui/icons/Explicit';
 import { Popconfirm } from 'antd';
 import ReplayIcon from '@material-ui/icons/Replay';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 const OrderList = () => {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const OrderList = () => {
     const deleteOrderHandler = (id, flag, status) => {
         dispatch(deleteOrder(id));
         if(flag) {
-            alert.success('Product Restored Successfully');
+            alert.success('Order Restored Successfully');
             return
         }
         if(status === 'SHIPPED') {
@@ -41,8 +42,18 @@ const OrderList = () => {
         if(status === 'SHIPPING') {
             return;
         }
-        alert.success('Product Deleted Successfully');
+        alert.success('Order Deleted Successfully');
     };
+
+    const exportPdf = async (id) => {
+        await axios.get(`http://localhost:8081/api/v1/orders/exportPDF/${id}`);
+        alert.success("Download file PDF successfully");
+    }
+
+    const ExportExcel = async (id) => {
+        await axios.get(`http://localhost:8081/api/v1/orders/exportExcel/${id}`);
+        alert.success("Download file Excel successfully");
+    }
 
     useEffect(() => {
         if (error) {
@@ -89,7 +100,7 @@ const OrderList = () => {
             minWidth: 190,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "CASH" ? ' rounded-xl text-sm w-24 p-2 text-center font-semibold text-orange-500' : 'bg-blue-300 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                    <span className={params.value === "CASH" ? ' rounded-xl text-sm w-24 p-2 text-center font-semibold text-orange-500' : 'text-green-500 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
                 )
             },
         },
@@ -136,11 +147,11 @@ const OrderList = () => {
                             )
                         }
 
-                        <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                        <Button onClick={(e) => exportPdf(params.getValue(params.id, 'id'))}>
                             <PictureAsPdfIcon />
                         </Button>
 
-                        <Button onClick={() => deleteOrderHandler(params.getValue(params.id, 'id'))}>
+                        <Button onClick={(e) => ExportExcel(params.getValue(params.id, 'id'))}>
                             <ExplicitIcon />
                         </Button>
                     </div>

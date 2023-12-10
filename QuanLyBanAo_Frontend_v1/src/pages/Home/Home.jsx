@@ -25,9 +25,6 @@ const Home = () => {
         dispatch(getAllUsers());
     }, [dispatch, error, alert]);
 
-
-    // console.log("product:", products);
-
     return (
         <div className="w-full mx-auto">
             <Banner />

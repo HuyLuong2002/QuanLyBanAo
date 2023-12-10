@@ -1,4 +1,4 @@
-import { ADD_TO_CART, CHECKOUT_FAIL, CHECKOUT_REQUEST, CHECKOUT_SUCCESS, GET_CURRENT_USER_CART, GET_CURRENT_USER_CART_FAIL, GET_CURRENT_USER_CART_REQUEST, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
+import { ADD_TO_CART, CHECKOUT_FAIL, CHECKOUT_ONL_FAIL, CHECKOUT_ONL_REQUEST, CHECKOUT_ONL_SUCCESS, CHECKOUT_REQUEST, CHECKOUT_SUCCESS, GET_CURRENT_USER_CART, GET_CURRENT_USER_CART_FAIL, GET_CURRENT_USER_CART_REQUEST, PAYMENT_ONL_FAIL, PAYMENT_ONL_REQUEST, PAYMENT_ONL_SUCCESS, REMOVE_CART_ITEM, SAVE_SHIPPING_INFO, UPDATE_ITEM_CART } from '../constants/cartConstants';
 import axios from 'axios';
 
 // Add to Cart
@@ -109,6 +109,42 @@ export const checkout = (paymentMethod = "CASH", notes = "") => async (dispatch)
     }
 
     localStorage.setItem('cartItems', JSON.stringify([]));
+}
+
+// CHECKOUT
+export const checkoutOnl = (paymentMethod = "BANKING", notes = "") => async (dispatch) => {
+    try {
+        dispatch({ type: CHECKOUT_ONL_REQUEST });
+
+        const config = { headers: { 'Content-Type': 'application/json' } };
+        const {data} = await axios.post(`http://localhost:8081/api/v1/cart/pay`, { paymentMethod, notes }, config);
+
+        dispatch({ type: CHECKOUT_ONL_SUCCESS, payload: data?.success });
+        
+    } catch (error) {
+        dispatch({
+            type: CHECKOUT_ONL_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify([]));
+}
+
+export const paymentSuccess = (paymentId, token, PayerID) => async (dispatch) => {
+    try {
+        dispatch({ type: PAYMENT_ONL_REQUEST });
+
+        const {data} = await axios.post(`http://localhost:8081/api/v1/cart/pay/success?paymentId=${paymentId}&token=${token}&PayerID=${PayerID}`);
+
+        dispatch({ type: PAYMENT_ONL_SUCCESS, payload: data?.success });
+        
+    } catch (error) {
+        dispatch({
+            type: PAYMENT_ONL_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
 }
 
 // Reset cart 

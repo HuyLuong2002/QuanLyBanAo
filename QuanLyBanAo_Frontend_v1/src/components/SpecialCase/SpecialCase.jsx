@@ -5,7 +5,7 @@ import { MdSwitchAccount } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space, message } from 'antd';
 import { useState } from "react";
-import { logout, updatePassword, updateProfile } from "../../actions/userAction";
+import { loadUser, logout, updatePassword, updateProfile } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { getCurrentUserCart } from "../../actions/cartAction";
 import axios from "axios";

@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     @Query("select o from Order o order by o.orderDate desc ")
     List<Order> getAll();
 
-    @Query("select o from Order o where o.user = :user and o.orderStatus = 'ACTIVE'")
+    @Query("select o from Order o where o.user = :user and o.orderStatus = 'ACTIVE' order by o.orderDate desc")
     List<Order> findAllUserOrder(@Param("user") User user);
 
     @Query("select new com.example.quanlybanaobackend.dto.StatisticalBestSellCustomerDTO(sum(o.totalQuantity), o.user) " +
