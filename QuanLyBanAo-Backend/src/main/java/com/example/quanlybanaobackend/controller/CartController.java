@@ -2,8 +2,12 @@ package com.example.quanlybanaobackend.controller;
 
 import com.example.quanlybanaobackend.constant.Constant;
 import com.example.quanlybanaobackend.dto.OrderInformationRequest;
+import com.example.quanlybanaobackend.dto.PayPalPayment;
 import com.example.quanlybanaobackend.model.*;
 import com.example.quanlybanaobackend.service.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
@@ -242,8 +246,8 @@ public class CartController {
                 }
                 order.setOrderDetails(orderDetailList);
                 Payment payment = service.createPayment(order.getTotalPrice(), "USD", "PAYPAL",
-                        "ORDER", order.getNotes(), "http://localhost:8081/api/v1/" + CANCEL_URL,
-                        "http://localhost:8081/api/v1" + SUCCESS_URL);
+                        "ORDER", order.getNotes(), "http://localhost:3000/cart/",
+                        "http://localhost:3000/cart");
                 for (Links link : payment.getLinks()) {
                     if (link.getRel().equals("approval_url")) {
                         response.put("approval_link", link.getHref());
@@ -268,29 +272,35 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = CANCEL_URL)
-    public ResponseEntity<Map<String, Object>> cancelPay() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", false);
-        response.put("message", "Thanh toán thất bại");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(value = SUCCESS_URL)
-    public ResponseEntity<Map<String, Object>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            response.put("success", false);
-            Payment payment = service.executePayment(paymentId, payerId);
-            if (payment.getState().equals("approved")) {
-                response.put("success", true);
-                response.put("response", payment.toJSON());
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-        } catch (PayPalRESTException e) {
-            System.out.println(e.getMessage());
-        }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+//    @GetMapping(value = CANCEL_URL)
+//    public ResponseEntity<Map<String, Object>> cancelPay() {
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("success", false);
+//        response.put("message", "Thanh toán thất bại");
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @GetMapping(value = SUCCESS_URL)
+//    public ResponseEntity<Map<String, Object>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+//        Map<String, Object> response = new HashMap<>();
+//        try {
+//            response.put("success", false);
+//            Payment payment = service.executePayment(paymentId, payerId);
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            PayPalPayment paypalPayment = objectMapper.readValue(payment.toString(), PayPalPayment.class);
+//            if (payment.getState().equals("approved")) {
+//                response.put("success", true);
+//                response.put("response", paypalPayment);
+//                return new ResponseEntity<>(response, HttpStatus.OK);
+//            }
+//        } catch (PayPalRESTException e) {
+//            System.out.println(e.getMessage());
+//        } catch (JsonMappingException e) {
+//            throw new RuntimeException(e);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 
 }
