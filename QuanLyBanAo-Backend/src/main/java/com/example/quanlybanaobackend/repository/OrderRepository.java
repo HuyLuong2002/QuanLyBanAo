@@ -33,7 +33,7 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
     List<RevenueByMonthDTO> getRevenueByMonth(@Param("year") int year);
 
     @Query("select new com.example.quanlybanaobackend.dto.RevenueByWeekDaysDTO(" +
-            "DAYOFWEEK(o.orderDate), MONTH(o.orderDate), YEAR(o.orderDateb), sum(o.totalPrice)) " +
+            "DAYOFWEEK(o.orderDate), MONTH(o.orderDate), YEAR(o.orderDate), sum(o.totalPrice)) " +
             "from Order o where o.orderStatus != 'INACTIVE' and o.orderDate >= :firstDate " +
             "and o.orderDate <= :secondDate " +
             "group by dayofweek(o.orderDate) " +
