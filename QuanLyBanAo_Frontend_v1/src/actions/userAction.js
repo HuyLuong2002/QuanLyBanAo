@@ -66,7 +66,7 @@ export const register = (userData) => async (dispatch) => {
 
         const { data } = await axios.post(`api/v1/auth/register`, { address, dateOfBirth, email, firstName, lastName, password, sex, tel }, config);
 
-        dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
+        dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
     } catch (error) {
         dispatch({
             type: REGISTER_USER_FAIL,

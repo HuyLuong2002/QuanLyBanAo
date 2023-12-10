@@ -147,7 +147,7 @@ const SignUp = () => {
         sex &&
         dateBirth
       ) {
-        
+
         // setFistName("");
         // setLastName("");
         // setEmail("");
@@ -156,20 +156,26 @@ const SignUp = () => {
         // setAddress("");
         // setSex("");
         // setDateBirth("");
-        console.log("form data: ", {...formData});
+        console.log("form data: ", { ...formData });
         dispatch(register(formData))
-        if(error) {
-          alert.error(error);
-        } else {
-          setSuccessMsg(
-            `Hello dear ${firstName}, Welcome you to OREBI Admin panel. We received your Sign up request. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-          );
-          navigate('/signin');
-          alert.success("Register successfully!");
-        }
+
       }
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+
+
+
+    if (user) {
+      navigate('/signin');
+      alert.success("Register successfully!");
+    }
+  }, [error, navigate, alert, user,dispatch])
 
   return (
     <div className="w-full h-screen flex items-center justify-start">

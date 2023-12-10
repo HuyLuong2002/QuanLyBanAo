@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
-import { clearErrors, login, updatePassword } from "../../actions/userAction";
+import { clearErrors, login, recoveryPassword, updatePassword } from "../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 
@@ -14,12 +14,14 @@ const Recovery = () => {
 
     const handlePassword = (e) => {
         setPassword(e.target.value);
-        setIsOpen(true)
     };
 
     const handleUpadtePass = (e) => {
         e.preventDefault();
-        dispatch(updatePassword(password));
+        let email = JSON.parse(localStorage.getItem('email'));
+        console.log("email: ", email)
+        dispatch(recoveryPassword(password, email));
+        setIsOpen(true)
     }
    
     return (

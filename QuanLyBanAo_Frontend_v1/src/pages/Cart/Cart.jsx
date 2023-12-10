@@ -9,6 +9,9 @@ import axios from "axios";
 import { checkout, getCurrentUserCart, removeItemsFromCart, resetCart, updateItemCart } from "../../actions/cartAction";
 import { useAlert } from "react-alert";
 import Loader from "../../components/Loader/Loader";
+import {
+    paypal
+  } from "../../assets/images";
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -127,12 +130,17 @@ const Cart = () => {
                                     </span>
                                 </p>
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-end items-center gap-4">
                                 <Link to="#" onClick={handleCheckout}>
                                     <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
-                                        Proceed to Checkout
+                                        Check out by Cash 
                                     </button>
+                                    
                                 </Link>
+                                <span>Or</span>
+                                <button className="">
+                                    <img src={paypal} alt="paypal" />
+                                </button>
                             </div>
                         </div>
                     </div>

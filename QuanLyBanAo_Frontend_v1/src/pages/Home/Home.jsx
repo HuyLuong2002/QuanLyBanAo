@@ -23,7 +23,6 @@ const Home = () => {
         if (error) return alert.error(error);
         dispatch(getProduct());
         dispatch(getAllUsers());
-        dispatch(loadUser());
     }, [dispatch, error, alert]);
 
 

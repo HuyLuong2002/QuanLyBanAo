@@ -42,8 +42,8 @@ public class CartController {
     @Autowired
     PayPalService service;
 
-    public static final String SUCCESS_URL = "/cart/pay/success";
-    public static final String CANCEL_URL = "/cart/pay/cancel";
+    public static final String SUCCESS_URL = "/pay/success";
+    public static final String CANCEL_URL = "/pay/cancel";
 
     @GetMapping(path = {"/getUserCart"})
     public ResponseEntity<Map<String, Object>> getUserCart() {

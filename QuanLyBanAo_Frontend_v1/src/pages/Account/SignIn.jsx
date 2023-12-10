@@ -91,16 +91,17 @@ const SignIn = () => {
             dispatch(clearErrors());
         }
 
-        if (isAuthenticated && user) {
-            navigate(redirect);
-        }
-
-        if (user?.user && user.user.roles[0].name === 'ADMIN') {
+        if (user && user.roles[0].name === 'ADMIN') {
             navigate(redirectAdmin);
             return;
         }
-        if (user?.user && user.user.roles[0].name === 'EMPLOYEE') {
+        if (user && user.roles[0].name === 'EMPLOYEE') {
             navigate(redirectEployee);
+            return;
+        }
+
+        if (isAuthenticated && user) {
+            navigate(redirect);
             return;
         }
     }, [dispatch, error, alert, navigate, isAuthenticated, redirect, user]);
