@@ -235,7 +235,6 @@ const UpdateUser = () => {
                                             <>
                                                 <option value="EMPLOYEE">EMPLOYEE</option>
                                                 <option value="CUSTOMER">CUSTOMER</option>
-                                                <option value="ADMIN">ADMIN</option>
                                             </>
                                         ) : user && user?.roles && user?.roles[0]?.name === "ADMIN" ? (
                                             <>
@@ -246,7 +245,6 @@ const UpdateUser = () => {
                                         ) : (
                                             <>
                                                 <option value="CUSTOMER">CUSTOMER</option>
-                                                <option value="ADMIN">ADMIN</option>
                                                 <option value="EMPLOYEE">EMPLOYEE</option>
                                             </>
                                         )

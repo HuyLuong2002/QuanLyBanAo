@@ -9,7 +9,7 @@
 }
 .newProductContainer h1 {
   color: rgba(0, 0, 0, 0.733);
-  font: 300 2rem "Roboto";
+  font: 300 2rem;
   text-align: center;
 }
 
@@ -108,7 +108,7 @@
   border: none;
   background-color: tomato;
   color: white;
-  font: 300 0.9vmax "Roboto";
+  font: 300 0.9vmax;
   width: 100%;
   padding: 1vmax;
   cursor: pointer;
@@ -152,7 +152,7 @@
   }
 
   #createProductBtn {
-    font: 300 1.9vmax "Roboto";
+    font: 300 1.9vmax;
     padding: 1.8vmax;
   }
 }
