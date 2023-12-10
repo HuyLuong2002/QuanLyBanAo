@@ -169,16 +169,21 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> forgot(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
-        EmailDetails emailDetails = new EmailDetails();
-        String htmlMsg = "Mời truy cập đường dẫn sau để khôi phục mật khẩu của bạn: <a href='http://localhost:3000/recovery_passs'> Nhấn vào đây </a>";
-        emailDetails.setRecipient(user.getEmail());
-        emailDetails.setSubject("Khôi phục mật khẩu");
-        emailDetails.setMsgBody(htmlMsg);
-        String result = emailController.sendMail(emailDetails);
-        response.put("success", true);
-        response.put("message", "Hệ thống đã gửi email khôi phục mật khẩu. Mời bạn kiểm tra email của mình");
-        System.out.println(result);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        if(userService.findByUsername(user.getEmail()) != null)
+        {
+            EmailDetails emailDetails = new EmailDetails();
+            String htmlMsg = "Mời truy cập đường dẫn sau để khôi phục mật khẩu của bạn: <a href='http://localhost:3000/recovery_passs'> Nhấn vào đây </a>";
+            emailDetails.setRecipient(user.getEmail());
+            emailDetails.setSubject("Khôi phục mật khẩu");
+            emailDetails.setMsgBody(htmlMsg);
+            String result = emailController.sendMail(emailDetails);
+            response.put("success", true);
+            response.put("message", "Hệ thống đã gửi email khôi phục mật khẩu. Mời bạn kiểm tra email của mình");
+            System.out.println(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.put("message", "Tài khoản của bạn chưa được đăng ký");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     public boolean checkUserLogin() {
