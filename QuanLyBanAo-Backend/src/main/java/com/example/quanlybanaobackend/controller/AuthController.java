@@ -54,6 +54,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDto) {
         try {
+            if(userService.findByUsername(loginDto.getEmail()).isDeleted() || userService.findByUsername(loginDto.getEmail()).getStatus() == Constant.UserStatus.INACTIVE)
+            {
+                return new ResponseEntity<>(new AuthResponseDTO(false, "Tài khoản đã bị khóa"), HttpStatus.BAD_REQUEST);
+            }
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginDto.getEmail(),
