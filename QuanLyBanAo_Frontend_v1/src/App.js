@@ -41,6 +41,7 @@ import Supplier from "./Admin/Supplier";
 import Categories from "./Admin/Categories";
 import UpdateSupplier from "./Admin/UpdateSupplier";
 import UpdateCategories from "./Admin/UpdateCategories";
+import Recovery from "./pages/Account/Recovery";
 
 const Layout = () => {
   return (
@@ -86,6 +87,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
+      <Route path="/recovery" element={<Recovery />}></Route>
       <Route
         path="/profile"
         element={

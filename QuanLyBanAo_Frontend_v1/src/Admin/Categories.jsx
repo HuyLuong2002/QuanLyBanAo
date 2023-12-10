@@ -16,6 +16,8 @@ import {deleteCategory} from "../actions/categoryAction";
 import ReplayIcon from "@material-ui/icons/Replay";
 import {Popconfirm} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
+import { CheckCircleOutline } from '@material-ui/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 const Categories = () => {
     const dispatch = useDispatch();
@@ -27,8 +29,13 @@ const Categories = () => {
 
     const {error: deleteError, isDeleted} = useSelector((state) => state.category);
 
-    const deleteCategoryHandler = (id) => {
+    const deleteCategoryHandler = (id, flag) => {
         dispatch(deleteCategory(id));
+        if(flag) {
+            alert.success('Category Restored Successfully');
+            return
+        }
+        alert.success('Category Deleted Successfully');
     };
 
     useEffect(() => {
@@ -43,11 +50,10 @@ const Categories = () => {
         }
 
         if (isDeleted) {
-            alert.success('Category Deleted Successfully');
+            // alert.success('Category Deleted Successfully');
             navigate('/admin/categories');
             dispatch({type: DELETE_CATEGORY_RESET});
         }
-
 
         dispatch(getCategories());
     }, [dispatch, alert, error, deleteError, navigate, isDeleted]);
@@ -64,6 +70,23 @@ const Categories = () => {
             field: 'deleted',
             headerName: 'Deleted',
             minWidth: 185,
+            type: 'boolean',
+            renderCell: (params) => {
+                return !params.value ? (
+                    <CheckCircleOutline
+                        style={{
+                            color: "green",
+                        }}
+                    />
+                ) : (
+                    <CloseCircleOutlined
+                        style={{
+                            color: "red",
+                            fontSize: "22px"
+                        }}
+                    />
+                );
+            },
         },
         {
             field: 'actions',
@@ -77,29 +100,27 @@ const Categories = () => {
                             <EditIcon/>
                         </Link>
 
-                        <Button onClick={() => deleteCategoryHandler(params.getValue(params.id, 'id'))}>
+                        {/* <Button onClick={() => deleteCategoryHandler(params.getValue(params.id, 'id'))}>
                             <DeleteIcon/>
-                        </Button>
+                        </Button> */}
 
-                        {/*{*/}
-                        {/*    params.getValue(params.id, 'deleted') ? (*/}
-                        {/*        <Button onClick={() => deleteCategoryHandler(params.getValue(params.id, 'id'))}>*/}
-                        {/*            <ReplayIcon />*/}
-                        {/*        </Button>*/}
-                        {/*    ) : (*/}
-                        {/*        // <Button onClick={() => deleteProductHandler(params.getValue(params.id, 'id'))}>*/}
-                        {/*        //     <DeleteIcon />*/}
-                        {/*        // </Button>*/}
-                        {/*        <Popconfirm*/}
-                        {/*            title="Delete the task"*/}
-                        {/*            description="Are you sure to delete this task?"*/}
-                        {/*            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}*/}
-                        {/*            placement='bottomLeft'*/}
-                        {/*        >*/}
-                        {/*            <Button danger><DeleteIcon /></Button>*/}
-                        {/*        </Popconfirm>*/}
-                        {/*    )*/}
-                        {/*}*/}
+                        {
+                            params.getValue(params.id, 'deleted') ? (
+                                <Button onClick={() => deleteCategoryHandler(params.getValue(params.id, 'id'), 1)}>
+                                    <ReplayIcon />
+                                </Button>
+                            ) : (
+                                <Popconfirm
+                                    title="Delete the task"
+                                    description="Are you sure to delete this category?"
+                                    icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                    placement='bottomLeft'
+                                    onConfirm={() => deleteCategoryHandler(params.getValue(params.id, 'id'))}
+                                >
+                                    <Button danger><DeleteIcon /></Button>
+                                </Popconfirm>
+                            )
+                        }
                     </Fragment>
                 );
             },
@@ -107,8 +128,6 @@ const Categories = () => {
     ];
 
     const rows = [];
-
-    console.log("categories: ", categories);
 
     categories &&
     categories.forEach((item) => {

@@ -338,7 +338,6 @@ export const supplierReducer = (state = {}, action) => {
                 ...state,
                 loading: false,
                 isDeleted: action.payload,
-                message: action.payload.message,
             };
         case DELETE_SUPPLIER_FAIL:
             return {
@@ -349,12 +348,13 @@ export const supplierReducer = (state = {}, action) => {
         case DELETE_SUPPLIER_RESET:
             return {
                 ...state,
-                success: false,
+                isDeleted: false,
             };
         case UPDATE_SUPPLIER_REQUEST:
             return {
                 ...state,
                 loading: true,
+                isUpdated: false
             };
         case UPDATE_SUPPLIER_SUCCESS:
             return {
@@ -446,7 +446,7 @@ export const categoryReducer = (state = {}, action) => {
         case DELETE_CATEGORY_RESET:
             return {
                 ...state,
-                success: false,
+                isDeleted: false,
             };
         case UPDATE_CATEGORY_REQUEST:
             return {
