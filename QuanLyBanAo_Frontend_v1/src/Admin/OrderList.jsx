@@ -84,7 +84,7 @@ const OrderList = () => {
             minWidth: 150,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "SHIPPED" ? 'bg-green-200 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "APPROVAL" ? 'bg-blue-200 rounded-xl text-sm w-24 p-2 text-center font-semibold' : params.value === "CANCELED" ? 'bg-red-300 rounded-xl text-sm w-24 p-2 text-center font-semibold' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                    <span className={params.value === "SHIPPED" ? 'bg-green-200 rounded-xl text-sm w-24 p-2 text-center' : params.value === "APPROVAL" ? 'bg-blue-200 rounded-xl text-sm w-24 p-2 text-center' : params.value === "CANCELED" ? 'bg-red-300 rounded-xl text-sm w-24 p-2 text-center' : 'bg-yellow-200 rounded-xl text-sm w-24 p-2 text-center'}>{params.value}</span>
                 )
             },
         },
@@ -100,7 +100,7 @@ const OrderList = () => {
             minWidth: 190,
             renderCell: (params) => {
                 return (
-                    <span className={params.value === "CASH" ? ' rounded-xl text-sm w-24 p-2 text-center font-semibold text-orange-500' : 'text-green-500 rounded-xl text-sm w-24 p-2 text-center font-semibold'}>{params.value}</span>
+                    <span className={params.value === "CASH" ? ' rounded-xl text-sm w-24 p-2 text-center text-orange-500' : 'text-green-500 rounded-xl text-sm w-24 p-2 text-center'}>{params.value}</span>
                 )
             },
         },

@@ -9,7 +9,7 @@
 }
 
 #productListHeading {
-  font: 400 2rem;
+  font-size: 2rem;
   padding: 0.5vmax;
   box-sizing: border-box;
   color: rgba(0, 0, 0, 0.637);
@@ -29,10 +29,9 @@
 }
 
 .productListTable div {
-  font: 300 1vmax;
+  font-size: 1vmax;
   /* color: rgba(0, 0, 0, 0.678); */
-  font-size: medium;
-  font-weight: 500;
+  font-weight: medium;
   border: none !important;
 }
 
@@ -56,7 +55,7 @@
 
 @media screen and (max-width: 600px) {
   .productListTable div {
-    font: 300 4vw;
+    font-size: 4vw;
   }
 }
 
