@@ -140,6 +140,24 @@ export const updatePassword = (password) => async (dispatch) => {
     }
 };
 
+// Update Password
+export const recoveryPassword = (password, email) => async (dispatch) => {
+    try {
+        dispatch({ type: UPDATE_PASSWORD_REQUEST });
+
+        const config = { headers: { 'Content-Type': 'application/json' } };
+
+        const { data } = await axios.put(`http://localhost:8081/api/v1/auth/reset_password`, {email, password}, config);
+
+        dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data?.success });
+    } catch (error) {
+        dispatch({
+            type: UPDATE_PASSWORD_FAIL,
+            payload: error.response?.data?.message,
+        });
+    }
+};
+
 // Forgot Password
 export const forgotPassword = (email) => async (dispatch) => {
     try {

@@ -165,7 +165,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/forgot")
+    @PostMapping("/forgot")
     public ResponseEntity<Map<String, Object>> forgot(@RequestBody User user) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);

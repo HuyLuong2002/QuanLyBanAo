@@ -7,6 +7,7 @@ import { useAlert } from "react-alert";
 const ProductInfo = ({ productInfo, id }) => {
   const alert = useAlert()
   const dispatch = useDispatch();
+  console.log("ProductInfo", productInfo);
   const handleAddToCart = () => {
     dispatch(
       addItemsToCart(id,1)
@@ -31,7 +32,7 @@ const ProductInfo = ({ productInfo, id }) => {
         Add to Cart
       </button>
       <p className="font-normal text-sm">
-        <span className="text-base font-medium"> Categories:</span> {productInfo.cate}
+        <span className="text-base font-medium"> Categories:</span> {productInfo && productInfo.cate}
       </p>
     </div>
   );

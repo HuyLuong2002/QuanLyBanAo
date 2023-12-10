@@ -183,11 +183,11 @@ const SpecialCase = () => {
           <Space>
             {
               edit ? <>
-                <Button onClick={() => handleUpdateProfile()} type="primary" className="bg-blue-600">
+                <Button onClick={() => handleUpdateProfile()} type="primary" className="bg-[#23BDFF]">
                   Update
                 </Button>
                 <Button onClick={() => setEdit(false)}>Cancel</Button></>
-                : <Button onClick={hanleEdit} type="primary" className="bg-blue-600">
+                : <Button onClick={hanleEdit} type="primary" className="bg-[#23BDFF]">
                   Edit
                 </Button>
             }
@@ -248,8 +248,6 @@ const SpecialCase = () => {
                   />
                 </Form.Item>
               </Col>
-            </Row>
-            <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
                   name="Sex"
@@ -302,6 +300,7 @@ const SpecialCase = () => {
                 </Form.Item>
               </Col>
             </Row>
+              
           </Form>
         }
 
@@ -311,15 +310,15 @@ const SpecialCase = () => {
           {
             openPw ? (
               <div className="flex gap-4">
-              <Button className="w-auto" onClick={() => handleUpdatePass()}>Update</Button>
+              <Button className="w-auto bg-[#23BDFF]" onClick={() => handleUpdatePass()}>Update</Button>
               <Button className="w-auto" onClick={() => setOpenPw(false)}>Cancel</Button>
               </div>
             ) : 
-            <Button className="w-auto" onClick={() => setOpenPw(true)}>Change Password</Button>
-          }
+            <Button className="w-auto bg-[#FFF3CD]" onClick={() => setOpenPw(true)}>Change Password</Button>
+          } 
           <div>
             <Link to="/myorder">
-              <Button className="w-24" onClick={() => setOpen(false)}>My orders</Button>
+              <Button className="w-24 bg-[#11CAF0]" onClick={() => setOpen(false)}>My orders</Button>
             </Link>
             <Button className="w-24 ml-4" onClick={Logout}>Logout</Button>
           </div>

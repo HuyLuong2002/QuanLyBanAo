@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
-import { clearErrors, login } from "../../actions/userAction";
+import { clearErrors, login, updatePassword } from "../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 
 const Recovery = () => {
     const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const [isOpen, setIsOpen] = useState(false);
+    const [message, setMessage] = useState("Update Password Success, go to login!");
+
     const handlePassword = (e) => {
         setPassword(e.target.value);
+        setIsOpen(true)
     };
-    useEffect(() => {
-        
-    }, []);
+
+    const handleUpadtePass = (e) => {
+        e.preventDefault();
+        dispatch(updatePassword(password));
+    }
+   
     return (
         <div className="w-full h-screen flex items-center justify-center">
             <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
@@ -85,17 +93,26 @@ const Recovery = () => {
                 </div>
             </div>
             <div className="w-full lgl:w-1/2 h-full">
-                <div className="h-screen w-full flex flex-col justify-center">
+                {
+                    isOpen ? <>
+                        <div className="w-full h-[100vh] flex items-center">
+                        {message}, &nbsp; <a className="text-blue-500" href="/signin">Login here</a>
+                        </div>
+                    </> : <>
+                    <div className="h-screen w-full flex flex-col justify-center">
                         <h1>Please enter your new password:</h1>
                         <input
                             onChange={handlePassword}
                             value={password}
                             className="w-1/2 h-8 my-2 placeholder:text-sm placeholder:tracking-wide p-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                             type="text"
-                            placeholder="enter your email"
+                            placeholder="Enter your new password"
                         />
-                        <button className="w-[80px] rounded-lg px-4 py-2 bg-blue-400 my-2">send</button>
+                        <button className="w-[80px] rounded-lg px-4 py-2 bg-blue-400 my-2" onClick={handleUpadtePass}>Update</button>
                     </div>
+                    </>
+                }
+                
             </div>
         </div>
     );

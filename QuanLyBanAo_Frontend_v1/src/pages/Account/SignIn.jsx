@@ -5,6 +5,7 @@ import { logoLight } from "../../assets/images";
 import { clearErrors, login } from "../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
+import axios from "axios";
 
 const SignIn = () => {
     // ============= Initial State Start here =============
@@ -14,6 +15,9 @@ const SignIn = () => {
     // ============= Error Msg Start here =================
     const [errEmail, setErrEmail] = useState("");
     const [errPassword, setErrPassword] = useState("");
+    const [emailFortgot, setEmailFortgot] = useState("");
+
+    const [messageForgot, setMessageForgot] = useState("")
 
     const [openForgot, setOpenForgot] = useState(true);
 
@@ -63,6 +67,23 @@ const SignIn = () => {
 
     const redirectAdmin = '/admin/dashboard'
     const redirectEployee = '/admin/products'
+
+    const handleEmailForgotChange = (e) => {
+        setEmailFortgot(e.target.value)
+    }
+
+    const handleForgot = async (e) => {
+        e.preventDefault();
+        const { error, data } = await axios.post("http://localhost:8081/api/v1/auth/forgot", {email: emailFortgot});
+        if(error) {
+            alert.error(error.message)
+        }
+        if (data.success) {
+            setMessageForgot(data.message)
+        }
+        alert.success("Send email recovery password success")
+        localStorage.setItem('email', JSON.stringify(emailFortgot));
+    }
 
     useEffect(() => {
         if (error) {
@@ -239,18 +260,23 @@ const SignIn = () => {
                                 </div>
                             </div>
                         </form>
-                    ) : <div className="h-screen w-full flex flex-col justify-center">
-                        <h1>Please enter your email:</h1>
-                        <input
-                            onChange={handlePassword}
-                            value={password}
-                            className="w-1/2 h-8 my-2 placeholder:text-sm placeholder:tracking-wide p-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                            type="text"
-                            placeholder="enter your email"
-                        />
-                        <button className="w-[80px] rounded-lg px-4 py-2 bg-blue-400 my-2">send</button>
-                        <i onClick={() => setOpenForgot(true)} className="cursor-pointer">Back to signin ?</i>
-                    </div>
+                    ) :
+                        <div className="h-screen w-full flex flex-col justify-center">
+                            {
+                                messageForgot ? <p>{messageForgot}</p> : <>
+                                    <h1>Please enter your email:</h1>
+                                    <input
+                                        onChange={handleEmailForgotChange}
+                                        className="w-1/2 h-8 my-2 placeholder:text-sm placeholder:tracking-wide p-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                                        type="text"
+                                        placeholder="Enter your email"
+                                    />
+                                    <button className="w-[80px] rounded-lg px-4 py-2 bg-blue-400 my-2" onClick={handleForgot} >send</button>
+                                    <i onClick={() => setOpenForgot(true)} className="cursor-pointer">Back to signin ?</i>
+                                </>
+                            }
+
+                        </div>
                 }
 
 

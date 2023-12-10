@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Bar } from 'react-chartjs-2';
 import 'animate.css/animate.min.css';
+import axios from 'axios';
+import { format } from 'date-fns';
 
 const rawData = [
     {
@@ -37,10 +39,30 @@ const rawData = [
     }
 ];
 
+const convertDate = (inputDate) => {
+    const dateObject = new Date(inputDate);
+    const formattedDate = format(dateObject, 'dd-MM-yyyy');
+    return formattedDate;
+  };
+  
+
 const WeeklyRevenueBarChart = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [data, setData] = useState([]);
+
+    const fetchDataDateInWeek =  async () => {
+        let newStartDate = convertDate(startDate)
+        let newEndDate = convertDate(endDate)
+        
+        let defaultStartDate = newStartDate ? newStartDate : "30-10-2023"
+        let defaultEndDate = newEndDate ? newEndDate : "08-12-2023"
+
+        const {data} = await axios.get(`http://localhost:8081/api/v1/statistical/revenueByWeekDays?firstDate=${defaultStartDate}&secondDate=${defaultEndDate}`)
+        setData(data)
+    }
+
+    console.log("data: ", data);
 
     useEffect(() => {
         if (startDate && endDate) {
@@ -55,7 +77,8 @@ const WeeklyRevenueBarChart = () => {
     }, [startDate, endDate]);
 
     const handleSearch = () => {
-        // You can perform additional actions here if needed
+        console.log("startDate: ", convertDate(startDate));
+        console.log("endDate: ", endDate);
     };
 
     const options = {

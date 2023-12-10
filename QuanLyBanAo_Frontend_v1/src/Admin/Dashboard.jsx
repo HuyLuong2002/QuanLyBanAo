@@ -214,6 +214,10 @@ const Dashboard = () => {
     let data3 = []
     let data4 = []
 
+    const totalRevenue = orders && orders.reduce((acc, item) => {
+        return acc + item.totalPrice;
+    }, 0)
+
     const handleYearChange = (event) => {
         const selectedYear = parseInt(event.target.value);
         setSelectedYear(selectedYear);
@@ -322,7 +326,7 @@ const Dashboard = () => {
                 <div className="dashboardSummary">
                     <div > 
                         <p className='rounded-full'>
-                            Total Amount <br /> $ Chưa có ní
+                            Total Amount <br /> $ {totalRevenue}
                         </p>
                     </div>
                     <div className="dashboardSummaryBox2">
