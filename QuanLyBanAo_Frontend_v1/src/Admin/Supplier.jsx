@@ -16,6 +16,8 @@ import {DELETE_SUPPLIER_RESET} from "../constants/supplierConstant";
 import ReplayIcon from "@material-ui/icons/Replay";
 import {Popconfirm} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
+import { CheckCircleOutline } from '@material-ui/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 const Supplier = () => {
     const dispatch = useDispatch();
@@ -35,8 +37,6 @@ const Supplier = () => {
         }
         alert.success('Supplier Deleted Successfully');
     };
-
-    console.log("isDeleted: ", isDeleted);
 
     useEffect(() => {
         if (error) {
@@ -70,6 +70,23 @@ const Supplier = () => {
             field: 'deleted',
             headerName: 'Deleted',
             minWidth: 185,
+            type: 'boolean',
+            renderCell: (params) => {
+                return !params.value ? (
+                    <CheckCircleOutline
+                        style={{
+                            color: "green",
+                        }}
+                    />
+                ) : (
+                    <CloseCircleOutlined
+                        style={{
+                            color: "red",
+                            fontSize: "22px"
+                        }}
+                    />
+                );
+            },
         },
         {
             field: 'actions',
