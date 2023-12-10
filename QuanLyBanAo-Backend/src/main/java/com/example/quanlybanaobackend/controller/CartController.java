@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -272,35 +275,32 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-//    @GetMapping(value = CANCEL_URL)
-//    public ResponseEntity<Map<String, Object>> cancelPay() {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("success", false);
-//        response.put("message", "Thanh toán thất bại");
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @GetMapping(value = SUCCESS_URL)
-//    public ResponseEntity<Map<String, Object>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//            response.put("success", false);
-//            Payment payment = service.executePayment(paymentId, payerId);
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            PayPalPayment paypalPayment = objectMapper.readValue(payment.toString(), PayPalPayment.class);
-//            if (payment.getState().equals("approved")) {
-//                response.put("success", true);
-//                response.put("response", paypalPayment);
-//                return new ResponseEntity<>(response, HttpStatus.OK);
-//            }
-//        } catch (PayPalRESTException e) {
-//            System.out.println(e.getMessage());
-//        } catch (JsonMappingException e) {
-//            throw new RuntimeException(e);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
+    @GetMapping(value = CANCEL_URL)
+    public ResponseEntity<Map<String, Object>> cancelPay() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Thanh toán thất bại");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
+    @GetMapping(value = SUCCESS_URL)
+    public ResponseEntity<Map<String, Object>> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            response.put("success", false);
+            Payment payment = service.executePayment(paymentId, payerId);
+            ObjectMapper objectMapper = new ObjectMapper();
+            PayPalPayment paypalPayment = objectMapper.readValue(payment.toJSON(), PayPalPayment.class);
+            if (payment.getState().equals("approved")) {
+                response.put("success", true);
+                response.put("response", paypalPayment);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
+        } catch (PayPalRESTException e) {
+            System.out.println(e.getMessage());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -2,7 +2,7 @@ package com.example.quanlybanaobackend.constant;
 
 public class Constant {
     public enum UserStatus {
-        ACTIVE, INACTIVE, BANNED
+        ACTIVE, INACTIVE
     }
 
     public enum Gender {
