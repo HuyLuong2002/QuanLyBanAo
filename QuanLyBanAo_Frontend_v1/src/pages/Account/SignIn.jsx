@@ -91,11 +91,11 @@ const SignIn = () => {
             dispatch(clearErrors());
         }
 
-        if (user && user.roles[0].name === 'ADMIN') {
+        if (user && user?.roles && user.roles[0].name === 'ADMIN') {
             navigate(redirectAdmin);
             return;
         }
-        if (user && user.roles[0].name === 'EMPLOYEE') {
+        if (user && user?.roles && user.roles[0].name === 'EMPLOYEE') {
             navigate(redirectEployee);
             return;
         }
