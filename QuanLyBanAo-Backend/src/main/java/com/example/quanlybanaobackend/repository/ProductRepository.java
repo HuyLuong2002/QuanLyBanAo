@@ -20,8 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     List<Product> getProductsByCategory_Id(int categoryId);
 
-    @Query(value = "SELECT * FROM products p where p.category_id = ?1 and p.product_id != ?2 limit 4 and p.is_deleted = 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM products p WHERE p.category_id = ?1 AND p.product_id != ?2 AND p.is_deleted = 0 LIMIT 4", nativeQuery = true)
     List<Product> getRelatedProduct(int categoryId, int productId);
+
     @Query("SELECT p from Product p where p.color = :color")
     List<Product> findProductByColor(@Param("color") Constant.Color color);
 
