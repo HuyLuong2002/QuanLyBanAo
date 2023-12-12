@@ -44,7 +44,7 @@ const Category = () => {
       <NavTitle title="Shop by Category" icons={false} />
       <div>
         <ul className="flex flex-col gap-4 text-sm lg:text-base text-[#767676]">
-          {items.map(({ id, name, icons = false }, index) => (
+          {items && items.filter(item => item.deleted === false).map(({ id, name, icons = false }, index) => (
             <li
               key={id}
               className={`border-b-[1px] border-b-[#F0F0F0] py-2 pl-2 flex items-center rounded-lg justify-between cursor-pointer ${active === index && values.cate ? 'font-bold bg-slate-300' : ''}`}

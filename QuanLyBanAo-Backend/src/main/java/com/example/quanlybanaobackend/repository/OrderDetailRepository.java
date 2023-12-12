@@ -12,7 +12,7 @@ import java.util.List;
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
 
     @Query("select new com.example.quanlybanaobackend.dto.StatisticalBestSellProductDTO(SUM(od.quantity), od.product) " +
-            "from OrderDetail od group by od.product.id order by SUM(od.quantity) desc limit 10")
+            "from OrderDetail od where od.product.isDeleted = false group by od.product.id order by SUM(od.quantity) desc limit 10")
     List<StatisticalBestSellProductDTO> getTop10ProductBestSell();
 
 

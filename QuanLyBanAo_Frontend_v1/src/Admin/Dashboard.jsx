@@ -255,6 +255,7 @@ const Dashboard = () => {
             tel: item.customer.tel,
         }
     }, [])
+    data2.sort((a, b) => b.totalQuantity - a.totalQuantity);
 
     data3 = top10Product && top10Product.map((item) => {
         return {
@@ -281,6 +282,7 @@ const Dashboard = () => {
             tel: item.seller.tel,
         }
     }, [])
+    data4.sort((a, b) => b.totalQuantity - a.totalQuantity);
 
     const chartData = {
         labels: months.map((month) => month.toString()),

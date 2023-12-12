@@ -29,9 +29,9 @@ const UpdateProduct = () => {
     const { categories } = useSelector((state) => state.categories);
     const { suplliers } = useSelector((state) => state.suppliers);
 
-    const [name, setName] = useState(product && product?.name);
-    const [price, setPrice] = useState(product?.price);
-    const [description, setDescription] = useState(product?.description);
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [description, setDescription] = useState("");
     const [category, setCategory] = useState('');
     const [images, setImages] = useState('');
     const [imagesPreview, setImagesPreview] = useState('');
@@ -173,7 +173,7 @@ const UpdateProduct = () => {
                                     <CategoryIcon />
                                     <select onChange={(e) => setCategory(e.target.value)}>
                                         <option value="">{product && product.category?.name}</option>
-                                        {categories && categories.filter(item=>item.name !== product.category?.name).map((cate) => (
+                                        {categories && categories.filter(item=>item.name !== product.category?.name && item.deleted === false).map((cate) => (
                                             <option key={cate.id} value={cate.name}>
                                                 {cate.name}
                                             </option>
@@ -185,7 +185,7 @@ const UpdateProduct = () => {
                                 <RateReviewIcon />
                                     <select onChange={(e) => setSupplier(e.target.value)}>
                                         <option value="">{product && product.supplier?.name}</option>
-                                        {suplliers && suplliers.filter(item=>item.name !== product.supplier?.name).map((sup) => (
+                                        {suplliers && suplliers.filter(item=>item.name !== product.supplier?.name && item.deleted === false).map((sup) => (
                                             <option key={sup.id} value={sup.name}>
                                                 {sup.name}
                                             </option>

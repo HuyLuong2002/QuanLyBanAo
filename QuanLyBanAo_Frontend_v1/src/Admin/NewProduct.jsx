@@ -148,7 +148,7 @@ const NewProduct = () => {
                             <AccountTreeIcon />
                             <select onChange={(e) => setCategory(e.target.value)}>
                                 <option value="">Choose Category</option>
-                                {categories && categories.map((cate) => (
+                                {categories && categories?.filter(item => item.deleted === false).map((cate) => (
                                     <option key={cate.id} value={cate.name}>
                                         {cate.name}
                                     </option>
@@ -160,7 +160,7 @@ const NewProduct = () => {
                             <AccountTreeIcon />
                             <select onChange={(e) => setSupplier(e.target.value)}>
                                 <option value="">Choose Supplier</option>
-                                {suplliers && suplliers.map((sup) => (
+                                {suplliers && suplliers?.filter(item => item.deleted === false).map((sup) => (
                                     <option key={sup.id} value={sup.name}>
                                         {sup.name}
                                     </option>

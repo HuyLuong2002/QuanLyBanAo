@@ -65,7 +65,7 @@ const NewArrivals = () => {
             <Heading heading="New Arrivals" />
             <Slider {...settings}>
                 {
-                    products && products.map((item, index) => {
+                    products && products?.filter(item => item.deleted === false).map((item, index) => {
                         return (
                             <div className="px-2" key={index}>
                                 <Product

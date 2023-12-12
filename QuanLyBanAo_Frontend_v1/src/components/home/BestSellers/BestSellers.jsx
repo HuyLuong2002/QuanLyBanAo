@@ -71,7 +71,7 @@ const BestSellers = () => {
       <Heading heading="Best sellers" />
       <Slider {...settings}>
         {
-          productsBestSeller && productsBestSeller.map((item, idx) => {
+          productsBestSeller && productsBestSeller?.filter(item => item.deleted === false).map((item, idx) => {
             return (
               <div key={idx} className="px-2">
                 <Product
