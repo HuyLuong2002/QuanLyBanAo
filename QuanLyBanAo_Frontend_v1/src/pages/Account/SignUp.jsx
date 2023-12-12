@@ -158,6 +158,8 @@ const SignUp = () => {
         // setDateBirth("");
         console.log("form data: ", { ...formData });
         dispatch(register(formData))
+        navigate('/signin');
+      alert.success("Register successfully!");
 
       }
     }
@@ -168,14 +170,7 @@ const SignUp = () => {
       alert.error(error);
       dispatch(clearErrors());
     }
-
-
-
-    if (user) {
-      navigate('/signin');
-      alert.success("Register successfully!");
-    }
-  }, [error, navigate, alert, user,dispatch])
+  }, [error, navigate, alert, dispatch])
 
   return (
     <div className="w-full h-screen flex items-center justify-start">

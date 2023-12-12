@@ -75,7 +75,7 @@ const BestSellers = () => {
             return (
               <div key={idx} className="px-2">
                 <Product
-                  Fzid={item.id}
+                  id={item.id}
                   image={item.image}
                   name={item.name}
                   price={item.price}

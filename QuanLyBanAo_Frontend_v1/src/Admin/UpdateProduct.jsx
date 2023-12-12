@@ -59,13 +59,13 @@ const UpdateProduct = () => {
         }
     }
 
-    
+
 
     const updateProductSubmitHandler = async (e) => {
         e.preventDefault();
         let imageOrigin = product.image
 
-        if(CheckChangeImage) {
+        if (CheckChangeImage) {
             const formData = new FormData();
             formData.append('file', images); // images[0] là tệp ảnh đầu tiên
 
@@ -78,7 +78,7 @@ const UpdateProduct = () => {
             imageOrigin = image
         }
 
-        
+
         console.log("dataImg: ", imageOrigin);
 
         const data = {
@@ -100,7 +100,7 @@ const UpdateProduct = () => {
         dispatch(getProductDetails(productId));
         dispatch(getSuppliers());
         dispatch(getCategories());
-        
+
         if (error) {
             alert.error(error);
             dispatch(clearErrors());
@@ -116,7 +116,7 @@ const UpdateProduct = () => {
             navigate('/admin/products');
             dispatch({ type: UPDATE_PRODUCT_RESET });
         }
-        
+
     }, [dispatch, alert, error, navigate, isUpdated, productId, updateError]);
 
     return (
@@ -173,7 +173,7 @@ const UpdateProduct = () => {
                                     <CategoryIcon />
                                     <select onChange={(e) => setCategory(e.target.value)}>
                                         <option value="">{product && product.category?.name}</option>
-                                        {categories && categories.filter(item=>item.name !== product.category?.name && item.deleted === false).map((cate) => (
+                                        {categories && categories.filter(item => item.name !== product.category?.name && item.deleted === false).map((cate) => (
                                             <option key={cate.id} value={cate.name}>
                                                 {cate.name}
                                             </option>
@@ -182,10 +182,10 @@ const UpdateProduct = () => {
                                 </div>
 
                                 <div>
-                                <RateReviewIcon />
+                                    <RateReviewIcon />
                                     <select onChange={(e) => setSupplier(e.target.value)}>
                                         <option value="">{product && product.supplier?.name}</option>
-                                        {suplliers && suplliers.filter(item=>item.name !== product.supplier?.name && item.deleted === false).map((sup) => (
+                                        {suplliers && suplliers.filter(item => item.name !== product.supplier?.name && item.deleted === false).map((sup) => (
                                             <option key={sup.id} value={sup.name}>
                                                 {sup.name}
                                             </option>
@@ -229,15 +229,16 @@ const UpdateProduct = () => {
 
                                 <div id="">
                                     {
-                                        !imagesPreview && <img src={product.image} alt="Old Product Preview" className='w-[120px]'/>
+                                        !imagesPreview && <img src={product.image} alt="Old Product Preview" className='w-[120px] h-[140px]' />
                                     }
                                 </div>
 
                                 <div id="">
                                     {imagesPreview &&
-                                        <img src={imagesPreview} alt="Product Preview" className='w-[120px]'/>
+                                        <img src={imagesPreview} alt="Product Preview" className='w-[120px] h-[140px]' />
                                     }
                                 </div>
+
 
                                 <Button id="createProductBtn" className='test2' type="submit" disabled={loading ? true : false}>
                                     Update

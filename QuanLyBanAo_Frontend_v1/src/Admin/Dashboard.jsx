@@ -188,6 +188,26 @@ const columns3 = [
 const controllers = Object.values(ChartJS).filter((chart) => chart.id !== undefined);
 Chart.register(...controllers);
 
+const formatNumberWithCommas = (number) => {
+    // Chuyển số thành chuỗi để xử lý dễ dàng
+    let numberString = number.toString();
+
+    // Chia chuỗi thành phần nguyên và phần thập phân (nếu có)
+    let parts = numberString.split('.');
+    let integerPart = parts[0];
+    let decimalPart = parts[1];
+
+    // Thêm dấu phẩy phân cách thập phân cho phần nguyên
+    let formattedNumber = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Nếu có phần thập phân, thêm lại vào sau dấu phẩy
+    if (decimalPart) {
+        formattedNumber += ',' + decimalPart;
+    }
+
+    return formattedNumber;
+}
+
 const Dashboard = () => {
     const dispatch = useDispatch();
 
@@ -214,9 +234,11 @@ const Dashboard = () => {
     let data3 = []
     let data4 = []
 
-    const totalRevenue = orders && orders.reduce((acc, item) => {
+    const totalRevenueBefore = orders && orders.reduce((acc, item) => {
         return acc + item.totalPrice;
     }, 0)
+
+    let totalRevenue = formatNumberWithCommas(totalRevenueBefore ? totalRevenueBefore : 0)
 
     const handleYearChange = (event) => {
         const selectedYear = parseInt(event.target.value);

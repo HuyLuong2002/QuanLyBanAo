@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
     public Order rejectOrder(int id, User user) {
         Order order = findById(id);
         order.setShipStatus(Constant.ShipStatus.CANCELED);
-        order.setOrderStatus(Constant.OrderStatus.INACTIVE);
+//        order.setOrderStatus(Constant.OrderStatus.INACTIVE);
         order.setEmployee(user);
         return orderRepository.save(order);
     }
